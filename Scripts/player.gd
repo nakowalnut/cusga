@@ -1,5 +1,5 @@
 extends CharacterBody2D
-
+#
 # 1. 武器数据定义
 class Weapon:
 	var name: String
