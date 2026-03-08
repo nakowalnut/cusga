@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://bwbih2ig3yeia"]
+
+[ext_resource type="Script" uid="uid://l4denkeet557" path="res://Scripts/player.gd" id="1_v0iea"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f60y1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v0iea"]
+radius = 20.22375
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v0iea"]
+size = Vector2(40, 5)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_cvnsp"]
+size = Vector2(10, 35)
+
+[node name="Player" type="CharacterBody2D" unique_id=68082897]
+script = ExtResource("1_v0iea")
+
+[node name="PlayerCollider" type="CollisionShape2D" parent="." unique_id=348578568]
+shape = SubResource("CapsuleShape2D_f60y1")
+debug_color = Color(0.86940557, 0.24404117, 0.6563944, 1)
+
+[node name="AttackHitBox" type="Area2D" parent="." unique_id=1598403926]
+
+[node name="AttackCollider" type="CollisionShape2D" parent="AttackHitBox" unique_id=1894716967]
+shape = SubResource("CircleShape2D_v0iea")
+
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=164879484]
+
+[node name="CurrentWeapon" type="Sprite2D" parent="WeaponHolder" unique_id=2109193990]
+position = Vector2(22, -5)
+rotation = -1.16588
+scale = Vector2(1, 1.125)
+texture = SubResource("PlaceholderTexture2D_v0iea")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=698285220]
+texture = SubResource("PlaceholderTexture2D_cvnsp")

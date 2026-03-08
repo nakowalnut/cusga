@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://nc1he8g3y4ws"]
+
+[ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://Scenes/player.tscn" id="1_uqcb1"]
+[ext_resource type="PackedScene" uid="uid://soq6wbhlf35h" path="res://EnemyTest.tscn" id="2_mw1po"]
+
+[node name="Text" type="Node2D" unique_id=2128265186]
+
+[node name="Player" parent="." unique_id=68082897 instance=ExtResource("1_uqcb1")]
+z_index = 2
+collision_layer = 2
+collision_mask = 6
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1861014865]
+zoom = Vector2(1.605, 1.605)
+limit_enabled = false
+
+[node name="Enemy" parent="." unique_id=649580512 instance=ExtResource("2_mw1po")]
+visibility_layer = 4
+z_index = 1
+position = Vector2(146, -110)
+scale = Vector2(0.56, 0.56)
