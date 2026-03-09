@@ -1,0 +1,204 @@
+[gd_scene format=3 uid="uid://d2p4jo23pjljy"]
+
+[ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://怪物/史莱姆/icon.png" id="1_7hvxg"]
+[ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://怪物/受击.gdshader" id="1_fg0bf"]
+[ext_resource type="Texture2D" uid="uid://bdjpi3sfwblst" path="res://怪物/史莱姆/icon-export.png" id="2_e47rn"]
+
+[sub_resource type="GDScript" id="GDScript_7hvxg"]
+script/source = "extends 怪物
+
+@export var 目标:Node2D
+
+func _ready() -> void:
+	生命=2
+	闲置()
+	
+
+@onready var animation_player_2: AnimationPlayer = $Icon/AnimationPlayer
+
+func _on_受伤_() -> void:
+	animation_player_2.play(\"受击\")
+func _on_死亡() -> void:
+	queue_free()
+
+
+
+
+var 速度:Vector2
+var s:float ##周期
+var f:Callable:
+	set(a):
+		s=0
+		f=a
+		
+@onready var icon: Sprite2D = $Icon
+
+func _physics_process(delta: float) -> void:
+	if 目标==null:return
+	icon.flip_h= 速度.x<0
+	s+=delta
+	f.call()
+	velocity+=(速度-velocity)*delta*10
+	move_and_slide()
+
+func 闲置():
+	速度=Vector2.from_angle(randf()*TAU)*50
+	f=闲置_2
+func 闲置_2():
+	if s>5:
+		animation_player.play(\"冲刺\")
+		
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
+func 静止():
+	f=func ():pass
+func 冲刺():
+	速度=(目标.global_position-global_position).normalized()*400
+
+	
+	
+	
+	
+
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	pass # Replace with function body.
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ybt5"]
+shader = ExtResource("1_fg0bf")
+shader_parameter/a = 0.0
+shader_parameter/c = Color(1, 0.75756776, 0.62100786, 1)
+
+[sub_resource type="Animation" id="Animation_6ybt5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_c851j"]
+resource_name = "受击"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.13, 0.23333333, 0.33333334, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 1.0, 0.0, 1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8a1y3"]
+_data = {
+&"RESET": SubResource("Animation_6ybt5"),
+&"受击": SubResource("Animation_c851j")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7hvxg"]
+size = Vector2(87, 72)
+
+[sub_resource type="Animation" id="Animation_e47rn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_fg0bf"]
+resource_name = "冲刺"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.7, 0.9, 1.3333334, 2.5333333, 2.9666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1, 0.5), Vector2(1, 0.5), Vector2(0.5, 2), Vector2(0.5, 2), Vector2(1, 1)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8333333, 2.9666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"values": [{
+"args": [],
+"method": &"静止"
+}, {
+"args": [],
+"method": &"冲刺"
+}, {
+"args": [],
+"method": &"闲置"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6ybt5"]
+_data = {
+&"RESET": SubResource("Animation_e47rn"),
+&"冲刺": SubResource("Animation_fg0bf")
+}
+
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=777199836]
+collision_layer = 4
+collision_mask = 0
+script = SubResource("GDScript_7hvxg")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1698345283]
+material = SubResource("ShaderMaterial_6ybt5")
+position = Vector2(1, -33.000004)
+texture = ExtResource("1_7hvxg")
+
+[node name="Sprite2D" type="Sprite2D" parent="Icon" unique_id=1017362878]
+z_index = -1
+texture = ExtResource("2_e47rn")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Icon" unique_id=1165974573]
+libraries/ = SubResource("AnimationLibrary_8a1y3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1520619429]
+visible = false
+position = Vector2(0.5, -38.000004)
+shape = SubResource("RectangleShape2D_7hvxg")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=329271735]
+libraries/ = SubResource("AnimationLibrary_6ybt5")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=790376113]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1876925430]
+visible = false
+position = Vector2(0.5, -38.000004)
+shape = SubResource("RectangleShape2D_7hvxg")
+
+[connection signal="受伤_" from="." to="." method="_on_受伤_"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
