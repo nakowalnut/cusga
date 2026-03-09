@@ -1,0 +1,7 @@
+- [x] 创建顶层基类 `CharacterBase.gd`
+- [x] 定义基础属性（HP, MaxHP, 状态标志）
+- [x] 实现伤害处理逻辑 (`take_damage`)
+- [x] 实现受击无敌帧及状态逻辑
+- [x] 修改 `player.gd` 继承 `CharacterBase`
+- [x] 修改 `怪物.gd` 继承 `CharacterBase` 并适配旧接口
+- [x] 成功新建 `progress.txt` 记录进度

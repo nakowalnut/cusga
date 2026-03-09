@@ -1,0 +1,52 @@
+extends CharacterBody2D
+class_name CharacterBase
+
+## 基础生命值属性
+@export var max_health: float = 100.0
+@onready var current_health: float = max_health
+
+## 状态定义
+var is_dead: bool = false
+var is_invulnerable: bool = false
+@export var invulnerability_duration: float = 0.2
+
+## 信号
+signal health_changed(new_health: float, max_health: float)
+signal damaged(amount: float)
+signal died
+
+## 伤害处理
+func take_damage(amount: float):
+	if is_dead or is_invulnerable:
+		return
+	
+	current_health -= amount
+	current_health = clamp(current_health, 0, max_health)
+	
+	emit_signal("damaged", amount)
+	emit_signal("health_changed", current_health, max_health)
+	
+	if current_health <= 0:
+		die()
+	else:
+		_trigger_invulnerability()
+
+## 触发无敌帧
+func _trigger_invulnerability():
+	is_invulnerable = true
+	get_tree().create_timer(invulnerability_duration).timeout.connect(
+		func(): is_invulnerable = false
+	)
+
+## 死亡逻辑
+func die():
+	if is_dead:
+		return
+	is_dead = true
+	emit_signal("died")
+	# 可以在子类中重写此方法以实现具体的死亡动画或效果
+	queue_free()
+
+## 获取生命百分比
+func get_health_percent() -> float:
+	return current_health / max_health

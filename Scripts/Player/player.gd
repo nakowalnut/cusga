@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends CharacterBase
 #
 # 1. 武器数据定义
 class Weapon:
