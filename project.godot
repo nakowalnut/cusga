@@ -13,7 +13,7 @@ config_version=5
 config/name="CUSGA"
 run/main_scene="uid://nc1he8g3y4ws"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://Artassets/icon.svg"
 
 [input]
 

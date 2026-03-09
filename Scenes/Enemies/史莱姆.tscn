@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://d2p4jo23pjljy"]
 
-[ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://怪物/史莱姆/icon.png" id="1_7hvxg"]
-[ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://怪物/受击.gdshader" id="1_fg0bf"]
-[ext_resource type="Texture2D" uid="uid://bdjpi3sfwblst" path="res://怪物/史莱姆/icon-export.png" id="2_e47rn"]
+[ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://Artassets/史莱姆/icon.png" id="1_7hvxg"]
+[ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://Gdshader/受击.gdshader" id="1_fg0bf"]
+[ext_resource type="Texture2D" uid="uid://bdjpi3sfwblst" path="res://Artassets/史莱姆/icon-export.png" id="2_e47rn"]
 
 [sub_resource type="GDScript" id="GDScript_7hvxg"]
 script/source = "extends 怪物
