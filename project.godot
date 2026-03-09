@@ -12,8 +12,17 @@ config_version=5
 
 config/name="CUSGA"
 run/main_scene="uid://nc1he8g3y4ws"
-config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://Artassets/icon.svg"
+config/features=PackedStringArray("4.5", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://classes/Global/game_manager.gd"
+
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep_height"
 
 [input]
 

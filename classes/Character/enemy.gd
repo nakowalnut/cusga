@@ -1,14 +1,11 @@
 extends CharacterBase
-class_name 怪物
+class_name Enemy
 
-signal 死亡_
-
-signal 受伤_ 
 ##如需复杂逻辑,请继承覆盖
 func 受击(伤害:float):
 	take_damage(伤害)
-	if 伤害>0:受伤_.emit()
+	if 伤害>0:hurt.emit()
 
 func die():
-	死亡_.emit()
+	died.emit()
 	super.die()

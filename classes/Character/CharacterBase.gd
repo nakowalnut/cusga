@@ -1,8 +1,11 @@
 extends CharacterBody2D
 class_name CharacterBase
 
-## 基础生命值属性
+## 基础属性
+@export_group("基础属性")
 @export var max_health: float = 100.0
+@export var speed: float = 300
+
 @onready var current_health: float = max_health
 
 ## 状态定义
@@ -10,9 +13,14 @@ var is_dead: bool = false
 var is_invulnerable: bool = false
 @export var invulnerability_duration: float = 0.2
 
+## 状态机节点
+@export_group("角色状态")
+@export var c_state_machine: StateMachine
+
 ## 信号
 signal health_changed(new_health: float, max_health: float)
 signal damaged(amount: float)
+signal hurt
 signal died
 
 ## 伤害处理

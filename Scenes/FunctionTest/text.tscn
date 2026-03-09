@@ -1,20 +1,20 @@
-[gd_scene format=3 uid="uid://nc1he8g3y4ws"]
+[gd_scene load_steps=3 format=3 uid="uid://nc1he8g3y4ws"]
 
-[ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://Scenes/Player/player.tscn" id="1_1nbhh"]
-[ext_resource type="PackedScene" uid="uid://soq6wbhlf35h" path="res://Scenes/Enemies/EnemyTest.tscn" id="2_5tcnh"]
+[ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://scenes/Player/player.tscn" id="1_1nbhh"]
+[ext_resource type="PackedScene" uid="uid://soq6wbhlf35h" path="res://scenes/Enemies/EnemyTest.tscn" id="2_5tcnh"]
 
-[node name="Text" type="Node2D" unique_id=2128265186]
+[node name="Text" type="Node2D"]
 
-[node name="Player" parent="." unique_id=68082897 instance=ExtResource("1_1nbhh")]
+[node name="Player" parent="." instance=ExtResource("1_1nbhh")]
 z_index = 2
 collision_layer = 2
 collision_mask = 6
 
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1861014865]
+[node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(1.605, 1.605)
 limit_enabled = false
 
-[node name="Enemy" parent="." unique_id=649580512 instance=ExtResource("2_5tcnh")]
+[node name="Enemy" parent="." instance=ExtResource("2_5tcnh")]
 visibility_layer = 4
 z_index = 1
 position = Vector2(146, -110)

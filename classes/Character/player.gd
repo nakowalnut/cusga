@@ -1,4 +1,5 @@
 extends CharacterBase
+class_name Player
 #
 # 1. 武器数据定义
 class Weapon:
@@ -16,7 +17,6 @@ class Weapon:
 		self.animation = _anim
 
 # 2. 玩家/武器轮属性
-@export var speed: float = 300
 @export var is_auto_mode: bool = true # 是否开启自动轮换模式
 
 # 武器库 (已解锁的所有武器)
