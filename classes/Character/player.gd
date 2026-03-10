@@ -81,7 +81,7 @@ func _perform_attack() -> void:
 	
 	print("使用武器攻击: ", weapon.name)
 	
-	# --- 视觉动画：让棍子摇一摇 (使用 Tween) ---
+	# --- 视觉动画：让棍子摇一摇 ---
 	var tween = create_tween()
 	# 模拟攻击：向前伸出然后缩回 (刺击效果)，同时带点旋转抖动
 	tween.tween_property(weapon_sprite, "position:x", 15.0, 0.05).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
