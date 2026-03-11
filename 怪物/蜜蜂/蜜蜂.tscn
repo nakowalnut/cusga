@@ -1,0 +1,162 @@
+[gd_scene format=3 uid="uid://cvimabpdnnvws"]
+
+[ext_resource type="Texture2D" uid="uid://dkxtvstiw3s5s" path="res://怪物/蜜蜂/蜜蜂.png" id="1_5bbil"]
+[ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://怪物/公共/受击.gdshader" id="1_6wc6l"]
+[ext_resource type="Texture2D" uid="uid://cop75onutavfb" path="res://怪物/蜜蜂/蜜蜂_阴影.png" id="3_msi6o"]
+
+[sub_resource type="GDScript" id="GDScript_6wc6l"]
+script/source = "extends 怪物
+
+@export var 目标:Node2D
+var z=preload(\"res://怪物/蜜蜂/子弹/怪物_子弹.tscn\")
+var s:float=0
+
+var 速度:Vector2
+func _physics_process(delta: float) -> void:
+	s+=delta
+	if 目标 and s>=5:
+		s=0
+		发射子弹()
+	var a=目标.global_position-global_position
+	if a.length()>100:
+		速度=a.normalized()*50
+	else :
+		速度=Vector2.ZERO
+	velocity+=(速度-velocity)*delta*10
+	move_and_slide()
+	蜜蜂.flip_h=velocity.x<0
+@onready var 蜜蜂: Sprite2D = $蜜蜂
+
+
+		
+@onready var node: Node = $Node
+
+func 发射子弹():
+	var a:Node2D=z.instantiate()
+	a.方向=(目标.global_position-global_position).normalized()*400
+	a.global_position=global_position
+	node.add_child(a)
+
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
+
+func _on_受伤_() -> void:
+	animation_player.play(\"受击\")
+
+
+func _on_死亡_() -> void:
+	queue_free()
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_msi6o"]
+resource_local_to_scene = true
+shader = ExtResource("1_6wc6l")
+shader_parameter/a = 0.0
+shader_parameter/c = Color(1, 0.7239131, 0.56839573, 1)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_msi6o"]
+radius = 28.160255
+
+[sub_resource type="Animation" id="Animation_6wc6l"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("蜜蜂:material:shader_parameter/a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_msi6o"]
+resource_name = "受击"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("蜜蜂:material:shader_parameter/a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 1.0, 0.0, 1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sj1io"]
+_data = {
+&"RESET": SubResource("Animation_6wc6l"),
+&"受击": SubResource("Animation_msi6o")
+}
+
+[sub_resource type="Animation" id="Animation_sj1io"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("蜜蜂:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-5, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_1r4ji"]
+resource_name = "浮动"
+length = 2.0
+loop_mode = 2
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("蜜蜂:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-5, -0.25, 0, 0.6, 0.8858714, 5, -0.5666667, -0.45828104, 0, 0),
+"times": PackedFloat32Array(0, 2)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ib1ub"]
+_data = {
+&"RESET": SubResource("Animation_sj1io"),
+&"浮动": SubResource("Animation_1r4ji")
+}
+
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1802833239]
+scale = Vector2(1.5, 1.5)
+collision_layer = 4
+collision_mask = 64
+script = SubResource("GDScript_6wc6l")
+"生命" = 2.0
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1189116329]
+modulate = Color(0.55787337, 0.55787337, 0.55787337, 0.8039216)
+texture = ExtResource("3_msi6o")
+
+[node name="蜜蜂" type="Sprite2D" parent="." unique_id=493200650]
+material = SubResource("ShaderMaterial_msi6o")
+position = Vector2(0, -5)
+texture = ExtResource("1_5bbil")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=149978924]
+visible = false
+shape = SubResource("CircleShape2D_msi6o")
+
+[node name="Node" type="Node" parent="." unique_id=517071715]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2013596618]
+libraries/ = SubResource("AnimationLibrary_sj1io")
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="." unique_id=871933352]
+libraries/ = SubResource("AnimationLibrary_ib1ub")
+autoplay = &"浮动"
+
+[connection signal="受伤_" from="." to="." method="_on_受伤_"]
+[connection signal="死亡_" from="." to="." method="_on_死亡_"]

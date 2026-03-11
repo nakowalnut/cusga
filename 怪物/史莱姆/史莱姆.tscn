@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d2p4jo23pjljy"]
 
 [ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://怪物/史莱姆/icon.png" id="1_7hvxg"]
-[ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://怪物/受击.gdshader" id="1_fg0bf"]
+[ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://怪物/公共/受击.gdshader" id="1_fg0bf"]
 [ext_resource type="Texture2D" uid="uid://bdjpi3sfwblst" path="res://怪物/史莱姆/icon-export.png" id="2_e47rn"]
 
 [sub_resource type="GDScript" id="GDScript_7hvxg"]
@@ -10,7 +10,6 @@ script/source = "extends 怪物
 @export var 目标:Node2D
 
 func _ready() -> void:
-	生命=2
 	闲置()
 	
 
@@ -37,22 +36,26 @@ func _physics_process(delta: float) -> void:
 	if 目标==null:return
 	icon.flip_h= 速度.x<0
 	s+=delta
-	f.call()
+	f.call(delta)
 	velocity+=(速度-velocity)*delta*10
 	move_and_slide()
 
 func 闲置():
 	速度=Vector2.from_angle(randf()*TAU)*50
 	f=闲置_2
-func 闲置_2():
+func 闲置_2(_delta: float):
 	if s>5:
 		animation_player.play(\"冲刺\")
 		
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 func 静止():
-	f=func ():pass
+	f=func (_delta: float):pass
 func 冲刺():
-	速度=(目标.global_position-global_position).normalized()*400
+	f=冲刺_2
+func 冲刺_2(delta: float):
+	var a=(目标.global_position-global_position).normalized()*800
+	速度+=(a-速度)*delta*2
+
 
 	
 	
@@ -65,6 +68,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6ybt5"]
+resource_local_to_scene = true
 shader = ExtResource("1_fg0bf")
 shader_parameter/a = 0.0
 shader_parameter/c = Color(1, 0.75756776, 0.62100786, 1)
@@ -168,8 +172,9 @@ _data = {
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=777199836]
 collision_layer = 4
-collision_mask = 0
+collision_mask = 64
 script = SubResource("GDScript_7hvxg")
+"生命" = 2.0
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=1698345283]
 material = SubResource("ShaderMaterial_6ybt5")
@@ -177,6 +182,7 @@ position = Vector2(1, -33.000004)
 texture = ExtResource("1_7hvxg")
 
 [node name="Sprite2D" type="Sprite2D" parent="Icon" unique_id=1017362878]
+modulate = Color(0.52104485, 0.52104485, 0.52104485, 0.8627451)
 z_index = -1
 texture = ExtResource("2_e47rn")
 
