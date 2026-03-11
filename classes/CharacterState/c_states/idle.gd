@@ -1,7 +1,6 @@
 extends State
 class_name IdleState
 
-
 func enter(msg: Dictionary = {}) -> void:
 	if character.anim.sprite_frames.has_animation("fall_to_ground") or character.anim.animation != "fall_to_ground":
 		character.anim.play("idle")

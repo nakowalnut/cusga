@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bwbih2ig3yeia"]
+[gd_scene format=3 uid="uid://bwbih2ig3yeia"]
 
 [ext_resource type="Script" uid="uid://l4denkeet557" path="res://classes/Character/player.gd" id="1_cyojo"]
 [ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_1kbk7"]
@@ -17,44 +17,44 @@ size = Vector2(40, 5)
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_cvnsp"]
 size = Vector2(10, 35)
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("c_state_machine")]
+[node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("c_state_machine")]
 script = ExtResource("1_cyojo")
 c_state_machine = NodePath("StateMachine")
 metadata/_custom_type_script = "uid://l4denkeet557"
 
-[node name="PlayerCollider" type="CollisionShape2D" parent="."]
+[node name="PlayerCollider" type="CollisionShape2D" parent="." unique_id=768710490]
 shape = SubResource("CapsuleShape2D_f60y1")
 debug_color = Color(0.86940557, 0.24404117, 0.6563944, 1)
 
-[node name="AttackHitBox" type="Area2D" parent="."]
+[node name="AttackHitBox" type="Area2D" parent="." unique_id=158853122]
 
-[node name="AttackCollider" type="CollisionShape2D" parent="AttackHitBox"]
+[node name="AttackCollider" type="CollisionShape2D" parent="AttackHitBox" unique_id=1780684797]
 shape = SubResource("CircleShape2D_v0iea")
 
-[node name="WeaponHolder" type="Node2D" parent="."]
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=2146487382]
 
-[node name="CurrentWeapon" type="Sprite2D" parent="WeaponHolder"]
+[node name="CurrentWeapon" type="Sprite2D" parent="WeaponHolder" unique_id=1031291387]
 position = Vector2(22, -5)
 rotation = -1.16588
 scale = Vector2(1, 1.125)
 texture = SubResource("PlaceholderTexture2D_v0iea")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=998488247]
 texture = SubResource("PlaceholderTexture2D_cvnsp")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("character")]
+[node name="StateMachine" type="Node" parent="." unique_id=381154842 node_paths=PackedStringArray("character")]
 script = ExtResource("2_1kbk7")
 character = NodePath("..")
 metadata/_custom_type_script = "uid://dyp5hiohmgn1i"
 
-[node name="IdleState" type="Node" parent="StateMachine"]
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=1767150937]
 script = ExtResource("3_uiqp4")
 metadata/_custom_type_script = "uid://dtjunbbhi11cp"
 
-[node name="AttackState" type="Node" parent="StateMachine"]
+[node name="AttackState" type="Node" parent="StateMachine" unique_id=1551888394]
 script = ExtResource("4_hvfru")
 metadata/_custom_type_script = "uid://d3wjjimrma8i6"
 
-[node name="WalkState" type="Node" parent="StateMachine"]
+[node name="WalkState" type="Node" parent="StateMachine" unique_id=1667233740]
 script = ExtResource("5_a06cl")
 metadata/_custom_type_script = "uid://bcrvjymso8owa"

@@ -23,3 +23,12 @@
 ---其他修正---
 	1.错别字修正：
 		猜测预期取名“测试”，但英文应是test 在res://Scenes/FunctionTest/text.tscn；
+
+
+
+
+3.11
+更改enemy.gd变量名称为英文
+player.gd去除移动逻辑
+去除模式切换按钮
+所有行为交由子级节点

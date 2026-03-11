@@ -1,6 +1,15 @@
 extends CharacterBase
 class_name Player
-#
+@export var type: int = 0# 0代表玩家 (Idle/Walk 等状态依据此区分逻辑)
+@export var debug_mode: bool = false
+var toward: int = 1# 面向方向 (Walk/Hurt 等状态依赖)
+
+var hp: float:
+	get: return current_health
+	set(value): current_health = value
+	
+@onready var anim = $Sprite2D
+@onready var animation_player = $AnimationPlayer
 # 1. 武器数据定义
 class Weapon:
 	var name: String
@@ -43,27 +52,15 @@ func _ready() -> void:
 	_update_weapon_visual()
 
 func _physics_process(_delta: float) -> void:
-	# 让武器挂载点始终指向鼠标方向
-	weapon_holder.look_at(get_global_mouse_position())
-	
-	# 基础移动 (2D俯视角) - 即使在攻击中也允许移动
-	var input_vector = Input.get_vector("left", "right", "up", "down")
-	velocity = input_vector * speed
 	move_and_slide()
 	
 	# 输入处理
 	_handle_input()
 
 func _handle_input() -> void:
-	# 模式切换: 切换自动攻击/手动控制 (建议设为键盘数字键1或其他功能键)
-	if Input.is_action_just_pressed("toggle_mode"):
-		is_auto_mode = !is_auto_mode
-		var mode_str = "自动" if is_auto_mode else "手动"
-		print("当前模式已切换为: ", mode_str)
-
-	# 平A (鼠标左键)
+	# 平A 
 	if Input.is_action_just_pressed("attack"):
-		_perform_attack()
+		c_state_machine.change_state("Attack", {"weapon": weapon_wheel[current_weapon_index]})
 		
 	# 手动切换 (滚轮): 显式切换
 	if Input.is_action_just_pressed("switch_next"):
