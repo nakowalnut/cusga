@@ -1,6 +1,6 @@
 extends CharacterBase
 class_name Player
-@export var type: int = 0# 0代表玩家 (Idle/Walk 等状态依据此区分逻辑)
+
 @export var debug_mode: bool = false
 var toward: int = 1# 面向方向 (Walk/Hurt 等状态依赖)
 
@@ -10,6 +10,21 @@ var hp: float:
 	
 @onready var anim = $Sprite2D
 @onready var animation_player = $AnimationPlayer
+
+## 检查是否处于无法切换状态的硬直中
+func can_change_state() -> bool:
+	# 1. 检查是否正在播放攻击动画 
+	if animation_player.is_playing():
+		var anim_name = animation_player.current_animation
+		if anim_name.begins_with("attack"):
+			return false
+	
+	# 2. 检查基础状态机当前是否处于 受击 或 死亡 状态
+	if c_state_machine.is_in_state("Hurt") or c_state_machine.is_in_state("Died"):
+		return false
+		
+	return true
+
 # 1. 武器数据定义
 class Weapon:
 	var name: String
@@ -58,6 +73,10 @@ func _physics_process(_delta: float) -> void:
 	_handle_input()
 
 func _handle_input() -> void:
+	# 检查切换前置条件：必须没有正在攻击，且没在受击/死亡中
+	if not can_change_state(): 
+		return
+
 	# 平A 
 	if Input.is_action_just_pressed("attack"):
 		c_state_machine.change_state("Attack", {"weapon": weapon_wheel[current_weapon_index]})
