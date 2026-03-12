@@ -2,26 +2,23 @@ extends State
 class_name IdleState
 
 func enter(msg: Dictionary = {}) -> void:
-	if character.anim.sprite_frames.has_animation("fall_to_ground") or character.anim.animation != "fall_to_ground":
-		character.anim.play("idle")
+	pass
+	#if character.anim.sprite_frames.has_animation("fall_to_ground") or character.anim.animation != "fall_to_ground":
+		#character.anim.play("idle")
 
 func exit() -> void:
 	pass
 
 func process(delta: float) -> void:
 	character.velocity.x = 0
-	match character.type:
-		0:
+	character.velocity.y = 0
+	#match character.type:
+	if character is Player:
 			# 检查是否应该切换到移动状态
-			if Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right"):
+			if Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right") or Input.is_action_pressed("up") or Input.is_action_pressed("down"):
 				state_machine.change_state("Walk")
-				
-			if Input.is_action_just_pressed("pounce"):
-				state_machine.change_state("Pounce")
-				
-			if Input.is_action_just_pressed("fire"):
-				state_machine.change_state("Fire")
-		1:
+
+	else:
 			if character.attack_cooldown.is_stopped():
 				if character.target_can_attack:
 					character.attack_cooldown.start()

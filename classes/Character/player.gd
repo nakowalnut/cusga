@@ -8,7 +8,7 @@ var hp: float:
 	get: return current_health
 	set(value): current_health = value
 	
-@onready var anim = $Sprite2D
+@onready var anim = $AnimatedSprite2D
 @onready var animation_player = $AnimationPlayer
 
 ## 检查是否处于无法切换状态的硬直中
@@ -81,16 +81,19 @@ func _handle_input() -> void:
 	# 检查切换前置条件：必须没有正在攻击，且没在受击/死亡中
 	if not can_change_state(): 
 		return
-
+	
 	# 平A 
 	if Input.is_action_just_pressed("attack"):
 		c_state_machine.change_state("Attack", {"weapon": weapon_wheel[current_weapon_index]})
+		print("attack")
 		
 	# 手动切换 (滚轮): 显式切换
 	if Input.is_action_just_pressed("switch_next"):
 		_switch_weapon(1)
 	elif Input.is_action_just_pressed("switch_prev"):
 		_switch_weapon(-1)
+		
+
 
 # 核心逻辑：执行攻击并自动轮换
 func _perform_attack() -> void:
@@ -102,14 +105,7 @@ func _perform_attack() -> void:
 	
 	print("使用武器攻击: ", weapon.name)
 	
-	# --- 视觉动画：让棍子摇一摇 ---
-	var tween = create_tween()
-	# 模拟攻击：向前伸出然后缩回 (刺击效果)，同时带点旋转抖动
-	tween.tween_property(weapon_sprite, "position:x", 15.0, 0.05).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property(weapon_sprite, "rotation_degrees", 15.0, 0.05)
-	
-	tween.tween_property(weapon_sprite, "position:x", 0.0, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	tween.parallel().tween_property(weapon_sprite, "rotation_degrees", 0.0, 0.15)
+	animation_player.play("Attack1")
 	
 	if is_auto_mode:
 		current_weapon_index = (current_weapon_index + 1) % weapon_wheel.size()
@@ -122,6 +118,8 @@ func _perform_attack() -> void:
 	# 模拟攻击硬直结束
 	await get_tree().create_timer(0.3).timeout
 	is_attacking = false
+	c_state_machine.change_state("Idle")
+
 
 # 手动切换逻辑
 func _switch_weapon(dir: int) -> void:
