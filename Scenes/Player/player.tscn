@@ -58,3 +58,7 @@ metadata/_custom_type_script = "uid://d3wjjimrma8i6"
 [node name="WalkState" type="Node" parent="StateMachine" unique_id=1667233740]
 script = ExtResource("5_a06cl")
 metadata/_custom_type_script = "uid://bcrvjymso8owa"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1710193980]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1687143012]
