@@ -73,6 +73,11 @@ func _physics_process(_delta: float) -> void:
 	_handle_input()
 
 func _handle_input() -> void:
+	if Input.is_action_just_pressed("toggle_mode"):
+		is_auto_mode = !is_auto_mode
+		var mode_type = "自动" if is_auto_mode else "手动"
+		print("当前模式切换为" + mode_type)
+		
 	# 检查切换前置条件：必须没有正在攻击，且没在受击/死亡中
 	if not can_change_state(): 
 		return
