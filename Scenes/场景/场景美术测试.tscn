@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://Scenes/player.tscn" id="2_idaft"]
 [ext_resource type="PackedScene" uid="uid://cvimabpdnnvws" path="res://怪物/蜜蜂/蜜蜂.tscn" id="3_nfw7d"]
 [ext_resource type="PackedScene" uid="uid://d2p4jo23pjljy" path="res://怪物/史莱姆/史莱姆.tscn" id="4_nfw7d"]
+[ext_resource type="AudioStream" uid="uid://b33xlw1pel3ko" path="res://Scenes/场景/ashermusiccreator-fast-lane-love-234612.mp3" id="5_4yl7h"]
 
 [node name="Node2D" type="Node2D" unique_id=1622607184]
 
@@ -23,6 +24,7 @@ position = Vector2(820, 526)
 position = Vector2(567, 244)
 
 [node name="Camera2D" type="Camera2D" parent="Node2D/Player" unique_id=89208304]
+zoom = Vector2(0.5, 0.5)
 
 [node name="CharacterBody2D" parent="Node2D" unique_id=1802833239 node_paths=PackedStringArray("目标") instance=ExtResource("3_nfw7d")]
 position = Vector2(410, -56)
@@ -30,3 +32,8 @@ position = Vector2(410, -56)
 
 [node name="CharacterBody2D2" parent="Node2D" unique_id=777199836 node_paths=PackedStringArray("目标") instance=ExtResource("4_nfw7d")]
 "目标" = NodePath("../Player")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=620559120]
+stream = ExtResource("5_4yl7h")
+volume_db = -14.766
+autoplay = true
