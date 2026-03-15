@@ -7,7 +7,12 @@ class_name CharacterBase
 @export var speed: float = 300
 
 @onready var current_health: float = max_health
+var toward: int = 1# 面向方向 (Walk/Hurt 等状态依赖)
 
+var hp: float:
+	get: return current_health
+	set(value): current_health = value
+	
 ## 状态定义
 var is_dead: bool = false
 var is_invulnerable: bool = false

@@ -2,12 +2,7 @@ extends CharacterBase
 class_name Player
 
 @export var debug_mode: bool = false
-var toward: int = 1# 面向方向 (Walk/Hurt 等状态依赖)
 
-var hp: float:
-	get: return current_health
-	set(value): current_health = value
-	
 @onready var anim = $AnimatedSprite2D
 @onready var animation_player = $AnimationPlayer
 
@@ -81,7 +76,11 @@ func _handle_input() -> void:
 	# 检查切换前置条件：必须没有正在攻击，且没在受击/死亡中
 	if not can_change_state(): 
 		return
-	
+	match c_state_machine.get_current_state_name():
+		"Idle":
+			pass
+		"Attack":
+			return
 	# 平A 
 	if Input.is_action_just_pressed("attack"):
 		c_state_machine.change_state("Attack", {"weapon": weapon_wheel[current_weapon_index]})
