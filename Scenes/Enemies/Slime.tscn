@@ -1,64 +1,9 @@
 [gd_scene format=3 uid="uid://d2p4jo23pjljy"]
 
-[ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://Assets/images/characters/slime/icon.png" id="1_7hvxg"]
+[ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://assets/images/characters/slime/icon.png" id="1_7hvxg"]
 [ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://shaders/受击.gdshader" id="1_fg0bf"]
-[ext_resource type="Texture2D" uid="uid://bdjpi3sfwblst" path="res://Assets/images/characters/slime/icon-export.png" id="2_e47rn"]
-
-[sub_resource type="GDScript" id="GDScript_7hvxg"]
-script/source = "extends Enemy
-
-@export var 目标:Node2D
-
-func _ready() -> void:
-	current_health=2
-	闲置()
-	
-
-@onready var animation_player_2: AnimationPlayer = $Icon/AnimationPlayer
-
-func _on_受伤_() -> void:
-	animation_player_2.play(\"受击\")
-func _on_死亡() -> void:
-	queue_free()
-
-
-
-
-var 速度:Vector2
-var s:float ##周期
-var f:Callable:
-	set(a):
-		s=0
-		f=a
-		
-@onready var icon: Sprite2D = $Icon
-
-func _physics_process(delta: float) -> void:
-	if 目标==null:return
-	icon.flip_h= 速度.x<0
-	s+=delta
-	f.call()
-	velocity+=(速度-velocity)*delta*10
-	move_and_slide()
-
-func 闲置():
-	速度=Vector2.from_angle(randf()*TAU)*50
-	f=闲置_2
-func 闲置_2():
-	if s>5:
-		animation_player.play(\"冲刺\")
-		
-@onready var animation_player: AnimationPlayer = $AnimationPlayer
-func 静止():
-	f=func ():pass
-func 冲刺():
-	速度=(目标.global_position-global_position).normalized()*400
-
-
-
-func _on_area_2d_body_entered(body: Node2D) -> void:
-	pass # Replace with function body.
-"
+[ext_resource type="Script" uid="uid://u4qbyupuxcf3" path="res://classes/Character/enemy.gd" id="1_ua82p"]
+[ext_resource type="Texture2D" uid="uid://bdjpi3sfwblst" path="res://assets/images/characters/slime/icon-export.png" id="2_e47rn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6ybt5"]
 shader = ExtResource("1_fg0bf")
@@ -68,10 +13,12 @@ shader_parameter/c = Color(1, 0.75756776, 0.62100786, 1)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7hvxg"]
 size = Vector2(87, 72)
 
-[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1621836730]
+[node name="Slime" type="CharacterBody2D" unique_id=184754201]
 collision_layer = 4
 collision_mask = 0
-script = SubResource("GDScript_7hvxg")
+script = ExtResource("1_ua82p")
+max_health = 25.0
+metadata/_custom_type_script = "uid://u4qbyupuxcf3"
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=667542661]
 material = SubResource("ShaderMaterial_6ybt5")
@@ -99,5 +46,3 @@ collision_mask = 2
 visible = false
 position = Vector2(0.5, -38.000004)
 shape = SubResource("RectangleShape2D_7hvxg")
-
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

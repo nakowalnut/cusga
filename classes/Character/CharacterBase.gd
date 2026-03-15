@@ -58,7 +58,7 @@ func die():
 	is_dead = true
 	emit_signal("died")
 	# 可以在子类中重写此方法以实现具体的死亡动画或效果
-	queue_free()
+	#queue_free()
 
 ## 获取生命百分比
 func get_health_percent() -> float:

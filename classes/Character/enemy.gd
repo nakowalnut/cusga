@@ -5,7 +5,3 @@ class_name Enemy
 func Hit(damage:float):
 	take_damage(damage)
 	if damage>0:hurt.emit()
-
-func die():
-	died.emit()
-	super.die()
