@@ -1,6 +1,6 @@
 extends CharacterBody2D
 class_name CharacterBase
-
+@export var debug_mode:bool = false
 ## 基础属性
 @export_group("基础属性")
 @export var max_health: float = 100.0
@@ -14,14 +14,28 @@ var is_invulnerable: bool = false
 @export var invulnerability_duration: float = 0.2
 
 ## 状态机节点
-@export_group("角色状态")
-@export var c_state_machine: StateMachine
-
+@export_group("附加组件")
+@export var c_state_machine: StateMachine ## 状态机节点
+@export var field_of_view:FieldOfView2D ## 视线节点
+@onready var attack_colldown_timer:Timer = Timer.new()
 ## 信号
 signal health_changed(new_health: float, max_health: float)
 signal damaged(amount: float)
 signal hurt
 signal died
+
+func _ready() -> void:
+	if field_of_view != null:
+		if debug_mode:
+			field_of_view.body_entered_vision.connect(on_body_entered_vision)
+			field_of_view.body_exited_vision.connect(on_body_exited_vision)
+			print("初始化",self,"的视野模块")
+			
+func on_body_entered_vision(body:Node2D):
+	print(body,"出现在",self,"的视野中")
+
+func on_body_exited_vision(body:Node2D):
+	print(body,"离开了",self,"的视野")
 
 ## 伤害处理
 func take_damage(amount: float):
@@ -53,7 +67,17 @@ func die():
 	is_dead = true
 	emit_signal("died")
 	# 可以在子类中重写此方法以实现具体的死亡动画或效果
+<<<<<<< Updated upstream
 	queue_free()
+=======
+	#queue_free()
+	
+## 攻击前摇
+func _perform_attack():
+	pass
+	
+
+>>>>>>> Stashed changes
 
 ## 获取生命百分比
 func get_health_percent() -> float:

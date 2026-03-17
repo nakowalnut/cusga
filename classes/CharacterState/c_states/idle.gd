@@ -16,6 +16,7 @@ func process(delta: float) -> void:
 			# 检查是否应该切换到移动状态
 			if Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right"):
 				state_machine.change_state("Walk")
+<<<<<<< Updated upstream
 				
 			if Input.is_action_just_pressed("pounce"):
 				state_machine.change_state("Pounce")
@@ -26,17 +27,24 @@ func process(delta: float) -> void:
 			if character.attack_cooldown.is_stopped():
 				if character.target_can_attack:
 					character.attack_cooldown.start()
+=======
+
+	else:
+			if character.attack_colldown_timer.is_stopped():
+				#if character.target_can_attack:
+					character.attack_colldown_timer.start()
+>>>>>>> Stashed changes
 					state_machine.change_state("Attack",{"anim" : 0})
 
-			if character.act_cooldown.is_stopped():
-				var f = (GameManager.player.position.x - character.position.x) > 0
-				character.character_filp(f)
+			#if character.act_cooldown.is_stopped():
+				#var f = (GameManager.player.position.x - character.position.x) > 0
+				#character.character_filp(f)
 				
-			if character.need_move_attack:
-				character.act_cooldown.start()
-				if state_machine.get_current_state_name()  == "Idle":
-					state_machine.change_state("Walk")
-					character.need_move_attack = false
-				
+			#if character.need_move_attack:
+				#character.act_cooldown.start()
+				#if state_machine.get_current_state_name()  == "Idle":
+					#state_machine.change_state("Walk")
+					#character.need_move_attack = false
+				#
 func get_state_name() -> String:
 	return "Idle"

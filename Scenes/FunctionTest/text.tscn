@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://nc1he8g3y4ws"]
+[gd_scene load_steps=4 format=3 uid="uid://nc1he8g3y4ws"]
 
 [ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://scenes/Player/player.tscn" id="1_1nbhh"]
 [ext_resource type="PackedScene" uid="uid://soq6wbhlf35h" path="res://scenes/Enemies/EnemyTest.tscn" id="2_5tcnh"]
+[ext_resource type="PackedScene" uid="uid://d2p4jo23pjljy" path="res://scenes/Enemies/Slime.tscn" id="3_d3f0n"]
 
 [node name="Text" type="Node2D"]
 
@@ -19,3 +20,6 @@ visibility_layer = 4
 z_index = 1
 position = Vector2(146, -110)
 scale = Vector2(0.56, 0.56)
+
+[node name="Slime" parent="." instance=ExtResource("3_d3f0n")]
+position = Vector2(-122, -49)
