@@ -20,50 +20,42 @@ func can_change_state() -> bool:
 		
 	return true
 
-# 1. 武器数据定义
-class Weapon:
-	var name: String
-	var damage: int
-	var attack_range: float
-	var animation: String
-	var color: Color # 新增：用于演示切换的颜色
-	
-	func _init(_name: String, _color: Color, _damage: int, _range: float, _anim: String):
-		self.name = _name
-		self.color = _color
-		self.damage = _damage
-		self.attack_range = _range
-		self.animation = _anim
-
-# 2. 玩家/武器轮属性
-
-# 武器库 (已解锁的所有武器)
-var all_weapons = {
-	"sword": Weapon.new("长剑", Color.WHITE, 10, 50.0, "attack_sword"),
-	"spear": Weapon.new("长矛", Color.RED, 8, 80.0, "attack_spear"),
-	"dagger": Weapon.new("短刀", Color.BLUE, 15, 30.0, "attack_dagger"),
-	"bow": Weapon.new("弓箭", Color.GREEN, 5, 200.0, "attack_bow"),
-	"Hammer": Weapon.new("锤", Color.BLACK, 5, 200.0, "attack_hammer")
-}
+# 武器库 (实体的 Node 节点)
+var all_weapons: Dictionary = {}
 
 # 当前武器轮 (玩家可自定义顺序)
-var weapon_wheel: Array[String] = ["sword", "spear", "dagger", "bow", "Hammer"]
+var weapon_wheel: Array[String] = ["sword", "spear", "dagger", "bow", "hammer"]
 var current_weapon_index: int = 0
 var is_attacking: bool = false
+var current_weapon_node: WeaponBase = null
 
 # 演示用节点引用
 @onready var weapon_holder = $WeaponHolder
-@onready var weapon_sprite = $WeaponHolder/CurrentWeapon # 这个 Sprite 的 Texture 设置为一个白色条状图片（棍子）
+@onready var weapon_sprite = $WeaponHolder/CurrentWeapon 
 @onready var weapon_hitbox = $WeaponHolder/CurrentWeapon/HitBox
 @onready var attack_collider = $AttackHitBox/AttackCollider
 
 func _ready() -> void:
+	_init_weapons()
 	# 初始更新一次视觉
 	_update_weapon_visual()
 	# 连接武器自己的攻击判定信号
 	weapon_hitbox.area_entered.connect(_on_weapon_hitbox_area_entered)
 	weapon_hitbox.body_entered.connect(_on_weapon_hitbox_body_entered)
 	weapon_hitbox.monitoring = false
+
+func _init_weapons() -> void:
+	# 实例化所有武器，并放入节点树成为子节点，这样就可以使用 Timer 或者 process 逻辑
+	all_weapons["sword"] = SwordWeapon.new()
+	all_weapons["spear"] = SpearWeapon.new()
+	all_weapons["dagger"] = DaggerWeapon.new()
+	all_weapons["bow"] = BowWeapon.new()
+	all_weapons["hammer"] = HammerWeapon.new()
+	
+	for key in all_weapons:
+		var wp = all_weapons[key]
+		wp.player = self
+		weapon_holder.add_child(wp)
 
 func _physics_process(_delta: float) -> void:
 	move_and_slide()
@@ -82,11 +74,15 @@ func _rotate_weapon_to_mouse() -> void:
 
 func _on_weapon_hitbox_area_entered(area: Area2D) -> void:
 	if weapon_hitbox.monitoring and area.get_parent() is Enemy:
-		print("攻击到了！")
+		if is_instance_valid(current_weapon_node):
+			current_weapon_node.on_hit(area.get_parent())
+		print("攻击到了(Area)！", area.get_parent().name)
 
 func _on_weapon_hitbox_body_entered(body: Node2D) -> void:
 	if weapon_hitbox.monitoring and body is Enemy:
-		print("攻击到了！")
+		if is_instance_valid(current_weapon_node):
+			current_weapon_node.on_hit(body)
+		print("攻击到了(Body)！", body.name)
 
 func _handle_input() -> void:
 
@@ -117,6 +113,11 @@ func _handle_input() -> void:
 func _switch_and_attack(new_index: int) -> void:
 	if new_index < 0 or new_index >= weapon_wheel.size(): return
 	var prev_weapon = weapon_wheel[current_weapon_index]
+	
+	# 如果切换武器，先让旧武器结算连携技并重置累积次数
+	if current_weapon_index != new_index and is_instance_valid(current_weapon_node):
+		current_weapon_node.on_switch_out()
+		
 	current_weapon_index = new_index
 	var new_weapon = weapon_wheel[current_weapon_index]
 	
@@ -136,6 +137,7 @@ func _update_weapon_visual() -> void:
 	
 	var current_weapon_id = weapon_wheel[current_weapon_index]
 	var weapon = all_weapons[current_weapon_id]
+	current_weapon_node = weapon
 	
 	# 通过调制颜色 (Self Modulate) 来模拟武器切换
 	if weapon_sprite:

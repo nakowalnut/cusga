@@ -21,8 +21,12 @@ func enter(msg: Dictionary = {}) -> void:
 		# 可以在此处执行连携动画播放逻辑
 		character.animation_player.play("Attack1") 
 	else:
-		print("使用武器普通攻击: ", weapon.name)
+		print("使用武器普通攻击: ", weapon.weapon_name)
 		character.animation_player.play("Attack1") 
+	
+	# 调用武器子类的特定攻击逻辑（位移、射箭等）
+	var mouse_pos = character.get_global_mouse_position()
+	weapon.attack(mouse_pos)
 	
 	character._update_weapon_visual()
 	character.set_weapon_hitbox_active(true)
@@ -49,24 +53,23 @@ func exit() -> void:
 
 func physics_process(delta: float) -> void:
 	if character is Player:
-		if Input.get_axis("move_left", "move_right") != 0:
-			character.toward = int(Input.get_axis("move_left", "move_right"))
-			# 更新移动逻辑
-			#if character.run:
-				#character.velocity.x = character.toward * character.speed * 3
-				#character.anim.play("run")
-			#else:
-				#character.velocity.x = character.toward * character.speed
-				#character.anim.play("walk")
-			character.velocity.x = character.toward * character.speed
-			character.anim.play("walk")
-		if Input.get_axis("up", "down") != 0:
-			character.velocity.y = int(Input.get_axis("up", "down")) * character.speed
-		if Input.get_axis("move_left", "move_right") == 0 and Input.get_axis("up", "down") == 0:
-
-			if character.hp > 0:
-				character.velocity.x = 0
-				character.velocity.y = 0
+		var current_weapon_node = character.current_weapon_node
+		var is_bow = current_weapon_node != null and current_weapon_node.weapon_name == "弓"
+		
+		if is_bow:
+			# 弓箭攻击时必定无法移动
+			character.velocity = Vector2.ZERO
+		else:
+			# 其它武器支持普通移动（或者根据你的游戏设定修改）
+			if Input.get_axis("move_left", "move_right") != 0:
+				character.toward = int(Input.get_axis("move_left", "move_right"))
+				character.velocity.x = character.toward * character.speed
+				character.anim.play("walk")
+			elif Input.get_axis("up", "down") != 0:
+				character.velocity.y = int(Input.get_axis("up", "down")) * character.speed
+			else:
+				if character.hp > 0:
+					character.velocity = Vector2.ZERO
 
 	# 播放攻击动画，停止移动
 
