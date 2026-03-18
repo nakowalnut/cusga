@@ -1,27 +1,6 @@
 extends CharacterBase
 class_name Player
-<<<<<<< Updated upstream
 #
-=======
-
-@onready var anim = $AnimatedSprite2D
-@onready var animation_player = $AnimationPlayer
-
-## 检查是否处于无法切换状态的硬直中
-func can_change_state() -> bool:
-	# 1. 检查是否正在播放攻击动画 
-	if animation_player.is_playing():
-		var anim_name = animation_player.current_animation
-		if anim_name.begins_with("attack"):
-			return false
-	
-	# 2. 检查基础状态机当前是否处于 受击 或 死亡 状态
-	if c_state_machine.is_in_state("Hurt") or c_state_machine.is_in_state("Died"):
-		return false
-		
-	return true
-
->>>>>>> Stashed changes
 # 1. 武器数据定义
 class Weapon:
 	var name: String

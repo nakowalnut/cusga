@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 [gd_scene load_steps=10 format=3 uid="uid://bwbih2ig3yeia"]
-=======
-[gd_scene load_steps=11 format=3 uid="uid://bwbih2ig3yeia"]
->>>>>>> Stashed changes
 
 [ext_resource type="Script" uid="uid://l4denkeet557" path="res://classes/Character/player.gd" id="1_cyojo"]
 [ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_1kbk7"]
@@ -21,11 +17,6 @@ size = Vector2(40, 5)
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_cvnsp"]
 size = Vector2(10, 35)
 
-<<<<<<< Updated upstream
-=======
-[sub_resource type="SpriteFrames" id="SpriteFrames_htcer"]
-
->>>>>>> Stashed changes
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("c_state_machine")]
 script = ExtResource("1_cyojo")
 c_state_machine = NodePath("StateMachine")
@@ -67,11 +58,3 @@ metadata/_custom_type_script = "uid://d3wjjimrma8i6"
 [node name="WalkState" type="Node" parent="StateMachine"]
 script = ExtResource("5_a06cl")
 metadata/_custom_type_script = "uid://bcrvjymso8owa"
-<<<<<<< Updated upstream
-=======
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_htcer")
->>>>>>> Stashed changes
