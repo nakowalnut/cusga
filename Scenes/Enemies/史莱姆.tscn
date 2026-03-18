@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://d2p4jo23pjljy"]
+[gd_scene format=3 uid="uid://c1nmb4blwnb77"]
 
 [ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://assets/images/characters/slime/icon.png" id="1_7hvxg"]
 [ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://shaders/受击.gdshader" id="1_fg0bf"]
@@ -68,34 +68,34 @@ shader_parameter/c = Color(1, 0.75756776, 0.62100786, 1)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7hvxg"]
 size = Vector2(87, 72)
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1331235482]
 collision_layer = 4
 collision_mask = 0
 script = SubResource("GDScript_7hvxg")
 
-[node name="Icon" type="Sprite2D" parent="."]
+[node name="Icon" type="Sprite2D" parent="." unique_id=2012448032]
 material = SubResource("ShaderMaterial_6ybt5")
 position = Vector2(1, -33.000004)
 texture = ExtResource("1_7hvxg")
 
-[node name="Sprite2D" type="Sprite2D" parent="Icon"]
+[node name="Sprite2D" type="Sprite2D" parent="Icon" unique_id=1819338496]
 z_index = -1
 texture = ExtResource("2_e47rn")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Icon"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Icon" unique_id=575329189]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1366263769]
 visible = false
 position = Vector2(0.5, -38.000004)
 shape = SubResource("RectangleShape2D_7hvxg")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=121692303]
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=317869773]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1221179045]
 visible = false
 position = Vector2(0.5, -38.000004)
 shape = SubResource("RectangleShape2D_7hvxg")

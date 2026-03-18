@@ -1,8 +1,5 @@
 extends CharacterBase
 class_name Player
-<<<<<<< Updated upstream
-#
-=======
 
 @onready var anim = $AnimatedSprite2D
 @onready var animation_player = $AnimationPlayer
@@ -21,7 +18,6 @@ func can_change_state() -> bool:
 		
 	return true
 
->>>>>>> Stashed changes
 # 1. 武器数据定义
 class Weapon:
 	var name: String

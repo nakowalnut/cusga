@@ -14,27 +14,15 @@ func process(delta: float) -> void:
 	match character.type:
 		0:
 			# 检查是否应该切换到移动状态
-			if Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right"):
+			if Input.is_action_pressed("left") or Input.is_action_pressed("right"):
 				state_machine.change_state("Walk")
-<<<<<<< Updated upstream
 				
-			if Input.is_action_just_pressed("pounce"):
-				state_machine.change_state("Pounce")
-				
-			if Input.is_action_just_pressed("fire"):
-				state_machine.change_state("Fire")
-		1:
-			if character.attack_cooldown.is_stopped():
-				if character.target_can_attack:
-					character.attack_cooldown.start()
-=======
 
-	else:
+		1:
 			if character.attack_colldown_timer.is_stopped():
 				#if character.target_can_attack:
-					character.attack_colldown_timer.start()
->>>>>>> Stashed changes
-					state_machine.change_state("Attack",{"anim" : 0})
+				character.attack_colldown_timer.start()
+				state_machine.change_state("Attack",{"anim" : 0})
 
 			#if character.act_cooldown.is_stopped():
 				#var f = (GameManager.player.position.x - character.position.x) > 0

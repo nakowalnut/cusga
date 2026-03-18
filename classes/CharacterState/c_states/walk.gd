@@ -9,24 +9,16 @@ func exit() -> void:
 
 func physics_process(_delta: float) -> void:
 	if character.type == 0:
-		if Input.get_axis("move_left", "move_right") != 0:
-			character.toward = int(Input.get_axis("move_left", "move_right"))
+		if Input.get_axis("left", "right") != 0:
+			character.toward = int(Input.get_axis("left", "right"))
 			# 更新移动逻辑
-			if character.run:
-				character.velocity.x = character.toward * character.speed * 3
-				character.anim.play("run")
-			else:
-				character.velocity.x = character.toward * character.speed
-				character.anim.play("walk")
+			character.velocity.x = character.toward * character.speed
+			character.anim.play("walk")
 		else:
 			if character.hp > 0:
 				state_machine.change_state("Idle")
 			
-		if Input.is_action_just_pressed("pounce"):
-			state_machine.change_state("Pounce")
-		
-		if Input.is_action_just_pressed("fire"):
-			state_machine.change_state("Fire")
+
 	else:
 		if character.target_character.position.y - 100 < character. position.y:
 			character.velocity.y = -character.speed

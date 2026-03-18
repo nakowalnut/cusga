@@ -8,16 +8,23 @@ class_name CharacterBase
 
 @onready var current_health: float = max_health
 
+var hp: float:
+	get:
+		return current_health
+	set(value):
+		current_health = value
+
 ## 状态定义
 var is_dead: bool = false
 var is_invulnerable: bool = false
 @export var invulnerability_duration: float = 0.2
-
+var toward: int = 0
 ## 状态机节点
 @export_group("附加组件")
 @export var c_state_machine: StateMachine ## 状态机节点
 @export var field_of_view:FieldOfView2D ## 视线节点
 @onready var attack_colldown_timer:Timer = Timer.new()
+@export var type: int = 0
 ## 信号
 signal health_changed(new_health: float, max_health: float)
 signal damaged(amount: float)
@@ -67,17 +74,11 @@ func die():
 	is_dead = true
 	emit_signal("died")
 	# 可以在子类中重写此方法以实现具体的死亡动画或效果
-<<<<<<< Updated upstream
 	queue_free()
-=======
-	#queue_free()
-	
+
 ## 攻击前摇
 func _perform_attack():
 	pass
-	
-
->>>>>>> Stashed changes
 
 ## 获取生命百分比
 func get_health_percent() -> float:
