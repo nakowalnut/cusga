@@ -54,18 +54,39 @@ var is_attacking: bool = false
 # 演示用节点引用
 @onready var weapon_holder = $WeaponHolder
 @onready var weapon_sprite = $WeaponHolder/CurrentWeapon # 这个 Sprite 的 Texture 设置为一个白色条状图片（棍子）
-@onready var attack_hitbox = $AttackHitBox
+@onready var weapon_hitbox = $WeaponHolder/CurrentWeapon/HitBox
 @onready var attack_collider = $AttackHitBox/AttackCollider
 
 func _ready() -> void:
 	# 初始更新一次视觉
 	_update_weapon_visual()
+	# 连接武器自己的攻击判定信号
+	weapon_hitbox.area_entered.connect(_on_weapon_hitbox_area_entered)
+	weapon_hitbox.body_entered.connect(_on_weapon_hitbox_body_entered)
+	weapon_hitbox.monitoring = false
 
 func _physics_process(_delta: float) -> void:
 	move_and_slide()
 	
+	# 让武器支架指向鼠标
+	_rotate_weapon_to_mouse()
+	
 	# 输入处理
 	_handle_input()
+
+func _rotate_weapon_to_mouse() -> void:
+	if weapon_holder:
+		var mouse_pos = get_global_mouse_position()
+		weapon_holder.look_at(mouse_pos)
+
+
+func _on_weapon_hitbox_area_entered(area: Area2D) -> void:
+	if weapon_hitbox.monitoring and area.get_parent() is Enemy:
+		print("攻击到了！")
+
+func _on_weapon_hitbox_body_entered(body: Node2D) -> void:
+	if weapon_hitbox.monitoring and body is Enemy:
+		print("攻击到了！")
 
 func _handle_input() -> void:
 
@@ -120,6 +141,11 @@ func _update_weapon_visual() -> void:
 	if weapon_sprite:
 		weapon_sprite.self_modulate = weapon.color
 	
+	# 同步攻击判定范围的掩码和层，确保能检测到敌人 (Layer 3/Collision Mask 4)
+	if weapon_hitbox:
+		weapon_hitbox.collision_mask = 4 
+		weapon_hitbox.collision_layer = 0 # 攻击判定不需要被别人撞，只需要去撞别人
+	
 	# 如果有攻击判定，可以在这里调整碰撞盒大小模拟不同武器长度
 	# attack_collider.shape.extents = Vector2(weapon.attack_range, 10)
 
@@ -128,3 +154,8 @@ func _update_weapon_visual() -> void:
 func update_weapon_sequence(new_sequence: Array[String]) -> void:
 	weapon_wheel = new_sequence
 	current_weapon_index = 0
+
+
+func set_weapon_hitbox_active(active: bool) -> void:
+	if weapon_hitbox:
+		weapon_hitbox.monitoring = active

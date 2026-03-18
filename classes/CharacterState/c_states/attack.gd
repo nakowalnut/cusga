@@ -25,6 +25,7 @@ func enter(msg: Dictionary = {}) -> void:
 		character.animation_player.play("Attack1") 
 	
 	character._update_weapon_visual()
+	character.set_weapon_hitbox_active(true)
 	
 	# 如果有传入anim的示例，可保留这部分自定义逻辑
 	match msg.get("anim"):
@@ -38,11 +39,13 @@ func enter(msg: Dictionary = {}) -> void:
 	# 确保还在 Attack 状态才切回 Idle，防止中途被受击等状态打断
 	if character.c_state_machine.get_current_state_name() == "Attack":
 		character.is_attacking = false
+		character.set_weapon_hitbox_active(false)
 		character.c_state_machine.change_state("Idle")
 
 func exit() -> void:
 	if character is Player:
 		character.is_attacking = false
+		character.set_weapon_hitbox_active(false)
 
 func physics_process(delta: float) -> void:
 	if character is Player:
@@ -60,7 +63,6 @@ func physics_process(delta: float) -> void:
 		if Input.get_axis("up", "down") != 0:
 			character.velocity.y = int(Input.get_axis("up", "down")) * character.speed
 		if Input.get_axis("move_left", "move_right") == 0 and Input.get_axis("up", "down") == 0:
-			print(character.velocity)
 
 			if character.hp > 0:
 				character.velocity.x = 0
