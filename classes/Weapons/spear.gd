@@ -27,4 +27,4 @@ func on_hit(enemy: Node) -> void:
 				print("长矛眩晕了敌人！当前眩晕次数:", current_combo)
 
 func execute_synergy() -> void:
-	print("执行矛连携技！")
+	print("矛连携技使出")

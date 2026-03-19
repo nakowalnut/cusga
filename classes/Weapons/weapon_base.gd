@@ -58,7 +58,7 @@ func get_nearby_enemies(radius: float) -> Array:
 	var params = PhysicsShapeQueryParameters2D.new()
 	params.shape = shape
 	params.transform = player.global_transform
-	params.collision_mask = 4 # 假设敌人是在 Layer 3 (掩码为 4)
+
 	
 	var results = space_state.intersect_shape(params)
 	for res in results:

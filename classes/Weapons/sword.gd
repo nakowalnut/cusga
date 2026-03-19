@@ -21,10 +21,5 @@ func on_hit(enemy: Node) -> void:
 		add_combo(1)
 
 func execute_synergy() -> void:
-	print("执行长剑连携技：对附近1-3名敌人造成伤害")
-	var enemies = get_nearby_enemies(150.0) # 半径150的圆内
-	var target_count = min(3, enemies.size())
-	for i in range(target_count):
-		if is_instance_valid(enemies[i]):
-			enemies[i].take_damage(synergy_damage)
-			# 这里可以生成一个剑气特效节点
+	print("长剑连携技使出")
+	# 具体的连携效果逻辑占位，后续根据视觉资源补充

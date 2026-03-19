@@ -21,5 +21,5 @@ func on_hit(enemy: Node) -> void:
 		enemy.take_damage(m_damage)
 
 func execute_synergy() -> void:
-	print("执行锤子连携技！")
-	# 连携技具体效果
+	print("锤子连携技使出")
+

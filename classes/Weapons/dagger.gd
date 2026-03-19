@@ -3,6 +3,7 @@ class_name DaggerWeapon
 
 @export var displacement_speed: float = 600.0
 @export var combo_timeout: float = 3.0
+@export var delay_time: float = 0.1
 var combo_timer: Timer
 
 func _init() -> void:
@@ -33,19 +34,39 @@ func attack(target_pos: Vector2) -> void:
 	params.collide_with_bodies = true
 	
 	var results = space_state.intersect_point(params)
-	var has_enemy = false
+	var target_enemy: Node = null
 	for res in results:
-		if res.collider and (res.collider is Enemy or res.collider.get_parent() is Enemy):
-			has_enemy = true
+		if res.collider and (res.collider is Enemy):
+			target_enemy = res.collider
+			break
+		elif res.collider and (res.collider.get_parent() is Enemy):
+			target_enemy = res.collider.get_parent()
 			break
 			
-	if has_enemy:
-		var dir = (mouse_pos - player.global_position).normalized()
-		player.velocity = dir * displacement_speed
-		# 短剑特有的前冲，状态机可能在下一帧重置velocity，可以在状态机/特定动画内持续
-		print("短剑：目标处有敌人，产生位移突刺")
+	if target_enemy:
+		print("短剑：锁定敌人，准备位移突刺...")
+		_perform_dash(target_enemy)
 	else:
 		print("短剑：目标处无敌人，原地攻击")
+
+func _perform_dash(enemy: Node) -> void:
+	# 延迟1秒
+	await get_tree().create_timer(delay_time).timeout
+	
+	# 延迟过后，逻辑上获取该敌人当前的最新坐标（实时更新效果）
+	if is_instance_valid(player) and is_instance_valid(enemy) and not enemy.is_dead:
+		# 留出一点距离，避免玩家和怪物完全重叠
+		var dir = (player.global_position - enemy.global_position).normalized()
+		var offset = dir * 40.0
+		if offset == Vector2.ZERO:
+			offset = Vector2(40, 0)
+			
+		# 直接更改玩家坐标到该敌人身边
+		player.global_position = enemy.global_position + offset
+		print("短剑：瞬移到敌人坐标并发起突刺！")
+		
+		# 瞬移后自动触发一次攻击判定
+		on_hit(enemy)
 
 func on_hit(enemy: Node) -> void:
 	if not enemy.is_dead:
@@ -60,5 +81,4 @@ func _on_combo_timeout() -> void:
 		print("短剑连击超时，已重置")
 
 func execute_synergy() -> void:
-	print("执行短剑连携技！")
-	# 具体的连携技效果按需补充，如爆发伤害等
+	print("短剑连携技使出")

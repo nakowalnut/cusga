@@ -32,5 +32,4 @@ func on_hit(enemy: Node) -> void:
 		add_combo(1)
 
 func execute_synergy() -> void:
-	print("执行弓连携技！")
-	# 具体逻辑，比如射出分散的箭矢
+	print("弓连携技使出")

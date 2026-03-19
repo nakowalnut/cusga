@@ -16,5 +16,3 @@ WeaponBase：
 		作为具体武器脚本的父类使用，在 Player 初始化时实例化并挂到武器节点下
 		通过 attack(target_pos: Vector2) 处理主动攻击，通过 on_hit(enemy: Node) 处理命中回调
 		通过 add_combo()、on_switch_out()、execute_synergy() 管理连携技条件与触发
-
-
