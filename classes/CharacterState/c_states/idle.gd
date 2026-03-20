@@ -19,20 +19,29 @@ func process(delta: float) -> void:
 				state_machine.change_state("Walk")
 
 	else:
+		if character.position.distance_to(GameManager.player.position) >= character.sight_range[1]:
+			pass
+		elif character.position.distance_to(GameManager.player.position) <= character.sight_range[0]:
+			pass
+		else:
+			state_machine.change_state("Walk")
+			#character.velocity = character.position.direction_to(GameManager.player.position)
+			
 			if character.attack_cooldown.is_stopped():
-				if character.target_can_attack:
-					character.attack_cooldown.start()
-					state_machine.change_state("Attack",{"anim" : 0})
+				pass
+				#if character.target_can_attack:
+					#character.attack_cooldown.start()
+					#state_machine.change_state("Attack",{"anim" : 0})
 
-			if character.act_cooldown.is_stopped():
-				var f = (GameManager.player.position.x - character.position.x) > 0
-				character.character_filp(f)
+			#if character.act_cooldown.is_stopped():
+				#var f = (GameManager.player.position.x - character.position.x) > 0
+				#character.character_filp(f)
 				
-			if character.need_move_attack:
-				character.act_cooldown.start()
-				if state_machine.get_current_state_name()  == "Idle":
-					state_machine.change_state("Walk")
-					character.need_move_attack = false
+			#if character.need_move_attack:
+				#character.act_cooldown.start()
+				#if state_machine.get_current_state_name()  == "Idle":
+					#state_machine.change_state("Walk")
+					#character.need_move_attack = false
 				
 func get_state_name() -> String:
 	return "Idle"

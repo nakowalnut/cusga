@@ -86,7 +86,7 @@ _data = {
 
 [node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("c_state_machine")]
 collision_layer = 2
-collision_mask = 4
+collision_mask = 2
 script = ExtResource("1_cyojo")
 c_state_machine = NodePath("StateMachine")
 metadata/_custom_type_script = "uid://l4denkeet557"

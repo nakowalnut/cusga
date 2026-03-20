@@ -1,7 +1,7 @@
 extends CharacterBase
 class_name Player
 
-@export var debug_mode: bool = false
+
 
 @onready var anim = $AnimatedSprite2D
 @onready var animation_player = $AnimationPlayer
@@ -36,6 +36,7 @@ var current_weapon_node: WeaponBase = null
 @onready var attack_collider = $AttackHitBox/AttackCollider
 
 func _ready() -> void:
+	GameManager.player = self
 	_init_weapons()
 	# 初始更新一次视觉
 	_update_weapon_visual()
