@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cvy4sl4ep3pcm"]
+
+[ext_resource type="PackedScene" uid="uid://d2p4jo23pjljy" path="res://Scenes/Enemies/Slime.tscn" id="1_e2b0u"]
+[ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://Scenes/Player/player.tscn" id="2_esso5"]
+
+[node name="Node2D" type="Node2D"]
+y_sort_enabled = true
+
+[node name="CharacterBody2D" parent="." node_paths=PackedStringArray("目标") instance=ExtResource("1_e2b0u")]
+position = Vector2(231, 345)
+"目标" = NodePath("../Player")
+
+[node name="Player" parent="." instance=ExtResource("2_esso5")]
+position = Vector2(567, 244)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
