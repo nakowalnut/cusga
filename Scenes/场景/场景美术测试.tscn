@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://ceke0iub8b8tg"]
 
 [ext_resource type="TileSet" uid="uid://dmvkwc5n772k0" path="res://Scenes/场景/地块_测试.tres" id="1_hxxmo"]
-[ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://Scenes/Player/player.tscn" id="2_idaft"]
+[ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://Scenes/player.tscn" id="2_idaft"]
 [ext_resource type="PackedScene" uid="uid://cvimabpdnnvws" path="res://怪物/蜜蜂/蜜蜂.tscn" id="3_nfw7d"]
 [ext_resource type="PackedScene" uid="uid://d2p4jo23pjljy" path="res://怪物/史莱姆/史莱姆.tscn" id="4_nfw7d"]
 [ext_resource type="AudioStream" uid="uid://b33xlw1pel3ko" path="res://Scenes/场景/ashermusiccreator-fast-lane-love-234612.mp3" id="5_4yl7h"]
