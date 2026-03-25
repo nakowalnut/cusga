@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://i1y7tuepouhp"]
+
+[ext_resource type="Script" uid="uid://dq46qlf6ulevh" path="res://classes/Weapons/arrow_projectile.gd" id="1_rna2p"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jwl2x"]
+
+[node name="Area2D" type="Area2D" unique_id=1048618060]
+script = ExtResource("1_rna2p")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1392021571]
+shape = SubResource("CircleShape2D_jwl2x")

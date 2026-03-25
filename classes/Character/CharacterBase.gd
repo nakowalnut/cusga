@@ -5,9 +5,17 @@ class_name CharacterBase
 @export_group("基础属性")
 @export var max_health: float = 100.0
 @export var speed: float = 300
-
+@export var debug_mode: bool = false
 @onready var current_health: float = max_health
+@onready var attack_cooldown: Timer = Timer.new()
+@onready var act_cooldown: Timer = Timer.new()
+@export var sight_range: Array[int] = [50, 500]## 感知范围，【临近值，最远值】
+var toward: int = 1# 面向方向 (Walk/Hurt 等状态依赖)
 
+var hp: float:
+	get: return current_health
+	set(value): current_health = value
+	
 ## 状态定义
 var is_dead: bool = false
 var is_invulnerable: bool = false
@@ -53,7 +61,7 @@ func die():
 	is_dead = true
 	emit_signal("died")
 	# 可以在子类中重写此方法以实现具体的死亡动画或效果
-	queue_free()
+	#queue_free()
 
 ## 获取生命百分比
 func get_health_percent() -> float:

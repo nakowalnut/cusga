@@ -14,9 +14,6 @@ radius = 20.22375
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v0iea"]
 size = Vector2(40, 5)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_htcer"]
-size = Vector2(5.3145466, 39.655815)
-
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_cvnsp"]
 size = Vector2(10, 35)
 
@@ -85,8 +82,6 @@ _data = {
 [sub_resource type="SpriteFrames" id="SpriteFrames_htcer"]
 
 [node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("c_state_machine")]
-collision_layer = 2
-collision_mask = 2
 script = ExtResource("1_cyojo")
 c_state_machine = NodePath("StateMachine")
 metadata/_custom_type_script = "uid://l4denkeet557"
@@ -107,17 +102,6 @@ position = Vector2(22, -5)
 rotation = -1.16588
 scale = Vector2(1, 1.125)
 texture = SubResource("PlaceholderTexture2D_v0iea")
-
-[node name="HitBox" type="Area2D" parent="WeaponHolder/CurrentWeapon" unique_id=1569215788]
-position = Vector2(-13.262398, -16.22335)
-rotation = 1.1215097
-scale = Vector2(0.907025, 0.98357975)
-skew = 0.08528507
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHolder/CurrentWeapon/HitBox" unique_id=1403685476]
-position = Vector2(22.000002, -4.9999986)
-rotation = 0.41538838
-shape = SubResource("RectangleShape2D_htcer")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=998488247]
 texture = SubResource("PlaceholderTexture2D_cvnsp")
