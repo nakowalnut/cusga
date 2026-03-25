@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bum5af3t0wy0e"
-path="res://.godot/imported/icon.png-55752392b3b2d86fe5417683b6625cd3.ctex"
+path="res://.godot/imported/icon.png-33da0dca1669a58d8050a16fe2d6460a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://怪物/史莱姆/icon.png"
-dest_files=["res://.godot/imported/icon.png-55752392b3b2d86fe5417683b6625cd3.ctex"]
+source_file="res://assets/images/characters/slime/icon.png"
+dest_files=["res://.godot/imported/icon.png-33da0dca1669a58d8050a16fe2d6460a.ctex"]
 
 [params]
 

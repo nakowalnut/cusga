@@ -1,0 +1,146 @@
+[gd_scene format=3 uid="uid://bwbih2ig3yeia"]
+
+[ext_resource type="Script" uid="uid://l4denkeet557" path="res://classes/Character/player.gd" id="1_cyojo"]
+[ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_1kbk7"]
+[ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_uiqp4"]
+[ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_hvfru"]
+[ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_a06cl"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f60y1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v0iea"]
+radius = 20.22375
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v0iea"]
+size = Vector2(40, 5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_htcer"]
+size = Vector2(5.3145466, 39.655815)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_cvnsp"]
+size = Vector2(10, 35)
+
+[sub_resource type="Animation" id="Animation_htcer"]
+resource_name = "Attack1"
+length = 0.4
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WeaponHolder/CurrentWeapon:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(0.5, 2, 2),
+"update": 0,
+"values": [Vector2(22, -5), Vector2(21, 14), Vector2(22, -5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("WeaponHolder/CurrentWeapon:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(0.5, 2, 2),
+"update": 0,
+"values": [-1.16588, 0.43633232, -1.16588]
+}
+
+[sub_resource type="Animation" id="Animation_dd0ac"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WeaponHolder/CurrentWeapon:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(22, -5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("WeaponHolder/CurrentWeapon:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-1.16588]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0u5uq"]
+_data = {
+&"Attack1": SubResource("Animation_htcer"),
+&"RESET": SubResource("Animation_dd0ac")
+}
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_htcer"]
+
+[node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("c_state_machine")]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_cyojo")
+c_state_machine = NodePath("StateMachine")
+metadata/_custom_type_script = "uid://l4denkeet557"
+
+[node name="PlayerCollider" type="CollisionShape2D" parent="." unique_id=768710490]
+shape = SubResource("CapsuleShape2D_f60y1")
+debug_color = Color(0.86940557, 0.24404117, 0.6563944, 1)
+
+[node name="AttackHitBox" type="Area2D" parent="." unique_id=158853122]
+
+[node name="AttackCollider" type="CollisionShape2D" parent="AttackHitBox" unique_id=1780684797]
+shape = SubResource("CircleShape2D_v0iea")
+
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=2146487382]
+
+[node name="CurrentWeapon" type="Sprite2D" parent="WeaponHolder" unique_id=1031291387]
+position = Vector2(22, -5)
+rotation = -1.16588
+scale = Vector2(1, 1.125)
+texture = SubResource("PlaceholderTexture2D_v0iea")
+
+[node name="HitBox" type="Area2D" parent="WeaponHolder/CurrentWeapon" unique_id=1569215788]
+position = Vector2(-13.262398, -16.22335)
+rotation = 1.1215097
+scale = Vector2(0.907025, 0.98357975)
+skew = 0.08528507
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHolder/CurrentWeapon/HitBox" unique_id=1403685476]
+position = Vector2(22.000002, -4.9999986)
+rotation = 0.41538838
+shape = SubResource("RectangleShape2D_htcer")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=998488247]
+texture = SubResource("PlaceholderTexture2D_cvnsp")
+
+[node name="StateMachine" type="Node" parent="." unique_id=381154842 node_paths=PackedStringArray("character")]
+script = ExtResource("2_1kbk7")
+character = NodePath("..")
+metadata/_custom_type_script = "uid://dyp5hiohmgn1i"
+
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=1767150937]
+script = ExtResource("3_uiqp4")
+metadata/_custom_type_script = "uid://dtjunbbhi11cp"
+
+[node name="AttackState" type="Node" parent="StateMachine" unique_id=1551888394]
+script = ExtResource("4_hvfru")
+metadata/_custom_type_script = "uid://d3wjjimrma8i6"
+
+[node name="WalkState" type="Node" parent="StateMachine" unique_id=1667233740]
+script = ExtResource("5_a06cl")
+metadata/_custom_type_script = "uid://bcrvjymso8owa"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1710193980]
+libraries/ = SubResource("AnimationLibrary_0u5uq")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1687143012]
+sprite_frames = SubResource("SpriteFrames_htcer")

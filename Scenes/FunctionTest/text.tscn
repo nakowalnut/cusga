@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://nc1he8g3y4ws"]
+
+[ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://Scenes/Player/player.tscn" id="1_1nbhh"]
+[ext_resource type="PackedScene" uid="uid://soq6wbhlf35h" path="res://Scenes/Enemies/EnemyTest.tscn" id="2_5tcnh"]
+[ext_resource type="PackedScene" uid="uid://d2p4jo23pjljy" path="res://Scenes/Enemies/Slime.tscn" id="3_igls4"]
+[ext_resource type="Texture2D" uid="uid://ci0hxdk3t7nh0" path="res://icon.svg" id="4_vnch7"]
+
+[node name="Text" type="Node2D" unique_id=1770177154]
+
+[node name="Player" parent="." unique_id=791580034 instance=ExtResource("1_1nbhh")]
+z_index = 2
+collision_mask = 6
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=56854408]
+zoom = Vector2(1.605, 1.605)
+limit_enabled = false
+
+[node name="Enemy" parent="." unique_id=420312350 instance=ExtResource("2_5tcnh")]
+visibility_layer = 4
+z_index = 1
+position = Vector2(146, -110)
+scale = Vector2(0.56, 0.56)
+collision_mask = 2
+
+[node name="Slime" parent="." unique_id=184754201 instance=ExtResource("3_igls4")]
+position = Vector2(-20, -117)
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1590017884]
+z_index = -2
+position = Vector2(777.9999, 474.50006)
+scale = Vector2(19.546873, 12.351563)
+texture = ExtResource("4_vnch7")

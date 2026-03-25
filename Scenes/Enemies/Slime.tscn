@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://d2p4jo23pjljy"]
+
+[ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://assets/images/characters/slime/icon.png" id="1_7hvxg"]
+[ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://shaders/受击.gdshader" id="1_fg0bf"]
+[ext_resource type="Script" uid="uid://u4qbyupuxcf3" path="res://classes/Character/enemy.gd" id="1_ua82p"]
+[ext_resource type="Texture2D" uid="uid://bdjpi3sfwblst" path="res://assets/images/characters/slime/icon-export.png" id="2_e47rn"]
+[ext_resource type="Script" uid="uid://dua2sujx6ct0d" path="res://classes/FieldOfView2D/FieldOfView2D.gd" id="5_otd3f"]
+[ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="6_vp0jb"]
+[ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="7_wwgcc"]
+[ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="8_pw37b"]
+[ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="9_duprh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ybt5"]
+shader = ExtResource("1_fg0bf")
+shader_parameter/a = 0.0
+shader_parameter/c = Color(1, 0.75756776, 0.62100786, 1)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vp0jb"]
+radius = 15.37
+height = 44.0
+
+[node name="Slime" type="CharacterBody2D" unique_id=184754201 node_paths=PackedStringArray("c_state_machine")]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("1_ua82p")
+max_health = 25.0
+speed = 30.0
+c_state_machine = NodePath("StateMachine")
+metadata/_custom_type_script = "uid://u4qbyupuxcf3"
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=667542661]
+material = SubResource("ShaderMaterial_6ybt5")
+scale = Vector2(0.52, 0.52)
+texture = ExtResource("1_7hvxg")
+
+[node name="Sprite2D" type="Sprite2D" parent="Icon" unique_id=820290814]
+z_index = -1
+texture = ExtResource("2_e47rn")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Icon" unique_id=401103608]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=279340720]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_vp0jb")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=755076256]
+
+[node name="FieldOfView2D" type="Area2D" parent="." unique_id=1236281263]
+script = ExtResource("5_otd3f")
+angle = 180.0
+auto_rotate = true
+rotation_speed = 100.96
+debug_draw = true
+metadata/_custom_type_script = "uid://dua2sujx6ct0d"
+
+[node name="StateMachine" type="Node" parent="." unique_id=2109086002 node_paths=PackedStringArray("character")]
+script = ExtResource("6_vp0jb")
+character = NodePath("..")
+metadata/_custom_type_script = "uid://dyp5hiohmgn1i"
+
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=1549762411]
+script = ExtResource("7_wwgcc")
+metadata/_custom_type_script = "uid://dtjunbbhi11cp"
+
+[node name="AttackState" type="Node" parent="StateMachine" unique_id=778704503]
+script = ExtResource("8_pw37b")
+metadata/_custom_type_script = "uid://d3wjjimrma8i6"
+
+[node name="WalkState" type="Node" parent="StateMachine" unique_id=226734607]
+script = ExtResource("9_duprh")
+metadata/_custom_type_script = "uid://bcrvjymso8owa"
