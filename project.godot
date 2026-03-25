@@ -19,12 +19,6 @@ run/main_scene="uid://nc1he8g3y4ws"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
-<<<<<<< HEAD
-[display]
-
-window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
-=======
 [autoload]
 
 GameManager="*res://classes/Global/game_manager.gd"
@@ -32,8 +26,7 @@ GameManager="*res://classes/Global/game_manager.gd"
 [display]
 
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep_height"
->>>>>>> walnut
+window/stretch/aspect="expand"
 
 [input]
 
