@@ -5,16 +5,23 @@ var is_stunned: bool = false
 var stun_timer: Timer
 
 func _ready() -> void:
+	anim = $AnimationPlayer
 	if not stun_timer:
 		stun_timer = Timer.new()
 		stun_timer.one_shot = true
 		stun_timer.timeout.connect(_on_stun_timeout)
 		add_child(stun_timer)
+	super._ready()
 
 ##如需复杂逻辑,请继承覆盖
 func Hit(damage:float):
 	take_damage(damage)
 	if damage>0:hurt.emit()
+
+func die():
+	super.die()
+	if c_state_machine:
+		c_state_machine.change_state("Died")
 
 func apply_stun(duration: float) -> void:
 	is_stunned = true

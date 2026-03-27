@@ -1,9 +1,6 @@
 extends CharacterBase
 class_name Player
 
-
-
-@onready var anim = $AnimatedSprite2D
 @onready var animation_player = $AnimationPlayer
 
 ## 检查是否处于无法切换状态的硬直中
@@ -26,7 +23,7 @@ var all_weapons: Dictionary = {}
 # 当前武器轮 (玩家可自定义顺序)
 var weapon_wheel: Array[String] = ["sword", "spear", "dagger", "bow", "hammer"]
 var current_weapon_index: int = 0
-var is_attacking: bool = false
+
 var current_weapon_node: WeaponBase = null
 
 # 演示用节点引用
@@ -36,6 +33,7 @@ var current_weapon_node: WeaponBase = null
 @onready var attack_collider = $AttackHitBox/AttackCollider
 
 func _ready() -> void:
+	anim = $AnimationPlayer
 	GameManager.player = self
 	_init_weapons()
 	# 初始更新一次视觉
@@ -55,7 +53,7 @@ func _init_weapons() -> void:
 	
 	for key in all_weapons:
 		var wp = all_weapons[key]
-		wp.player = self
+		wp.weapon_owner = self
 		weapon_holder.add_child(wp)
 
 func _physics_process(_delta: float) -> void:
@@ -86,8 +84,6 @@ func _on_weapon_hitbox_body_entered(body: Node2D) -> void:
 		print("攻击到了(Body)！", body.name)
 
 func _handle_input() -> void:
-
-		
 	# 检查切换前置条件：必须没有正在攻击，且没在受击/死亡中
 	if not can_change_state(): 
 		return
@@ -114,10 +110,10 @@ func _handle_input() -> void:
 func _switch_and_attack(new_index: int) -> void:
 	if new_index < 0 or new_index >= weapon_wheel.size(): return
 	var prev_weapon = weapon_wheel[current_weapon_index]
-	
+
 	# 如果切换武器，先让旧武器结算连携技并重置累积次数
 	if current_weapon_index != new_index and is_instance_valid(current_weapon_node):
-		current_weapon_node.on_switch_out()
+		current_weapon_node.on_switch_out(weapon_wheel[new_index])
 		
 	current_weapon_index = new_index
 	var new_weapon = weapon_wheel[current_weapon_index]
@@ -146,6 +142,8 @@ func _update_weapon_visual() -> void:
 	
 	# 同步攻击判定范围的掩码和层，确保能检测到敌人 (Layer 3/Collision Mask 4)
 	if weapon_hitbox:
+		# 强制重新获取实时层级 (如果需要动态更新，可以在此处根据具体敌人场景调整掩码)
+		# 默认敌人层为 4 (1 << 2)
 		weapon_hitbox.collision_mask = 4 
 		weapon_hitbox.collision_layer = 0 # 攻击判定不需要被别人撞，只需要去撞别人
 	
@@ -153,12 +151,49 @@ func _update_weapon_visual() -> void:
 	# attack_collider.shape.extents = Vector2(weapon.attack_range, 10)
 
 
-# 自定义武器轮接口 (供Tab菜单调用)
-func update_weapon_sequence(new_sequence: Array[String]) -> void:
-	weapon_wheel = new_sequence
-	current_weapon_index = 0
-
 
 func set_weapon_hitbox_active(active: bool) -> void:
 	if weapon_hitbox:
 		weapon_hitbox.monitoring = active
+
+func pre_attack(msg):
+	var current_weapon_id = msg.get("weapon", weapon_wheel[current_weapon_index])
+	var prev_weapon_id = msg.get("prev_weapon", current_weapon_id)
+	var is_switch = msg.get("is_switch", false)
+	
+	var weapon = all_weapons[current_weapon_id]
+	
+	if is_switch:
+		print("执行连携攻击: ", prev_weapon_id, " -> ", current_weapon_id)
+		# 可以在此处执行连携动画播放逻辑
+		animation_player.play("Attack1") 
+	else:
+		print("使用武器普通攻击: ", weapon.weapon_name)
+		animation_player.play("Attack1") 
+	
+	# 调用武器子类的特定攻击逻辑（位移、射箭等）
+	var mouse_pos = get_global_mouse_position()
+	weapon.attack(mouse_pos)
+	
+	_update_weapon_visual()
+	set_weapon_hitbox_active(true)
+
+func player_attack():
+	var character = self
+	var current_weapon_node = character.current_weapon_node
+	var is_bow = current_weapon_node != null and current_weapon_node.weapon_name == "弓"
+		
+	if is_bow:
+		# 弓箭攻击时必定无法移动
+		character.velocity = Vector2.ZERO
+	else:
+		# 其它武器支持普通移动（或者根据你的游戏设定修改）
+		if Input.get_axis("move_left", "move_right") != 0:
+			character.toward = int(Input.get_axis("move_left", "move_right"))
+			character.velocity.x = character.toward * character.speed
+			character.anim.play("walk")
+		elif Input.get_axis("up", "down") != 0:
+			character.velocity.y = int(Input.get_axis("up", "down")) * character.speed
+		else:
+			if character.hp > 0:
+				character.velocity = Vector2.ZERO

@@ -10,7 +10,7 @@ class_name WeaponBase
 
 var current_combo: int = 0
 var is_synergy_ready: bool = false
-var player: Player
+@export var weapon_owner: CharacterBase
 
 func _ready() -> void:
 	pass
@@ -19,8 +19,21 @@ func _ready() -> void:
 func attack(target_pos: Vector2) -> void:
 	pass
 
+## 统一致死判定接口：由子类 on_hit 调用，实现“触碰即死”语义
+#func kill_target_if_enemy(target: Node) -> void:
+	#if not is_instance_valid(target): return
+	#if target.has_method("die") and not target.get("is_dead"):
+		## 如果是 CharacterBase 或继承者，直接触发死亡逻辑
+		#target.die()
+
+# 统一数值伤害接口
+func deal_damage(target: Node) -> void:
+	if not is_instance_valid(target): return
+	if target.has_method("take_damage") and not target.get("is_dead"):
+		target.take_damage(damage)
+
 # 每次攻击检测到命中敌人时调用
-func on_hit(enemy: Node) -> void:
+func on_hit(target: Node) -> void:
 	pass
 
 # 更新连携技进度
@@ -33,14 +46,15 @@ func add_combo(amount: int = 1) -> void:
 		print(weapon_name + " 连携技已就绪！")
 
 # 切换武器时调用，判断是否触发连携技
-func on_switch_out() -> void:
+func on_switch_out(name: String) -> void:
 	if is_synergy_ready:
-		execute_synergy()
+		execute_synergy(name)
 	reset_combo()
 
 # 执行连携技的具体逻辑，由子类实现
-func execute_synergy() -> void:
-	pass
+func execute_synergy(name) -> void:
+	if weapon_owner.debug_mode:
+		print("连携技使出(",weapon_name,"->", name, ")")
 
 # 重置连携计数
 func reset_combo() -> void:
@@ -49,15 +63,15 @@ func reset_combo() -> void:
 
 # 获取附近敌人的辅助函数
 func get_nearby_enemies(radius: float) -> Array:
-	if not is_instance_valid(player): return []
+	if not is_instance_valid(weapon_owner): return []
 	var enemies = []
-	var space_state = player.get_world_2d().direct_space_state
+	var space_state = weapon_owner.get_world_2d().direct_space_state
 	var shape = CircleShape2D.new()
 	shape.radius = radius
 	
 	var params = PhysicsShapeQueryParameters2D.new()
 	params.shape = shape
-	params.transform = player.global_transform
+	params.transform = weapon_owner.global_transform
 
 	
 	var results = space_state.intersect_shape(params)
@@ -66,3 +80,4 @@ func get_nearby_enemies(radius: float) -> Array:
 		if col.has_method("take_damage") and not col.is_dead:
 			enemies.append(col)
 	return enemies
+	

@@ -2,16 +2,17 @@ extends CharacterBody2D
 class_name CharacterBase
 
 ## 基础属性
+@export var character_weapon: WeaponBase
 @export_group("基础属性")
 @export var max_health: float = 100.0
 @export var speed: float = 300
 @export var debug_mode: bool = false
 @onready var current_health: float = max_health
-@onready var attack_cooldown: Timer = Timer.new()
-@onready var act_cooldown: Timer = Timer.new()
+@export var attack_timer: Timer
+@export var attack_cooldown_time: float = 1.0
 @export var sight_range: Array[int] = [50, 500]## 感知范围，【临近值，最远值】
 var toward: int = 1# 面向方向 (Walk/Hurt 等状态依赖)
-
+@onready var anim: Node ##存储动画
 var hp: float:
 	get: return current_health
 	set(value): current_health = value
@@ -20,7 +21,7 @@ var hp: float:
 var is_dead: bool = false
 var is_invulnerable: bool = false
 @export var invulnerability_duration: float = 0.2
-
+var is_attacking: bool = false
 ## 状态机节点
 @export_group("角色状态")
 @export var c_state_machine: StateMachine
@@ -30,6 +31,10 @@ signal health_changed(new_health: float, max_health: float)
 signal damaged(amount: float)
 signal hurt
 signal died
+
+func _ready() -> void:
+	if attack_timer:
+		attack_timer.one_shot = true
 
 ## 伤害处理
 func take_damage(amount: float):
@@ -66,3 +71,10 @@ func die():
 ## 获取生命百分比
 func get_health_percent() -> float:
 	return current_health / max_health
+	
+func _init_weapons() -> void:
+	# 实例化所有武器，并放入节点树成为子节点，这样就可以使用 Timer 或者 process 逻辑
+	pass
+
+func pre_attack(msg: Dictionary):
+	pass
