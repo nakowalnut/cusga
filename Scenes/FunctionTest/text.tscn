@@ -11,10 +11,6 @@
 z_index = 2
 collision_mask = 6
 
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=56854408]
-zoom = Vector2(1.605, 1.605)
-limit_enabled = false
-
 [node name="Enemy" parent="." unique_id=420312350 instance=ExtResource("2_5tcnh")]
 visibility_layer = 4
 z_index = 1

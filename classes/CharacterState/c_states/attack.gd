@@ -18,10 +18,11 @@ func enter(msg: Dictionary = {}) -> void:
 
 	# 模拟攻击硬直结束
 	await get_tree().create_timer(0.3).timeout
-	if character is not Player:
-		character.character_weapon.attack(character.position)
-	# 确保还在 Attack 状态才切回 Idle，防止中途被受击等状态打断
+	
+	# 确保还在 Attack 状态才执行后续攻击和切回 Idle，防止中途被受击等状态打断或动画提前结束
 	if character.c_state_machine.get_current_state_name() == "Attack":
+		if character is not Player and is_instance_valid(character.character_weapon):
+			character.character_weapon.attack(character.global_position)
 		character.is_attacking = false
 		if character is Player:
 			character.set_weapon_hitbox_active(false)

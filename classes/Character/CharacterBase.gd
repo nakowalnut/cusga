@@ -47,9 +47,14 @@ func take_damage(amount: float):
 	emit_signal("damaged", amount)
 	emit_signal("health_changed", current_health, max_health)
 	
+	if amount > 0:
+		emit_signal("hurt")
+	
 	if current_health <= 0:
 		die()
 	else:
+		if c_state_machine and c_state_machine.states.has("Hurt"):
+			c_state_machine.change_state("Hurt")
 		_trigger_invulnerability()
 
 ## 触发无敌帧
@@ -65,6 +70,9 @@ func die():
 		return
 	is_dead = true
 	emit_signal("died")
+	
+	if c_state_machine and c_state_machine.states.has("Died"):
+		c_state_machine.change_state("Died")
 	# 可以在子类中重写此方法以实现具体的死亡动画或效果
 	#queue_free()
 

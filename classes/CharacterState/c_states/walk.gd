@@ -32,16 +32,16 @@ func physics_process(_delta: float) -> void:
 				state_machine.change_state("Idle")
 			
 	else:
-		if character.position.distance_to(GameManager.player.position) >= character.sight_range[1]:
-			state_machine.change_state("Idle")
-		elif character.position.distance_to(GameManager.player.position) <= character.sight_range[0]:
-			character.velocity = Vector2.ZERO
-			if character.attack_timer and character.attack_timer.is_stopped(): 
-				character.attack_timer.start(character.attack_cooldown_time)
-				state_machine.change_state("Attack")
-		else:
-			character.velocity = character.position.direction_to(GameManager.player.position) * character.speed
-			
+		if is_instance_valid(GameManager.player):
+			if character.position.distance_to(GameManager.player.position) >= character.sight_range[1]:
+				state_machine.change_state("Idle")
+			elif character.position.distance_to(GameManager.player.position) <= character.sight_range[0]:
+				character.velocity = Vector2.ZERO
+				if character.attack_timer and character.attack_timer.is_stopped():
+					character.attack_timer.start(character.attack_cooldown_time)
+					state_machine.change_state("Attack")
+			else:
+				character.velocity = character.position.direction_to(GameManager.player.position) * character.speed
 		#if character.attack_timer and character.attack_timer.is_stopped():
 			#if character.target_can_attack:ad
 				#character.attack_timer.start()

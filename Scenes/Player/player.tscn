@@ -154,3 +154,5 @@ libraries/ = SubResource("AnimationLibrary_0u5uq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1687143012]
 sprite_frames = SubResource("SpriteFrames_htcer")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1838557750]

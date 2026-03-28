@@ -57,6 +57,11 @@ func _init_weapons() -> void:
 		weapon_holder.add_child(wp)
 
 func _physics_process(_delta: float) -> void:
+	if is_dead:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
 	move_and_slide()
 	
 	# 让武器支架指向鼠标

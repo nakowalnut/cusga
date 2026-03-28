@@ -18,11 +18,6 @@ func Hit(damage:float):
 	take_damage(damage)
 	if damage>0:hurt.emit()
 
-func die():
-	super.die()
-	if c_state_machine:
-		c_state_machine.change_state("Died")
-
 func apply_stun(duration: float) -> void:
 	is_stunned = true
 	if not stun_timer.is_inside_tree():

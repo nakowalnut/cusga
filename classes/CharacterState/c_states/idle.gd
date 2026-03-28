@@ -19,16 +19,16 @@ func process(delta: float) -> void:
 				state_machine.change_state("Walk")
 
 	else:
-		if character.position.distance_to(GameManager.player.position) >= character.sight_range[1]:
-			pass
-		elif character.position.distance_to(GameManager.player.position) <= character.sight_range[0]:
-			if character.attack_timer and character.attack_timer.is_stopped(): 
-				character.attack_timer.start(character.attack_cooldown_time)
-				state_machine.change_state("Attack")
-		else:
-			state_machine.change_state("Walk")
-			#character.velocity = character.position.direction_to(GameManager.player.position)
-			
+		if is_instance_valid(GameManager.player):
+			if character.position.distance_to(GameManager.player.position) >= character.sight_range[1]:
+				pass
+			elif character.position.distance_to(GameManager.player.position) <= character.sight_range[0]:
+				if character.attack_timer and character.attack_timer.is_stopped():
+					character.attack_timer.start(character.attack_cooldown_time)
+					state_machine.change_state("Attack")
+			else:
+				state_machine.change_state("Walk")
+				#character.velocity = character.position.direction_to(GameManager.player.position)
 			if character.attack_timer and character.attack_timer.is_stopped():
 				pass
 				#if character.target_can_attack:
