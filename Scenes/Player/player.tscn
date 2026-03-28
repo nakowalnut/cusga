@@ -5,6 +5,8 @@
 [ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_uiqp4"]
 [ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_hvfru"]
 [ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_a06cl"]
+[ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="6_0u5uq"]
+[ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="7_jlvik"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f60y1"]
 
@@ -139,8 +141,18 @@ metadata/_custom_type_script = "uid://d3wjjimrma8i6"
 script = ExtResource("5_a06cl")
 metadata/_custom_type_script = "uid://bcrvjymso8owa"
 
+[node name="DieState" type="Node" parent="StateMachine" unique_id=1575050374]
+script = ExtResource("6_0u5uq")
+metadata/_custom_type_script = "uid://vqdmlojjhhyw"
+
+[node name="HurtState" type="Node" parent="StateMachine" unique_id=1705208187]
+script = ExtResource("7_jlvik")
+metadata/_custom_type_script = "uid://be7e7v1oxgfla"
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1710193980]
 libraries/ = SubResource("AnimationLibrary_0u5uq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1687143012]
 sprite_frames = SubResource("SpriteFrames_htcer")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1838557750]

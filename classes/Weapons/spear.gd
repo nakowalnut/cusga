@@ -15,16 +15,14 @@ func _init() -> void:
 func attack(target_pos: Vector2) -> void:
 	pass
 
-func on_hit(enemy: Node) -> void:
-	if not enemy.is_dead:
-		enemy.take_damage(damage)
+func on_hit(target: Node) -> void:
+	if not target.is_dead:
+		deal_damage(target)
+		add_combo(1)
 		# 概率眩晕敌人
 		if randf() <= stun_chance:
-			if enemy.has_method("apply_stun"):
-				enemy.apply_stun(stun_duration)
+			if target.has_method("apply_stun"):
+				target.apply_stun(stun_duration)
 				# 眩晕敌人增加 combo (需求: 累计眩晕敌人3人次)
 				add_combo(1)
 				print("长矛眩晕了敌人！当前眩晕次数:", current_combo)
-
-func execute_synergy() -> void:
-	print("矛连携技使出")

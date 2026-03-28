@@ -15,11 +15,7 @@ func attack(target_pos: Vector2) -> void:
 	# 长剑的常规攻击交由 Player 的 AnimationPlayer 和 HitBox 处理
 	pass
 
-func on_hit(enemy: Node) -> void:
-	if not enemy.is_dead:
-		enemy.take_damage(damage)
+func on_hit(target: Node) -> void:
+	if not target.is_dead:
+		deal_damage(target)
 		add_combo(1)
-
-func execute_synergy() -> void:
-	print("长剑连携技使出")
-	# 具体的连携效果逻辑占位，后续根据视觉资源补充

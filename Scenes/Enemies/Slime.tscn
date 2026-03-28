@@ -2,13 +2,15 @@
 
 [ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://assets/images/characters/slime/icon.png" id="1_7hvxg"]
 [ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://shaders/受击.gdshader" id="1_fg0bf"]
-[ext_resource type="Script" uid="uid://u4qbyupuxcf3" path="res://classes/Character/enemy.gd" id="1_ua82p"]
+[ext_resource type="Script" uid="uid://bxqje215v1nxl" path="res://Scenes/Enemies/slime.gd" id="1_pw37b"]
 [ext_resource type="Texture2D" uid="uid://bdjpi3sfwblst" path="res://assets/images/characters/slime/icon-export.png" id="2_e47rn"]
 [ext_resource type="Script" uid="uid://dua2sujx6ct0d" path="res://classes/FieldOfView2D/FieldOfView2D.gd" id="5_otd3f"]
 [ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="6_vp0jb"]
 [ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="7_wwgcc"]
 [ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="8_pw37b"]
 [ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="9_duprh"]
+[ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="10_wwgcc"]
+[ext_resource type="Script" uid="uid://c0gqmu1cbxjjr" path="res://classes/Weapons/enemiesweapon/Slimer.gd" id="11_pw37b"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6ybt5"]
 shader = ExtResource("1_fg0bf")
@@ -19,12 +21,17 @@ shader_parameter/c = Color(1, 0.75756776, 0.62100786, 1)
 radius = 15.37
 height = 44.0
 
-[node name="Slime" type="CharacterBody2D" unique_id=184754201 node_paths=PackedStringArray("c_state_machine")]
+[sub_resource type="CircleShape2D" id="CircleShape2D_wwgcc"]
+radius = 30.463093
+
+[node name="Slime" type="CharacterBody2D" unique_id=184754201 node_paths=PackedStringArray("character_weapon", "attack_timer", "c_state_machine")]
 collision_layer = 4
-collision_mask = 4
-script = ExtResource("1_ua82p")
+collision_mask = 6
+script = ExtResource("1_pw37b")
+character_weapon = NodePath("WeaponHolder/Slimer")
 max_health = 25.0
 speed = 30.0
+attack_timer = NodePath("AttackTimer")
 c_state_machine = NodePath("StateMachine")
 metadata/_custom_type_script = "uid://u4qbyupuxcf3"
 
@@ -69,3 +76,27 @@ metadata/_custom_type_script = "uid://d3wjjimrma8i6"
 [node name="WalkState" type="Node" parent="StateMachine" unique_id=226734607]
 script = ExtResource("9_duprh")
 metadata/_custom_type_script = "uid://bcrvjymso8owa"
+
+[node name="DieState" type="Node" parent="StateMachine" unique_id=1842936744]
+script = ExtResource("10_wwgcc")
+metadata/_custom_type_script = "uid://vqdmlojjhhyw"
+
+[node name="HurtState" type="Node" parent="StateMachine" unique_id=2126178708]
+
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=1241831584]
+
+[node name="HitBox" type="Area2D" parent="WeaponHolder" unique_id=1743703014]
+position = Vector2(0, -9.536743e-07)
+scale = Vector2(1, 0.99999994)
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHolder/HitBox" unique_id=1135992294]
+position = Vector2(-1, 1.4305115e-06)
+rotation = 0.41538838
+shape = SubResource("CircleShape2D_wwgcc")
+
+[node name="Slimer" type="Node2D" parent="WeaponHolder" unique_id=1453450992]
+script = ExtResource("11_pw37b")
+metadata/_custom_type_script = "uid://c0gqmu1cbxjjr"
+
+[node name="AttackTimer" type="Timer" parent="." unique_id=1443518225]

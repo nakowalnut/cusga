@@ -14,3 +14,8 @@ func get_direction(from_position: Vector2, to_position: Vector2) -> Vector2:
 
 func get_distance(from_position: Vector2, to_position: Vector2) -> float:
 	return from_position.distance_to(to_position)
+
+func player_die() -> void:
+	print("Player died! Game Over!")
+	# 如果有场景重启的逻辑可以在这里调用，比如 get_tree().reload_current_scene()
+	pass

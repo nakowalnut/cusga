@@ -10,7 +10,7 @@ func exit() -> void:
 
 func physics_process(_delta: float) -> void:
 	character.get_velocity()
-	print(character.get_velocity())
+
 	if character is Player:
 		if Input.get_axis("move_left", "move_right") != 0:
 			character.toward = int(Input.get_axis("move_left", "move_right"))
@@ -32,18 +32,21 @@ func physics_process(_delta: float) -> void:
 				state_machine.change_state("Idle")
 			
 	else:
-		if character.position.distance_to(GameManager.player.position) >= character.sight_range[1]:
-			state_machine.change_state("Idle")
-		elif character.position.distance_to(GameManager.player.position) <= character.sight_range[0]:
-			character.velocity = Vector2.ZERO
-		else:
-			character.velocity = character.position.direction_to(GameManager.player.position) * character.speed
-			
-		#if character.attack_cooldown.is_stopped():
+		if is_instance_valid(GameManager.player):
+			if character.position.distance_to(GameManager.player.position) >= character.sight_range[1]:
+				state_machine.change_state("Idle")
+			elif character.position.distance_to(GameManager.player.position) <= character.sight_range[0]:
+				character.velocity = Vector2.ZERO
+				if character.attack_timer and character.attack_timer.is_stopped():
+					character.attack_timer.start(character.attack_cooldown_time)
+					state_machine.change_state("Attack")
+			else:
+				character.velocity = character.position.direction_to(GameManager.player.position) * character.speed
+		#if character.attack_timer and character.attack_timer.is_stopped():
 			#if character.target_can_attack:ad
-				#character.attack_cooldown.start()
+				#character.attack_timer.start()
 				#state_machine.change_state("Idle")
-		#if character.act_cooldown.is_stopped():
+		#if character.attack_timer and character.attack_timer.is_stopped():
 				#var f = (GameManager.player.position.x - character.position.x) > 0
 				#character.character_filp(f)
 	character.move_and_slide()
