@@ -156,3 +156,4 @@ libraries/ = SubResource("AnimationLibrary_0u5uq")
 sprite_frames = SubResource("SpriteFrames_htcer")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1838557750]
+zoom = Vector2(1.32, 1.32)
