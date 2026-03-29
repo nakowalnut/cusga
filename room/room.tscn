@@ -1,60 +1,10 @@
 [gd_scene format=3 uid="uid://c8sqivq1b6gr8"]
 
 [ext_resource type="Script" uid="uid://7qygnd4f2x23" path="res://room/room.gd" id="1_tku2a"]
-[ext_resource type="Script" uid="uid://u4qbyupuxcf3" path="res://classes/Character/enemy.gd" id="2_wid0f"]
-[ext_resource type="Shader" uid="uid://h3n6mugc4rgw" path="res://shaders/受击.gdshader" id="3_158eg"]
+[ext_resource type="PackedScene" uid="uid://d2p4jo23pjljy" path="res://Scenes/Enemies/Slime.tscn" id="2_qx3y5"]
+[ext_resource type="PackedScene" uid="uid://soq6wbhlf35h" path="res://Scenes/Enemies/EnemyTest.tscn" id="3_fntg6"]
 [ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://Scenes/Player/player.tscn" id="4_et4wo"]
-[ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://assets/images/characters/slime/icon.png" id="4_t7mnq"]
-[ext_resource type="Texture2D" uid="uid://bdjpi3sfwblst" path="res://assets/images/characters/slime/icon-export.png" id="5_acpa7"]
-[ext_resource type="Script" uid="uid://dua2sujx6ct0d" path="res://classes/FieldOfView2D/FieldOfView2D.gd" id="6_ltqu5"]
-[ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="7_ew6p8"]
-[ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="8_hhhe8"]
-[ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="9_ylgym"]
-[ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="10_1f5bx"]
-[ext_resource type="Texture2D" uid="uid://ci0hxdk3t7nh0" path="res://icon.svg" id="11_158eg"]
 [ext_resource type="Texture2D" uid="uid://bxm80s3rbat5y" path="res://room/未标题.png" id="13_t7mnq"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ybt5"]
-shader = ExtResource("3_158eg")
-shader_parameter/a = 0.0
-shader_parameter/c = Color(1, 0.75756776, 0.62100786, 1)
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vp0jb"]
-radius = 15.37
-height = 44.0
-
-[sub_resource type="PackedScene" id="PackedScene_wid0f"]
-_bundled = {
-"conn_count": 0,
-"conns": PackedInt32Array(),
-"editable_instances": [],
-"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
-"names": PackedStringArray("Slime", "CharacterBody2D", "collision_layer", "collision_mask", "script", "max_health", "speed", "c_state_machine", "metadata/_custom_type_script", "Icon", "Sprite2D", "material", "scale", "texture", "Sprite2D", "Sprite2D", "z_index", "texture", "AnimationPlayer", "AnimationPlayer", "CollisionShape2D", "CollisionShape2D", "rotation", "shape", "AnimationPlayer", "AnimationPlayer", "FieldOfView2D", "Area2D", "script", "angle", "auto_rotate", "rotation_speed", "debug_draw", "metadata/_custom_type_script", "StateMachine", "Node", "script", "character", "metadata/_custom_type_script", "IdleState", "Node", "script", "metadata/_custom_type_script", "AttackState", "Node", "script", "metadata/_custom_type_script", "WalkState", "Node", "script", "metadata/_custom_type_script"),
-"node_count": 11,
-"node_ids": PackedInt32Array(184754201, 667542661, 820290814, 401103608, 279340720, 755076256, 1236281263, 2109086002, 1549762411, 778704503, 226734607),
-"node_paths": [NodePath("."), NodePath("./Icon"), NodePath("./Icon"), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath("./StateMachine"), NodePath("./StateMachine"), NodePath("./StateMachine")],
-"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 7, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 1073741831, 5, 8, 6, 0, 1073741824, 0, 10, 9, -1, 3, 11, 7, 12, 8, 13, 9, 0, 1073741825, 0, 15, 14, -1, 2, 16, 10, 17, 11, 0, 1073741826, 0, 19, 18, -1, 0, 0, 1073741827, 0, 21, 20, -1, 2, 22, 12, 23, 13, 0, 1073741828, 0, 25, 24, -1, 0, 0, 1073741829, 0, 27, 26, -1, 6, 28, 14, 29, 15, 30, 16, 31, 17, 32, 18, 33, 19, 0, 1073741830, 0, 35, 34, -1, 3, 36, 20, 1073741861, 21, 38, 22, 0, 1073741831, 0, 40, 39, -1, 2, 41, 23, 42, 24, 0, 1073741832, 0, 44, 43, -1, 2, 45, 25, 46, 26, 0, 1073741833, 0, 48, 47, -1, 2, 49, 27, 50, 28, 0),
-"variants": [4, 4, ExtResource("2_wid0f"), 25.0, 30.0, NodePath("StateMachine"), "uid://u4qbyupuxcf3", SubResource("ShaderMaterial_6ybt5"), Vector2(0.52, 0.52), ExtResource("4_t7mnq"), -1, ExtResource("5_acpa7"), 1.5707964, SubResource("CapsuleShape2D_vp0jb"), ExtResource("6_ltqu5"), 180.0, true, 100.96, true, "uid://dua2sujx6ct0d", ExtResource("7_ew6p8"), NodePath(".."), "uid://dyp5hiohmgn1i", ExtResource("8_hhhe8"), "uid://dtjunbbhi11cp", ExtResource("9_ylgym"), "uid://d3wjjimrma8i6", ExtResource("10_1f5bx"), "uid://bcrvjymso8owa"],
-"version": 3
-}
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_uape3"]
-size = Vector2(127, 126)
-
-[sub_resource type="PackedScene" id="PackedScene_t7mnq"]
-_bundled = {
-"conn_count": 0,
-"conns": PackedInt32Array(),
-"editable_instances": [],
-"id_paths": [PackedInt32Array(), PackedInt32Array()],
-"names": PackedStringArray("Enemy", "CharacterBody2D", "collision_layer", "collision_mask", "script", "metadata/_custom_type_script", "Sprite2D", "Sprite2D", "texture", "CollisionShape2D", "CollisionShape2D", "position", "shape"),
-"node_count": 3,
-"node_ids": PackedInt32Array(287965457, 1026741012, 1803169254),
-"node_paths": [NodePath("."), NodePath(".")],
-"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 4, 2, 0, 3, 1, 4, 2, 5, 3, 0, 1073741824, 0, 7, 6, -1, 1, 8, 4, 0, 1073741825, 0, 10, 9, -1, 2, 11, 5, 12, 6, 0),
-"variants": [4, 6, ExtResource("2_wid0f"), "uid://couuhdcbsiyre", ExtResource("11_158eg"), Vector2(-0.5, 0), SubResource("RectangleShape2D_uape3")],
-"version": 3
-}
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_tku2a"]
 normal = Vector2(-1, 0)
@@ -76,12 +26,9 @@ size = Vector2(97, 99)
 [node name="room" type="Node2D" unique_id=518830409]
 y_sort_enabled = true
 script = ExtResource("1_tku2a")
-enemy_scenes = Array[PackedScene]([SubResource("PackedScene_wid0f"), SubResource("PackedScene_t7mnq")])
+enemy_scenes = Array[PackedScene]([ExtResource("2_qx3y5"), ExtResource("3_fntg6")])
 enemy_count = 6
 max_per_type = 3
-metadata/_edit_lock_ = true
-
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1461709971]
 metadata/_edit_lock_ = true
 
 [node name="enemy_spawn_point" type="Node2D" parent="." unique_id=1592720160]
