@@ -1,6 +1,13 @@
 extends CharacterBody2D
 class_name CharacterBase
 
+## 状态名常量
+const STATE_HURT = "Hurt"
+const STATE_DIED = "Died"
+const STATE_IDLE = "Idle"
+const STATE_ATTACK = "Attack"
+const STATE_WALK = "Walk"
+
 ## 基础属性
 @export var character_weapon: WeaponBase
 @export_group("基础属性")
@@ -53,8 +60,8 @@ func take_damage(amount: float):
 	if current_health <= 0:
 		die()
 	else:
-		if c_state_machine and c_state_machine.states.has("Hurt"):
-			c_state_machine.change_state("Hurt")
+		if c_state_machine and c_state_machine.states.has(STATE_HURT):
+			c_state_machine.change_state(STATE_HURT)
 		_trigger_invulnerability()
 
 ## 触发无敌帧
@@ -71,8 +78,8 @@ func die():
 	is_dead = true
 	emit_signal("died")
 	
-	if c_state_machine and c_state_machine.states.has("Died"):
-		c_state_machine.change_state("Died")
+	if c_state_machine and c_state_machine.states.has(STATE_DIED):
+		c_state_machine.change_state(STATE_DIED)
 	# 可以在子类中重写此方法以实现具体的死亡动画或效果
 	#queue_free()
 
@@ -84,5 +91,32 @@ func _init_weapons() -> void:
 	# 实例化所有武器，并放入节点树成为子节点，这样就可以使用 Timer 或者 process 逻辑
 	pass
 
+func begin_attack(msg: Dictionary) -> bool:
+	pre_attack(msg)
+	return true
+
 func pre_attack(msg: Dictionary):
 	pass
+
+func execute_attack() -> void:
+	if is_instance_valid(character_weapon):
+		character_weapon.attack(global_position)
+
+func end_attack() -> void:
+	is_attacking = false
+
+func process_attack_physics(delta: float) -> void:
+	pass
+
+## ---- 状态机重构：角色通用接口 ----
+func process_movement(delta: float) -> void:
+	pass
+
+func process_idle(delta: float) -> void:
+	pass
+
+func on_death_state_entered() -> void:
+	pass
+
+func get_attack_duration() -> float:
+	return 0.3 # 保持与原 attack.gd 相同的默认锁定时间基线

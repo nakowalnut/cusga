@@ -13,7 +13,7 @@ func enter(msg: Dictionary = {}) -> void:
 	get_tree().create_timer(1).timeout.connect(func():character.queue_free())
 	
 func get_state_name() -> String:
-	return "Died"
+	return CharacterBase.STATE_DIED
 	
 func process(delta: float) -> void:
 	if character.anim is AnimationPlayer:

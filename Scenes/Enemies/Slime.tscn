@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="8_pw37b"]
 [ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="9_duprh"]
 [ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="10_wwgcc"]
+[ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="11_bhv08"]
 [ext_resource type="Script" uid="uid://bo6ptf42wuque" path="res://classes/CharacterState/c_states/stun.gd" id="11_duprh"]
 [ext_resource type="Script" uid="uid://c0gqmu1cbxjjr" path="res://classes/Weapons/enemiesweapon/Slimer.gd" id="11_pw37b"]
 
@@ -83,7 +84,9 @@ metadata/_custom_type_script = "uid://bcrvjymso8owa"
 script = ExtResource("10_wwgcc")
 metadata/_custom_type_script = "uid://vqdmlojjhhyw"
 
-[node name="HurtState" type="Node" parent="StateMachine" unique_id=2126178708]
+[node name="HurtState" type="Node" parent="StateMachine" unique_id=1707129028]
+script = ExtResource("11_bhv08")
+metadata/_custom_type_script = "uid://be7e7v1oxgfla"
 
 [node name="StunState" type="Node" parent="StateMachine" unique_id=322063167]
 script = ExtResource("11_duprh")

@@ -29,10 +29,9 @@ func enter(msg: Dictionary = {}) -> void:
 		if !hurt_timer.timeout.is_connected(on_timeout):
 			hurt_timer.timeout.connect(on_timeout)
 	else:
-		if character.has_method("is_player") or character is Player:
-			GameManager.player_die()
+		character.on_death_state_entered()
 		hurt_timer.stop()
-		state_machine.change_state("Died")
+		state_machine.change_state(CharacterBase.STATE_DIED)
 
 
 func exit() -> void:
@@ -43,10 +42,10 @@ func process(delta: float) -> void:
 	character.velocity.x = - character.toward
 
 func get_state_name() -> String:
-	return "Hurt"
+	return CharacterBase.STATE_HURT
 
 func on_timeout():
 	if character.material:
 		character.material.set("shader_parameter/get_hit", false)
 	if character.hp > 0:
-		state_machine.change_state("Idle")
+		state_machine.change_state(CharacterBase.STATE_IDLE)

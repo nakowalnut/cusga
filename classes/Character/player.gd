@@ -1,6 +1,9 @@
 extends CharacterBase
 class_name Player
 
+## 近战命中目标层（可在 Inspector 中配置）
+@export_flags_2d_physics var enemy_hitbox_mask: int = 4
+
 @onready var animation_player = $AnimationPlayer
 
 ## 检查是否处于无法切换状态的硬直中
@@ -12,7 +15,7 @@ func can_change_state() -> bool:
 			return false
 	
 	# 2. 检查基础状态机当前是否处于 受击 或 死亡 状态
-	if c_state_machine.is_in_state("Hurt") or c_state_machine.is_in_state("Died"):
+	if c_state_machine.is_in_state(STATE_HURT) or c_state_machine.is_in_state(STATE_DIED):
 		return false
 		
 	return true
@@ -110,7 +113,7 @@ func _handle_input() -> void:
 		
 		# 如果不是蓄力武器，直接发起攻击状态
 		if not is_charged_type:
-			c_state_machine.change_state("Attack", {
+			c_state_machine.change_state(STATE_ATTACK, {
 				"weapon": cur_weapon_id, 
 				"prev_weapon": cur_weapon_id, 
 				"is_switch": false
@@ -131,7 +134,7 @@ func _handle_input() -> void:
 		if is_charged_type:
 			if current_weapon_tween and current_weapon_tween.is_valid():
 				current_weapon_tween.kill() # 停掉蓄力的动画
-			c_state_machine.change_state("Attack", {
+			c_state_machine.change_state(STATE_ATTACK, {
 				"weapon": cur_weapon_id, 
 				"prev_weapon": cur_weapon_id, 
 				"is_switch": false
@@ -154,7 +157,7 @@ func _switch_and_attack(new_index: int) -> void:
 	_update_weapon_visual()
 	
 	# 切枪算作攻击，进入Attack状态并传递连携信息
-	c_state_machine.change_state("Attack", {
+	c_state_machine.change_state(STATE_ATTACK, {
 		"weapon": new_weapon, 
 		"prev_weapon": prev_weapon, 
 		"is_switch": true
@@ -178,30 +181,33 @@ func _update_weapon_visual() -> void:
 	# 通过调制颜色 (Self Modulate) 来模拟武器切换
 	if weapon_sprite:
 		weapon_sprite.self_modulate = weapon.color
-		# 视觉与物理同步变化：CurrentWeapon 是 HitBox 的父节点，缩放会同时影响碰撞判定
-		weapon_sprite.scale = Vector2(1.0, 1.125)
-		match current_weapon_id:
-			"dagger":
-				# 短剑：更短
-				weapon_sprite.scale = Vector2(0.5, 1.125)
-			"spear":
-				# 矛：更细、更长
-				weapon_sprite.scale = Vector2(1.6, 0.55)
-				# 矛头方向与鼠标一致：本地旋转归零，由 weapon_holder.look_at 接管朝向
-				weapon_sprite.rotation = 0.0
-			"hammer":
-				# 锤子：杆保持中等长度，头部由多个方块拼接
-				weapon_sprite.scale = Vector2(0.9, 1.0)
-				_build_hammer_head(weapon.color)
-			_:
-				pass
+		_apply_weapon_transforms(current_weapon_id, weapon.color)
 	
-	# 同步攻击判定范围的掩码和层，确保能检测到敌人 (Layer 3/Collision Mask 4)
+	# 同步攻击判定范围的掩码和层，确保能检测到敌人
 	if weapon_hitbox:
-		# 强制重新获取实时层级 (如果需要动态更新，可以在此处根据具体敌人场景调整掩码)
-		# 默认敌人层为 4 (1 << 2)
-		weapon_hitbox.collision_mask = 4 
+		# 强制重新获取实时层级
+		weapon_hitbox.collision_mask = enemy_hitbox_mask
 		weapon_hitbox.collision_layer = 0 # 攻击判定不需要被别人撞，只需要去撞别人
+
+func _apply_weapon_transforms(weapon_id: String, weapon_color: Color) -> void:
+	# 视觉与物理同步变化：CurrentWeapon 是 HitBox 的父节点，缩放会同时影响碰撞判定
+	weapon_sprite.scale = Vector2(1.0, 1.125)
+	
+	match weapon_id:
+		"dagger":
+			# 短剑：更短
+			weapon_sprite.scale = Vector2(0.5, 1.125)
+		"spear":
+			# 矛：更细、更长
+			weapon_sprite.scale = Vector2(1.6, 0.55)
+			# 矛头方向与鼠标一致：本地旋转归零，由 weapon_holder.look_at 接管朝向
+			weapon_sprite.rotation = 0.0
+		"hammer":
+			# 锤子：杆保持中等长度，头部由多个方块拼接
+			weapon_sprite.scale = Vector2(0.9, 1.0)
+			_build_hammer_head(weapon_color)
+		_:
+			pass
 	
 	# 如果有攻击判定，可以在这里调整碰撞盒大小模拟不同武器长度
 	# attack_collider.shape.extents = Vector2(weapon.attack_range, 10)
@@ -254,16 +260,10 @@ func pre_attack(msg):
 	
 	if is_switch:
 		print("执行连携攻击: ", prev_weapon_id, " -> ", current_weapon_id)
-		if current_weapon_id == "spear":
-			_spear_poke_animation()
-		else:
-			animation_player.play("Attack1") 
+		_play_attack_visual(current_weapon_id)
 	else:
 		print("使用武器普通攻击: ", weapon.weapon_name)
-		if current_weapon_id == "spear":
-			_spear_poke_animation()
-		else:
-			animation_player.play("Attack1") 
+		_play_attack_visual(current_weapon_id)
 	
 	# 调用武器子类的特定攻击逻辑（位移、射箭等）
 	var mouse_pos = get_global_mouse_position()
@@ -271,6 +271,12 @@ func pre_attack(msg):
 	
 	_update_weapon_visual()
 	set_weapon_hitbox_active(true)
+
+func _play_attack_visual(weapon_id: String) -> void:
+	if weapon_id == "spear":
+		_spear_poke_animation()
+	else:
+		animation_player.play("Attack1") 
 
 var current_weapon_tween: Tween
 
@@ -332,3 +338,50 @@ func player_attack():
 		else:
 			if character.hp > 0:
 				character.velocity = Vector2.ZERO
+
+## ---- 状态机重构：重写基类方法 ----
+func begin_attack(msg: Dictionary) -> bool:
+	if weapon_wheel.size() == 0:
+		if c_state_machine:
+			c_state_machine.change_state(STATE_IDLE)
+		return false
+	is_attacking = true
+	pre_attack(msg)
+	return true
+
+func process_movement(delta: float) -> void:
+	if Input.get_axis("move_left", "move_right") != 0:
+		toward = int(Input.get_axis("move_left", "move_right"))
+		velocity.x = toward * speed
+		if anim and anim.has_animation("walk"): anim.play("walk")
+	if Input.get_axis("up", "down") != 0:
+		velocity.y = int(Input.get_axis("up", "down")) * speed
+		
+	if Input.get_axis("move_left", "move_right") == 0 and Input.get_axis("up", "down") == 0:
+		if hp > 0 and c_state_machine:
+			c_state_machine.change_state(STATE_IDLE)
+
+func process_idle(delta: float) -> void:
+	velocity = Vector2.ZERO
+	# 检查是否应该切换到移动状态
+	if Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right") or Input.is_action_pressed("up") or Input.is_action_pressed("down"):
+		if c_state_machine:
+			c_state_machine.change_state(STATE_WALK)
+
+func on_death_state_entered() -> void:
+	GameManager.player_die()
+
+func end_attack() -> void:
+	is_attacking = false
+	set_weapon_hitbox_active(false)
+
+func process_attack_physics(delta: float) -> void:
+	player_attack()
+
+func execute_attack() -> void:
+	pass # Player在 pre_attack 中就触发了武器逻辑，这里留空或后续合并
+
+func get_attack_duration() -> float:
+	if is_instance_valid(current_weapon_node):
+		return current_weapon_node.attack_duration
+	return 0.3

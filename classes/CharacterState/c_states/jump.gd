@@ -14,7 +14,7 @@ func physics_process(delta: float) -> void:
 	# 检查是否落地
 	if character.is_on_floor() and character.hp > 0:
 		character.anim.play("fall_to_ground")
-		state_machine.change_state("Idle")
+		state_machine.change_state(CharacterBase.STATE_IDLE)
 		
 	if character.velocity.y >= 100:
 		character.anim.play("fall")

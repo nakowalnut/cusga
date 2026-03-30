@@ -18,10 +18,10 @@ func enter(msg: Dictionary = {}) -> void:
 	await get_tree().create_timer(stun_duration).timeout
 	
 	if character.c_state_machine.get_current_state_name() == "Stun":
-		character.c_state_machine.change_state("Idle")
+		character.c_state_machine.change_state(CharacterBase.STATE_IDLE)
 
 func transition_reason(state_name: String) -> bool:
 	# 眩晕期间不可主动切换至除死亡、受击之外的其他状态
-	if state_name in ["Died", "Hurt"]:
+	if state_name in [CharacterBase.STATE_DIED, CharacterBase.STATE_HURT]:
 		return true
 	return false

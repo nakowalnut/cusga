@@ -35,6 +35,36 @@ func apply_stun(duration: float) -> void:
 func _on_stun_timeout() -> void:
 	is_stunned = false
 	if c_state_machine and c_state_machine.get_current_state_name() == "Stun":
-		c_state_machine.change_state("Idle")
+		c_state_machine.change_state(STATE_IDLE)
 	else:
 		speed = base_speed
+
+## ---- 状态机重构：重写基类方法 ----
+func process_movement(delta: float) -> void:
+	if is_instance_valid(GameManager.player):
+		var dist = position.distance_to(GameManager.player.position)
+		if dist >= sight_range[1]:
+			if c_state_machine: c_state_machine.change_state(STATE_IDLE)
+		elif dist <= sight_range[0]:
+			velocity = Vector2.ZERO
+			if attack_timer and attack_timer.is_stopped():
+				attack_timer.start(attack_cooldown_time)
+				if c_state_machine: c_state_machine.change_state(STATE_ATTACK)
+		else:
+			velocity = position.direction_to(GameManager.player.position) * speed
+
+func process_idle(delta: float) -> void:
+	velocity = Vector2.ZERO
+	if is_instance_valid(GameManager.player):
+		var dist = position.distance_to(GameManager.player.position)
+		if dist >= sight_range[1]:
+			pass
+		elif dist <= sight_range[0]:
+			if attack_timer and attack_timer.is_stopped():
+				attack_timer.start(attack_cooldown_time)
+				if c_state_machine: c_state_machine.change_state(STATE_ATTACK)
+		else:
+			if c_state_machine: c_state_machine.change_state(STATE_WALK)
+
+func on_death_state_entered() -> void:
+	pass
