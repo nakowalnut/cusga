@@ -4,38 +4,79 @@ class_name DaggerWeapon
 @export var displacement_speed: float = 600.0
 @export var combo_timeout: float = 3.0
 @export var delay_time: float = 0.1
+@export var hold_time_required: float = 0.17 # 长按触发所需时间
 var combo_timer: Timer
+var hold_timer: Timer
 var pending_stab_target: Node = null
-var pending_stab_hits: int = 0
+var dash_pending: bool = false
+var dash_executed_this_hold: bool = false
 
 func _init() -> void:
 	weapon_name = "短剑"
 	damage = 8.0
 	attack_range = 30.0
-	attack_speed_multiplier = 1.5 # 攻速高
+	attack_speed_multiplier = 1.6 # 提高攻速
 	color = Color.BLUE
 	max_combo = 5
+	attack_duration = 0.2 # 短快攻击
+	is_charge_weapon = true
 
 func _ready() -> void:
 	combo_timer = Timer.new()
 	combo_timer.one_shot = true
 	combo_timer.timeout.connect(_on_combo_timeout)
 	add_child(combo_timer)
+	
+	hold_timer = Timer.new()
+	hold_timer.one_shot = true
+	hold_timer.timeout.connect(_on_hold_timeout)
+	add_child(hold_timer)
+
+func on_attack_pressed() -> void:
+	dash_executed_this_hold = false
+	dash_pending = false
+	var mouse_pos = weapon_owner.get_global_mouse_position()
+	var target_enemy = _find_enemy_near_mouse(mouse_pos)
+	if target_enemy:
+		_register_stab_target(target_enemy)
+	else:
+		_reset_pending_stab()
+
+func on_attack_released() -> void:
+	if not hold_timer.is_stopped():
+		hold_timer.stop()
+		print("短剑：长按中断")
 
 func attack(target_pos: Vector2) -> void:
 	if not is_instance_valid(weapon_owner): return
-	
-	var mouse_pos = weapon_owner.get_global_mouse_position()
-	
+
+	# 长按闪现已结算，松开触发的 Attack 不再重复结算伤害。
+	if dash_pending or dash_executed_this_hold:
+		dash_executed_this_hold = false
+		return
+
+	var target_enemy = _find_enemy_near_mouse(target_pos)
+	if target_enemy:
+		on_hit(target_enemy)
+	else:
+		print("短剑：目标处无敌人，原地攻击")
+
+func _find_enemy_near_mouse(mouse_pos: Vector2) -> Node:
 	# 短剑位移：检测鼠标位置是否有敌人
 	var space_state = weapon_owner.get_world_2d().direct_space_state
-	var params = PhysicsPointQueryParameters2D.new()
-	params.position = mouse_pos
-	params.collision_mask = 4 # Enemy Layer
+	var params = PhysicsShapeQueryParameters2D.new()
+	 
+	var shape = CircleShape2D.new()
+	shape.radius = 100.0#调受击判定半径大小
+	
+	params.shape = shape
+	params.transform = Transform2D(0,mouse_pos)
+
+	#params.collision_mask = 4 # Enemy Layer
 	params.collide_with_areas = true
 	params.collide_with_bodies = true
 	
-	var results = space_state.intersect_point(params)
+	var results = space_state.intersect_shape(params)
 	var target_enemy: Node = null
 	for res in results:
 		if res.collider and (res.collider is Enemy):
@@ -44,12 +85,8 @@ func attack(target_pos: Vector2) -> void:
 		elif res.collider and (res.collider.get_parent() is Enemy):
 			target_enemy = res.collider.get_parent()
 			break
-			
-	if target_enemy:
-		_register_stab_target(target_enemy)
-	else:
-		print("短剑：目标处无敌人，原地攻击")
-		_reset_pending_stab()
+
+	return target_enemy
 
 func _register_stab_target(enemy: Node) -> void:
 	if not is_instance_valid(enemy) or enemy.is_dead:
@@ -57,18 +94,17 @@ func _register_stab_target(enemy: Node) -> void:
 
 	if pending_stab_target != enemy:
 		pending_stab_target = enemy
-		pending_stab_hits = 0
 
-	pending_stab_hits += 1
-	combo_timer.start(combo_timeout)
+	if hold_timer.is_stopped():
+		print("短剑：锁定敌人，开始长按判定...")
+		hold_timer.start(hold_time_required)
 
-	if pending_stab_hits < 2:
-		print("短剑：第1次命中，继续点同一个敌人触发突刺")
-		return
-
-	print("短剑：双击命中，准备位移突刺...")
-	_reset_pending_stab()
-	_perform_dash(enemy)
+func _on_hold_timeout() -> void:
+	if is_instance_valid(pending_stab_target) and not pending_stab_target.is_dead:
+		print("短剑：长按触发，准备位移突刺...")
+		dash_pending = true
+		_perform_dash(pending_stab_target)
+		_reset_pending_stab()
 
 func _perform_dash(enemy: Node) -> void:
 	# 延迟1秒
@@ -93,6 +129,8 @@ func _perform_dash(enemy: Node) -> void:
 		combo_timer.start(combo_timeout)
 		# 瞬移后自动触发一次攻击判定
 		on_hit(enemy)
+		dash_executed_this_hold = true
+	dash_pending = false
 
 func on_hit(target: Node) -> void:
 	if not target.is_dead:
@@ -109,4 +147,3 @@ func _on_combo_timeout() -> void:
 
 func _reset_pending_stab() -> void:
 	pending_stab_target = null
-	pending_stab_hits = 0

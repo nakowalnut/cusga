@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="8_pw37b"]
 [ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="9_duprh"]
 [ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="10_wwgcc"]
+[ext_resource type="Script" uid="uid://bo6ptf42wuque" path="res://classes/CharacterState/c_states/stun.gd" id="11_duprh"]
 [ext_resource type="Script" uid="uid://c0gqmu1cbxjjr" path="res://classes/Weapons/enemiesweapon/Slimer.gd" id="11_pw37b"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6ybt5"]
@@ -18,8 +19,8 @@ shader_parameter/a = 0.0
 shader_parameter/c = Color(1, 0.75756776, 0.62100786, 1)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vp0jb"]
-radius = 15.37
-height = 44.0
+radius = 19.0
+height = 52.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wwgcc"]
 radius = 30.463093
@@ -47,6 +48,7 @@ texture = ExtResource("2_e47rn")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Icon" unique_id=401103608]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=279340720]
+position = Vector2(0, 9)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_vp0jb")
 
@@ -83,7 +85,11 @@ metadata/_custom_type_script = "uid://vqdmlojjhhyw"
 
 [node name="HurtState" type="Node" parent="StateMachine" unique_id=2126178708]
 
+[node name="StunState" type="Node" parent="StateMachine" unique_id=322063167]
+script = ExtResource("11_duprh")
+
 [node name="WeaponHolder" type="Node2D" parent="." unique_id=1241831584]
+visible = false
 
 [node name="HitBox" type="Area2D" parent="WeaponHolder" unique_id=1743703014]
 position = Vector2(0, -9.536743e-07)

@@ -102,13 +102,41 @@ func _handle_input() -> void:
 
 	# 平A (鼠标点击)
 	if Input.is_action_just_pressed("attack"):
-		var cur_weapon = weapon_wheel[current_weapon_index]
-		c_state_machine.change_state("Attack", {
-			"weapon": cur_weapon, 
-			"prev_weapon": cur_weapon, 
-			"is_switch": false
-		})
-		print("普通攻击")
+		var cur_weapon_id = weapon_wheel[current_weapon_index]
+		var is_charged_type = false
+		if is_instance_valid(current_weapon_node):
+			current_weapon_node.on_attack_pressed()
+			is_charged_type = current_weapon_node.get("is_charge_weapon")
+		
+		# 如果不是蓄力武器，直接发起攻击状态
+		if not is_charged_type:
+			c_state_machine.change_state("Attack", {
+				"weapon": cur_weapon_id, 
+				"prev_weapon": cur_weapon_id, 
+				"is_switch": false
+			})
+			print("攻击按下")
+		else:
+			print("蓄力武器，开始举起...")
+			_play_charge_animation()
+		
+	if Input.is_action_just_released("attack"):
+		var cur_weapon_id = weapon_wheel[current_weapon_index]
+		var is_charged_type = false
+		if is_instance_valid(current_weapon_node):
+			current_weapon_node.on_attack_released()
+			is_charged_type = current_weapon_node.get("is_charge_weapon")
+			
+		# 对于蓄力武器，松开时才真正触发攻击挥舞
+		if is_charged_type:
+			if current_weapon_tween and current_weapon_tween.is_valid():
+				current_weapon_tween.kill() # 停掉蓄力的动画
+			c_state_machine.change_state("Attack", {
+				"weapon": cur_weapon_id, 
+				"prev_weapon": cur_weapon_id, 
+				"is_switch": false
+			})
+			print("蓄力释放，执行攻击")
 
 
 # 处理切换武器并攻击
@@ -140,10 +168,33 @@ func _update_weapon_visual() -> void:
 	var current_weapon_id = weapon_wheel[current_weapon_index]
 	var weapon = all_weapons[current_weapon_id]
 	current_weapon_node = weapon
+	_clear_custom_weapon_shapes()
+	
+	# 重置被Tween影响的位置和旋转，防止切枪时由于动画残留导致表现错乱
+	if weapon_sprite:
+		weapon_sprite.position = Vector2(22, -5)
+		weapon_sprite.rotation = -1.16588
 	
 	# 通过调制颜色 (Self Modulate) 来模拟武器切换
 	if weapon_sprite:
 		weapon_sprite.self_modulate = weapon.color
+		# 视觉与物理同步变化：CurrentWeapon 是 HitBox 的父节点，缩放会同时影响碰撞判定
+		weapon_sprite.scale = Vector2(1.0, 1.125)
+		match current_weapon_id:
+			"dagger":
+				# 短剑：更短
+				weapon_sprite.scale = Vector2(0.5, 1.125)
+			"spear":
+				# 矛：更细、更长
+				weapon_sprite.scale = Vector2(1.6, 0.55)
+				# 矛头方向与鼠标一致：本地旋转归零，由 weapon_holder.look_at 接管朝向
+				weapon_sprite.rotation = 0.0
+			"hammer":
+				# 锤子：杆保持中等长度，头部由多个方块拼接
+				weapon_sprite.scale = Vector2(0.9, 1.0)
+				_build_hammer_head(weapon.color)
+			_:
+				pass
 	
 	# 同步攻击判定范围的掩码和层，确保能检测到敌人 (Layer 3/Collision Mask 4)
 	if weapon_hitbox:
@@ -154,6 +205,39 @@ func _update_weapon_visual() -> void:
 	
 	# 如果有攻击判定，可以在这里调整碰撞盒大小模拟不同武器长度
 	# attack_collider.shape.extents = Vector2(weapon.attack_range, 10)
+
+
+func _clear_custom_weapon_shapes() -> void:
+	if not weapon_sprite:
+		return
+	for child in weapon_sprite.get_children():
+		if child.name.begins_with("CustomShape_"):
+			child.free()
+
+
+func _build_hammer_head(base_color: Color) -> void:
+	if not weapon_sprite:
+		return
+	# 防御性清理：避免同帧重复构建时出现残留
+	_clear_custom_weapon_shapes()
+	_add_hammer_square(Vector2(18.0, -8.0), 11.0, base_color.lightened(0.15), "Top")
+	_add_hammer_square(Vector2(24.0, -2.0), 13.0, base_color, "Middle")
+	_add_hammer_square(Vector2(18.0, 7.0), 10.0, base_color.darkened(0.2), "Bottom")
+
+
+func _add_hammer_square(center: Vector2, size: float, fill_color: Color, suffix: String) -> void:
+	var half := size * 0.5
+	var block := Polygon2D.new()
+	block.name = "CustomShape_Hammer_" + suffix
+	block.polygon = PackedVector2Array([
+		Vector2(-half, -half),
+		Vector2(half, -half),
+		Vector2(half, half),
+		Vector2(-half, half)
+	])
+	block.position = center
+	block.color = fill_color
+	weapon_sprite.add_child(block)
 
 
 
@@ -170,11 +254,16 @@ func pre_attack(msg):
 	
 	if is_switch:
 		print("执行连携攻击: ", prev_weapon_id, " -> ", current_weapon_id)
-		# 可以在此处执行连携动画播放逻辑
-		animation_player.play("Attack1") 
+		if current_weapon_id == "spear":
+			_spear_poke_animation()
+		else:
+			animation_player.play("Attack1") 
 	else:
 		print("使用武器普通攻击: ", weapon.weapon_name)
-		animation_player.play("Attack1") 
+		if current_weapon_id == "spear":
+			_spear_poke_animation()
+		else:
+			animation_player.play("Attack1") 
 	
 	# 调用武器子类的特定攻击逻辑（位移、射箭等）
 	var mouse_pos = get_global_mouse_position()
@@ -182,6 +271,47 @@ func pre_attack(msg):
 	
 	_update_weapon_visual()
 	set_weapon_hitbox_active(true)
+
+var current_weapon_tween: Tween
+
+func _play_charge_animation() -> void:
+	if animation_player.is_playing() and animation_player.current_animation.begins_with("Attack"):
+		animation_player.stop()
+	
+	if current_weapon_tween and current_weapon_tween.is_valid():
+		current_weapon_tween.kill()
+		
+	current_weapon_tween = create_tween()
+	# 蓄力时将武器向后方高高举起 (旋转角度后仰，并稍微收回)
+	var final_rotation = weapon_sprite.rotation - deg_to_rad(45.0)
+	var final_position = weapon_sprite.position + Vector2(-10, -10)
+	
+	current_weapon_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	current_weapon_tween.tween_property(weapon_sprite, "rotation", final_rotation, 0.4)
+	current_weapon_tween.parallel().tween_property(weapon_sprite, "position", final_position, 0.4)
+
+func _spear_poke_animation() -> void:
+	# 停止动画播放器，以免与代码Tween冲突
+	if animation_player.is_playing() and animation_player.current_animation.begins_with("Attack"):
+		animation_player.stop()
+
+	if current_weapon_tween and current_weapon_tween.is_valid():
+		current_weapon_tween.kill()
+		
+	var base_pos = Vector2(22, -5)
+	weapon_sprite.position = base_pos
+	# 矛的默认角度由 weapon_holder.look_at 驱动，这里保持本地零旋转
+	weapon_sprite.rotation = 0.0
+	
+	# 向本地 X 轴直接延伸进行“戳”的动作
+	# 父节点 weapon_holder 已经 look_at 指向了鼠标，因此增加 X 轴位置即为向前突刺
+	var target_pos = base_pos + Vector2(60, 0)
+	
+	current_weapon_tween = create_tween()
+	# 快速突刺
+	current_weapon_tween.tween_property(weapon_sprite, "position", target_pos, 0.1).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	# 慢速收回
+	current_weapon_tween.tween_property(weapon_sprite, "position", base_pos, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
 func player_attack():
 	var character = self

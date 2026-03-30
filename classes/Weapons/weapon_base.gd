@@ -7,6 +7,8 @@ class_name WeaponBase
 @export var attack_speed_multiplier: float = 1.0
 @export var color: Color = Color.WHITE
 @export var max_combo: int = 5
+@export var attack_duration: float = 0.3 # 统一攻击硬直时长
+@export var is_charge_weapon: bool = false # 是否需要蓄力
 
 var current_combo: int = 0
 var is_synergy_ready: bool = false
@@ -19,7 +21,35 @@ func _ready() -> void:
 func attack(target_pos: Vector2) -> void:
 	pass
 
-## 统一致死判定接口：由子类 on_hit 调用，实现“触碰即死”语义
+# 统一输入钩子：玩家按下攻击键时
+func on_attack_pressed() -> void:
+	pass
+
+# 统一输入钩子：玩家松开攻击键时
+func on_attack_released() -> void:
+	pass
+
+# 获取附近敌人的辅助函数
+func get_nearby_enemies(radius: float) -> Array:
+	var space_state = weapon_owner.get_world_2d().direct_space_state
+	var query = PhysicsShapeQueryParameters2D.new()
+	var shape = CircleShape2D.new()
+	shape.radius = radius
+	query.shape = shape
+	query.transform = Transform2D(0, weapon_owner.global_position)
+	query.collision_mask = 4 
+	query.collide_with_areas = true
+	var results = space_state.intersect_shape(query)
+	var enemies = []
+	for r in results:
+		var col = r.collider
+		if col is Enemy:
+			enemies.append(col)
+		elif col.get_parent() is Enemy:
+			enemies.append(col.get_parent())
+	return enemies
+
+# 统一致死判定接口：由子类 on_hit 调用，实现“触碰即死”语义
 #func kill_target_if_enemy(target: Node) -> void:
 	#if not is_instance_valid(target): return
 	#if target.has_method("die") and not target.get("is_dead"):
@@ -60,24 +90,4 @@ func execute_synergy(name) -> void:
 func reset_combo() -> void:
 	current_combo = 0
 	is_synergy_ready = false
-
-# 获取附近敌人的辅助函数
-func get_nearby_enemies(radius: float) -> Array:
-	if not is_instance_valid(weapon_owner): return []
-	var enemies = []
-	var space_state = weapon_owner.get_world_2d().direct_space_state
-	var shape = CircleShape2D.new()
-	shape.radius = radius
-	
-	var params = PhysicsShapeQueryParameters2D.new()
-	params.shape = shape
-	params.transform = weapon_owner.global_transform
-
-	
-	var results = space_state.intersect_shape(params)
-	for res in results:
-		var col = res.collider
-		if col.has_method("take_damage") and not col.is_dead:
-			enemies.append(col)
-	return enemies
 	

@@ -9,6 +9,12 @@ func enter(msg: Dictionary = {}) -> void:
 		
 		character.is_attacking = true
 	character.pre_attack(msg)
+	
+	# 读取武器具体的攻击时长
+	var lock_time = 0.3
+	if character is Player and character.current_weapon_node:
+		lock_time = character.current_weapon_node.attack_duration
+	
 	# 如果有传入anim的示例，可保留这部分自定义逻辑
 	match msg.get("anim"):
 		0:
@@ -16,8 +22,8 @@ func enter(msg: Dictionary = {}) -> void:
 		1:
 			character.animation_player.play("attack2")
 
-	# 模拟攻击硬直结束
-	await get_tree().create_timer(0.3).timeout
+	# 使用动态时长
+	await get_tree().create_timer(lock_time).timeout
 	
 	# 确保还在 Attack 状态才执行后续攻击和切回 Idle，防止中途被受击等状态打断或动画提前结束
 	if character.c_state_machine.get_current_state_name() == "Attack":
