@@ -3,17 +3,12 @@ class_name ArrowProjectile
 
 @export var speed: float = 600.0
 @export var life_time: float = 2.0
-@export_flags_2d_physics var target_collision_mask: int = 4
 
 var direction: Vector2 = Vector2.ZERO
 var damage: float = 5.0
 var weapon_owner: WeaponBase
 
 func _ready() -> void:
-	# 设置 Collision 以便检测目标层（由 Inspector 配置）
-	collision_layer = 0
-	collision_mask = target_collision_mask
-	
 	body_entered.connect(_on_body_entered)
 	area_entered.connect(_on_area_entered)
 	

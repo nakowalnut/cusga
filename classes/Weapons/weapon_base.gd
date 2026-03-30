@@ -9,7 +9,6 @@ class_name WeaponBase
 @export var max_combo: int = 5
 @export var attack_duration: float = 0.3 # 统一攻击硬直时长
 @export var is_charge_weapon: bool = false # 是否需要蓄力
-@export_flags_2d_physics var nearby_enemy_mask: int = 4 # 默认敌人层
 
 var current_combo: int = 0
 var is_synergy_ready: bool = false
@@ -38,7 +37,6 @@ func get_nearby_enemies(radius: float) -> Array:
 	shape.radius = radius
 	query.shape = shape
 	query.transform = Transform2D(0, weapon_owner.global_position)
-	query.collision_mask = nearby_enemy_mask
 	query.collide_with_areas = true
 	var results = space_state.intersect_shape(query)
 	var enemies = []

@@ -1,9 +1,7 @@
 extends CharacterBase
 class_name Player
 
-## 近战命中目标层（可在 Inspector 中配置）
-@export_flags_2d_physics var enemy_hitbox_mask: int = 4
-
+## ---- 常量定义 ----
 @onready var animation_player = $AnimationPlayer
 
 ## 检查是否处于无法切换状态的硬直中
@@ -182,12 +180,6 @@ func _update_weapon_visual() -> void:
 	if weapon_sprite:
 		weapon_sprite.self_modulate = weapon.color
 		_apply_weapon_transforms(current_weapon_id, weapon.color)
-	
-	# 同步攻击判定范围的掩码和层，确保能检测到敌人
-	if weapon_hitbox:
-		# 强制重新获取实时层级
-		weapon_hitbox.collision_mask = enemy_hitbox_mask
-		weapon_hitbox.collision_layer = 0 # 攻击判定不需要被别人撞，只需要去撞别人
 
 func _apply_weapon_transforms(weapon_id: String, weapon_color: Color) -> void:
 	# 视觉与物理同步变化：CurrentWeapon 是 HitBox 的父节点，缩放会同时影响碰撞判定
