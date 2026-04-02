@@ -30,20 +30,7 @@ func attack(target_pos: Vector2) -> void:
 
 	var results = get_world_2d().direct_space_state.intersect_shape(params)
 
-	# --- 调试打印开始 ---
-	print("--- 史莱姆攻击调试 ---")
-	print("攻击位置: ", target_pos)
-	print("HitBox 掩码(Mask): ", hitbox.collision_mask)
-	print("检测到的物体数量: ", results.size())
-
-	for result in results:
-		var body: Node = result.get("collider")
-		if body == null:
-			continue
-		print("检测到物体: ", body.name, " | 类名: ", body.get_class(), " | 是否为Player: ", body is Player)
-		if body is CharacterBody2D:
-			print("  物体层(Layer): ", body.collision_layer)
-	# --- 调试打印结束 ---
+	# 已移除攻击时的调试打印（需要时可临时打开）
 
 	for result in results:
 		var i: Node = result.get("collider")

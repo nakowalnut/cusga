@@ -90,6 +90,7 @@ _data = {
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_cyojo")
+max_health = 10000000.0
 c_state_machine = NodePath("StateMachine")
 metadata/_custom_type_script = "uid://l4denkeet557"
 

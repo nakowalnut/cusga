@@ -7,6 +7,8 @@ class_name ArrowProjectile
 var direction: Vector2 = Vector2.ZERO
 var damage: float = 5.0
 var weapon_owner: WeaponBase
+var direct_damage: float = -1.0
+var trigger_weapon_on_hit: bool = true
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
@@ -23,16 +25,32 @@ func _on_body_entered(body: Node2D) -> void:
 	_hit(body)
 
 func _on_area_entered(area: Area2D) -> void:
-	if area is FieldOfView2D:
-		return
-	# 如果敌人的受击区域是 Area2D
-	_hit(area.get_parent())
+		if area is FieldOfView2D:
+				return
+		# 检测是否命中了敌人的 HitBox (Area2D)
+		# 很多敌人的结构是 Character (Node) -> HitBox (Area2D)，所以找 parent
+		var target = area.get_parent()
+		
+		# 针对 Slime 这种 HitBox 被放在孙子节点的特殊结构 (Character -> WeaponHolder -> HitBox)
+		# 如果 parent 没有受击方法，则继续往上找一层
+		if target and not target.has_method("take_damage"):
+			target = target.get_parent()
+			
+		_hit(target)
 
 func _hit(target: Node) -> void:
 	if target and target.has_method("take_damage") and not target.get("is_dead"):
-		# 触发武器的命中逻辑从而叠加 combo
-		if is_instance_valid(weapon_owner):
-			weapon_owner.on_hit(target)
+		if is_instance_valid(weapon_owner) and target == weapon_owner.weapon_owner:
+			return
+
+		if direct_damage >= 0.0:
+			target.take_damage(direct_damage)
+			if trigger_weapon_on_hit and is_instance_valid(weapon_owner):
+				weapon_owner.on_hit(target)
+		else:
+			# 触发武器的命中逻辑从而叠加 combo
+			if is_instance_valid(weapon_owner):
+				weapon_owner.on_hit(target)
 		queue_free()
 
 func _draw() -> void:

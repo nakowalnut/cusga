@@ -36,6 +36,12 @@ var current_weapon_node: WeaponBase = null
 func _ready() -> void:
 	anim = $AnimationPlayer
 	GameManager.player = self
+	
+	# 初始化连携管理器
+	var combo_manager = ComboManagerClass.new()
+	combo_manager.name = "ComboManager"
+	add_child(combo_manager)
+	
 	_init_weapons()
 	# 初始更新一次视觉
 	_update_weapon_visual()
@@ -146,10 +152,11 @@ func _handle_input() -> void:
 func _switch_and_attack(new_index: int) -> void:
 	if new_index < 0 or new_index >= weapon_wheel.size(): return
 	var prev_weapon = weapon_wheel[current_weapon_index]
+	var new_weapon_id = weapon_wheel[new_index]
 
-	# 如果切换武器，先让旧武器结算连携技并重置累积次数
-	if current_weapon_index != new_index and is_instance_valid(current_weapon_node):
-		current_weapon_node.on_switch_out(weapon_wheel[new_index])
+	# 无论是否切换同样武器，只要发起按键都结算旧武器状态
+	if is_instance_valid(current_weapon_node):
+		current_weapon_node.on_switch_out(new_weapon_id)
 		
 	current_weapon_index = new_index
 	var new_weapon = weapon_wheel[current_weapon_index]

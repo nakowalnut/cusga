@@ -52,8 +52,18 @@ func get_nearby_enemies(radius: float) -> Array:
 
 # 统一数值伤害接口
 func deal_damage(target: Node) -> void:
-	if not is_instance_valid(target): return
+	if not is_instance_valid(target):
+		return
 	if target.has_method("take_damage") and not target.get("is_dead"):
+		# 如果该武器的拥有者是玩家，并且目标不是玩家，则打印伤害调试信息
+		if is_instance_valid(weapon_owner) and weapon_owner is Player and not (target is Player):
+			var prev_hp = target.get("current_health")
+			target.take_damage(damage)
+			var after_hp = target.get("current_health")
+			print("玩家伤害:", weapon_owner.name, "->", target.name, " 伤害:", damage, " HP:", prev_hp, "->", after_hp)
+			return
+
+		# 默认造成伤害
 		target.take_damage(damage)
 
 # 每次攻击检测到命中敌人时调用
@@ -79,6 +89,9 @@ func on_switch_out(name: String) -> void:
 func execute_synergy(name) -> void:
 	if weapon_owner.debug_mode:
 		print("连携技使出(",weapon_name,"->", name, ")")
+	if weapon_owner.has_node("ComboManager"):
+		var manager = weapon_owner.get_node("ComboManager")
+		manager.trigger_combo(weapon_owner, self, name)
 
 # 重置连携计数
 func reset_combo() -> void:
