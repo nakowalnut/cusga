@@ -23,6 +23,8 @@ func _on_body_entered(body: Node2D) -> void:
 	_hit(body)
 
 func _on_area_entered(area: Area2D) -> void:
+	if area is FieldOfView2D:
+		return
 	# 如果敌人的受击区域是 Area2D
 	_hit(area.get_parent())
 

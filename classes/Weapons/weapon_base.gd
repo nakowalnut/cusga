@@ -3,7 +3,7 @@ class_name WeaponBase
 
 @export var weapon_name: String = "未命名武器"
 @export var damage: float = 10.0
-@export var attack_range: float = 50.0
+var attack_range: float = 50.0
 @export var attack_speed_multiplier: float = 1.0
 @export var color: Color = Color.WHITE
 @export var max_combo: int = 5
@@ -37,7 +37,8 @@ func get_nearby_enemies(radius: float) -> Array:
 	shape.radius = radius
 	query.shape = shape
 	query.transform = Transform2D(0, weapon_owner.global_position)
-	query.collide_with_areas = true
+	query.collide_with_bodies = true
+	query.collide_with_areas = false
 	var results = space_state.intersect_shape(query)
 	var enemies = []
 	for r in results:
@@ -48,12 +49,6 @@ func get_nearby_enemies(radius: float) -> Array:
 			enemies.append(col.get_parent())
 	return enemies
 
-# 统一致死判定接口：由子类 on_hit 调用，实现“触碰即死”语义
-#func kill_target_if_enemy(target: Node) -> void:
-	#if not is_instance_valid(target): return
-	#if target.has_method("die") and not target.get("is_dead"):
-		## 如果是 CharacterBase 或继承者，直接触发死亡逻辑
-		#target.die()
 
 # 统一数值伤害接口
 func deal_damage(target: Node) -> void:

@@ -73,7 +73,7 @@ func _find_enemy_near_mouse(mouse_pos: Vector2) -> Node:
 	params.transform = Transform2D(0,mouse_pos)
 
 	#params.collision_mask = 4 # Enemy Layer
-	params.collide_with_areas = true
+	params.collide_with_areas = false
 	params.collide_with_bodies = true
 	
 	var results = space_state.intersect_shape(params)

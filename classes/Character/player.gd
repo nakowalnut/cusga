@@ -78,6 +78,8 @@ func _rotate_weapon_to_mouse() -> void:
 
 
 func _on_weapon_hitbox_area_entered(area: Area2D) -> void:
+	if area is FieldOfView2D:
+		return
 	if weapon_hitbox.monitoring and area.get_parent() is Enemy:
 		if is_instance_valid(current_weapon_node):
 			current_weapon_node.on_hit(area.get_parent())
