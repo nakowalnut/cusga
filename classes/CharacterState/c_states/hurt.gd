@@ -39,7 +39,12 @@ func exit() -> void:
 		print("Exiting Hurt State")
 
 func process(delta: float) -> void:
-	character.velocity.x = - character.toward
+	pass
+
+func physics_process(delta: float) -> void:
+	# 击退动量衰减并位移
+	character.velocity = character.velocity.move_toward(Vector2.ZERO, 3000.0 * delta)
+	character.move_and_slide()
 
 func get_state_name() -> String:
 	return CharacterBase.STATE_HURT

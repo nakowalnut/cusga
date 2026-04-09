@@ -43,7 +43,7 @@ func _get_combo_key(wp1: String, wp2: String) -> String:
 	arr.sort()
 	return arr[0] + "_" + arr[1]
 
-func trigger_combo(player: CharacterBase, current_weapon: WeaponBase, next_weapon_name: String) -> void:
+func trigger_combo(player: CharacterBase, current_weapon: WeaponBase, next_weapon_name: String) -> bool:
 	var cur_name = ""
 	# 处理 weapon_name 可能和 ID 不完全对应的情况，最好传 weapon id (如 "sword")
 	# current_weapon.weapon_name 是中文名（"未命名武器"），所以我们要在武器本身或者通过转换拿到它的英文ID。
@@ -62,8 +62,19 @@ func trigger_combo(player: CharacterBase, current_weapon: WeaponBase, next_weapo
 	if combos.has(key):
 		var combo_script_class = combos[key]
 		var combo_instance = combo_script_class.new()
-		# 将实例添加到树中以支持内部计时器、补间动画等
 		add_child(combo_instance)
+		
+		# 检查是否是弓/锤组合，如果是，我们要返回 false 阻止即时攻击
+		var is_bow_hammer = (key == "bow_hammer")
+		
 		combo_instance.execute(player, current_weapon, next_weapon_name)
+		if player is Player and player.has_method("add_ultimate_point"):
+			player.add_ultimate_point(1)
+		
+		if is_bow_hammer:
+			return false
+			
+		return true
 	else:
 		print("[ComboManager] 未找到对应连携技: ", key)
+		return false

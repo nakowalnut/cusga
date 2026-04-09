@@ -5,6 +5,7 @@ class_name WeaponBase
 @export var damage: float = 10.0
 var attack_range: float = 50.0
 @export var attack_speed_multiplier: float = 1.0
+@export var movement_speed_multiplier: float = 1.0
 @export var color: Color = Color.WHITE
 @export var max_combo: int = 5
 @export var attack_duration: float = 0.3 # 统一攻击硬直时长
@@ -51,20 +52,26 @@ func get_nearby_enemies(radius: float) -> Array:
 
 
 # 统一数值伤害接口
-func deal_damage(target: Node) -> void:
+func deal_damage(target: Node, override_damage: float = -1.0) -> void:
 	if not is_instance_valid(target):
 		return
 	if target.has_method("take_damage") and not target.get("is_dead"):
+		var applied_damage = damage
+		if override_damage >= 0.0:
+			applied_damage = override_damage
+
 		# 如果该武器的拥有者是玩家，并且目标不是玩家，则打印伤害调试信息
 		if is_instance_valid(weapon_owner) and weapon_owner is Player and not (target is Player):
 			var prev_hp = target.get("current_health")
-			target.take_damage(damage)
+			target.take_damage(applied_damage)
 			var after_hp = target.get("current_health")
-			print("玩家伤害:", weapon_owner.name, "->", target.name, " 伤害:", damage, " HP:", prev_hp, "->", after_hp)
-			return
+			print("玩家伤害:", weapon_owner.name, "->", target.name, " 伤害:", applied_damage, " HP:", prev_hp, "->", after_hp)
+		else:
+			# 默认造成伤害
+			target.take_damage(applied_damage)
 
-		# 默认造成伤害
-		target.take_damage(damage)
+		if is_instance_valid(weapon_owner) and weapon_owner is Player and weapon_owner.has_method("spawn_ultimate_followup_arrow"):
+			weapon_owner.spawn_ultimate_followup_arrow(target)
 
 # 每次攻击检测到命中敌人时调用
 func on_hit(target: Node) -> void:
@@ -80,21 +87,32 @@ func add_combo(amount: int = 1) -> void:
 		print(weapon_name + " 连携技已就绪！")
 
 # 切换武器时调用，判断是否触发连携技
-func on_switch_out(name: String) -> void:
+func on_switch_out(name: String) -> bool:
+	var triggered := false
 	if is_synergy_ready:
-		execute_synergy(name)
+		triggered = execute_synergy(name)
 	reset_combo()
+	return triggered
 
 # 执行连携技的具体逻辑，由子类实现
-func execute_synergy(name) -> void:
+func execute_synergy(name) -> bool:
 	if weapon_owner.debug_mode:
 		print("连携技使出(",weapon_name,"->", name, ")")
 	if weapon_owner.has_node("ComboManager"):
 		var manager = weapon_owner.get_node("ComboManager")
-		manager.trigger_combo(weapon_owner, self, name)
+		return manager.trigger_combo(weapon_owner, self, name)
+	return false
 
 # 重置连携计数
 func reset_combo() -> void:
 	current_combo = 0
 	is_synergy_ready = false
+
+# 如果武器在特定状态下可以接管伤害处理（如霸体），返回 true 并执行自定义逻辑
+func handle_take_damage(amount: float) -> bool:
+	return false
+
+# 如果武器在特定状态下可以接管击退处理，返回 true 并执行自定义逻辑
+func handle_apply_knockback(force: Vector2) -> bool:
+	return false
 	

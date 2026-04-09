@@ -5,11 +5,14 @@ class_name DaggerWeapon
 @export var combo_timeout: float = 3.0
 @export var delay_time: float = 0.1
 @export var hold_time_required: float = 0.17 # 长按触发所需时间
+@export var hammer_synergy_damage_multiplier: float = 2.5
+@export var hammer_synergy_knockback: float = 800.0
 var combo_timer: Timer
 var hold_timer: Timer
 var pending_stab_target: Node = null
 var dash_pending: bool = false
 var dash_executed_this_hold: bool = false
+var hammer_synergy_expire_at: float = 0.0
 
 func _init() -> void:
 	weapon_name = "短剑"
@@ -67,7 +70,7 @@ func _find_enemy_near_mouse(mouse_pos: Vector2) -> Node:
 	var params = PhysicsShapeQueryParameters2D.new()
 	 
 	var shape = CircleShape2D.new()
-	shape.radius = 100.0#调受击判定半径大小
+	shape.radius = 10.0#调受击判定半径大小
 	
 	params.shape = shape
 	params.transform = Transform2D(0,mouse_pos)
@@ -115,6 +118,7 @@ func _perform_dash(enemy: Node) -> void:
 		return
 
 	if is_instance_valid(weapon_owner) and is_instance_valid(enemy) and not enemy.is_dead:
+		var pre_dash_pos = weapon_owner.global_position
 		# 留出一点距离，避免玩家和怪物完全重叠
 		var dir = (weapon_owner.global_position - enemy.global_position).normalized()
 		var offset = dir * 40.0
@@ -127,8 +131,11 @@ func _perform_dash(enemy: Node) -> void:
 		add_combo(1)
 		# 刷新连击时间
 		combo_timer.start(combo_timeout)
-		# 瞬移后自动触发一次攻击判定
-		on_hit(enemy)
+		# 瞬移后自动触发一次攻击判定；锤子连携窗口内升级为击飞突刺
+		if _is_hammer_synergy_active():
+			_apply_hammer_synergy_stab(enemy, pre_dash_pos)
+		else:
+			on_hit(enemy)
 		dash_executed_this_hold = true
 	dash_pending = false
 
@@ -147,3 +154,38 @@ func _on_combo_timeout() -> void:
 
 func _reset_pending_stab() -> void:
 	pending_stab_target = null
+
+func grant_hammer_synergy(duration: float = 10.0) -> void:
+	hammer_synergy_expire_at = _get_now_seconds() + duration
+	print("短剑：获得锤子连携强化，持续", duration, "秒")
+
+func _is_hammer_synergy_active() -> bool:
+	return _get_now_seconds() < hammer_synergy_expire_at
+
+func _get_now_seconds() -> float:
+	return Time.get_ticks_msec() / 1000.0
+
+func _apply_hammer_synergy_stab(target: Node, from_pos: Vector2) -> void:
+	if not is_instance_valid(target) or target.get("is_dead"):
+		return
+
+	var synergy_damage = damage * hammer_synergy_damage_multiplier
+	if target.has_method("take_damage"):
+		target.take_damage(synergy_damage)
+
+	var dir_to_enemy = (target.global_position - from_pos).normalized()
+	if dir_to_enemy == Vector2.ZERO:
+		dir_to_enemy = (target.global_position - weapon_owner.global_position).normalized()
+	if dir_to_enemy == Vector2.ZERO:
+		dir_to_enemy = Vector2.RIGHT
+
+	if target.has_method("apply_knockback"):
+		target.apply_knockback(dir_to_enemy * hammer_synergy_knockback)
+	elif "velocity" in target:
+		target.velocity = target.velocity + dir_to_enemy * hammer_synergy_knockback
+		if target.has_method("move_and_slide"):
+			target.move_and_slide()
+
+	add_combo(1)
+	combo_timer.start(combo_timeout)
+	print("短剑：连携突刺触发，造成击飞")

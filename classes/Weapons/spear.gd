@@ -24,7 +24,11 @@ func on_hit(target: Node) -> void:
 		deal_damage(target)
 		add_combo(1)
 		# 概率眩晕敌人
-		if randf() <= stun_chance:
+		var final_stun_chance = stun_chance
+		if is_instance_valid(weapon_owner) and weapon_owner is Player and weapon_owner.get("in_ultimate_mode"):
+			final_stun_chance = 1.0
+
+		if randf() <= final_stun_chance:
 			if target.has_method("apply_stun"):
 				target.apply_stun(stun_duration)
 				# 眩晕敌人增加 combo (需求: 累计眩晕敌人3人次)

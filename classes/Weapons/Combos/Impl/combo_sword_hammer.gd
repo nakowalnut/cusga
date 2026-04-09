@@ -20,7 +20,10 @@ func execute(player: CharacterBase, current_weapon: WeaponBase, next_weapon_name
 		deal_damage_to(e, base_dmg)
 		print("锤击命中：", e.name, "，造成伤害：", base_dmg)
 		# 微弱击退
-		if e is CharacterBody2D or e is RigidBody2D:
+		if e.has_method("apply_knockback"):
+			var dir = (e.global_position - player.global_position).normalized()
+			e.apply_knockback(dir * 200.0)
+		elif e is CharacterBody2D or e is RigidBody2D:
 			var dir = (e.global_position - player.global_position).normalized()
 			if e.get("velocity") != null:
 				e.velocity += dir * 200.0

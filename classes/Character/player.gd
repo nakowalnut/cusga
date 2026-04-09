@@ -1,6 +1,10 @@
 extends CharacterBase
 class_name Player
 
+@export var ULTIMATE_MAX_POINTS: int = 3 # 测试大招次数，平时是10
+const ULTIMATE_ARROW_SCENE = preload("res://Scenes/Prefab/arrow_projectile.tscn")
+const ULTIMATE_ARROW_DAMAGE: float = 4.0
+
 ## ---- 常量定义 ----
 @onready var animation_player = $AnimationPlayer
 
@@ -26,6 +30,10 @@ var weapon_wheel: Array[String] = ["sword", "spear", "dagger", "bow", "hammer"]
 var current_weapon_index: int = 0
 
 var current_weapon_node: WeaponBase = null
+var ultimate_points: int = 0
+var in_ultimate_mode: bool = false
+var ultimate_weapon_cycle: Array[String] = ["sword", "dagger", "spear", "hammer"]
+var ultimate_cycle_index: int = -1
 
 # 演示用节点引用
 @onready var weapon_holder = $WeaponHolder
@@ -49,6 +57,18 @@ func _ready() -> void:
 	weapon_hitbox.area_entered.connect(_on_weapon_hitbox_area_entered)
 	weapon_hitbox.body_entered.connect(_on_weapon_hitbox_body_entered)
 	weapon_hitbox.monitoring = false
+
+func take_damage(amount: float) -> void:
+	if is_instance_valid(current_weapon_node) and current_weapon_node.has_method("handle_take_damage"):
+		if current_weapon_node.handle_take_damage(amount):
+			return
+	super.take_damage(amount)
+
+func apply_knockback(force: Vector2) -> void:
+	if is_instance_valid(current_weapon_node) and current_weapon_node.has_method("handle_apply_knockback"):
+		if current_weapon_node.handle_apply_knockback(force):
+			return
+	super.apply_knockback(force)
 
 func _init_weapons() -> void:
 	# 实例化所有武器，并放入节点树成为子节点，这样就可以使用 Timer 或者 process 逻辑
@@ -89,33 +109,48 @@ func _on_weapon_hitbox_area_entered(area: Area2D) -> void:
 	if weapon_hitbox.monitoring and area.get_parent() is Enemy:
 		if is_instance_valid(current_weapon_node):
 			current_weapon_node.on_hit(area.get_parent())
+			if in_ultimate_mode:
+				apply_ultimate_arrow_rain(area.get_parent())
 		print("攻击到了(Area)！", area.get_parent().name)
 
 func _on_weapon_hitbox_body_entered(body: Node2D) -> void:
 	if weapon_hitbox.monitoring and body is Enemy:
 		if is_instance_valid(current_weapon_node):
 			current_weapon_node.on_hit(body)
+			if in_ultimate_mode:
+				apply_ultimate_arrow_rain(body)
 		print("攻击到了(Body)！", body.name)
 
 func _handle_input() -> void:
+	if Input.is_action_just_pressed("ultimate"):
+		_try_cast_ultimate()
+		return
+
 	# 检查切换前置条件：必须没有正在攻击，且没在受击/死亡中
 	if not can_change_state(): 
 		return
 
 	# 处理数字键切换武器并触发攻击
-	for i in range(1, weapon_wheel.size() + 1):
-		var action_name = "weapon_" + str(i)
-		if Input.is_action_just_pressed(action_name):
-			_switch_and_attack(i - 1)
-			return
+	if not in_ultimate_mode:
+		for i in range(1, weapon_wheel.size() + 1):
+			var action_name = "weapon_" + str(i)
+			if Input.is_action_just_pressed(action_name):
+				_switch_and_attack(i - 1)
+				return
 
 	# 平A (鼠标点击)
 	if Input.is_action_just_pressed("attack"):
+		if in_ultimate_mode:
+			_cycle_ultimate_weapon_before_attack()
+
 		var cur_weapon_id = weapon_wheel[current_weapon_index]
 		var is_charged_type = false
+		var bypass_charge = in_ultimate_mode and cur_weapon_id == "hammer"
 		if is_instance_valid(current_weapon_node):
 			current_weapon_node.on_attack_pressed()
 			is_charged_type = current_weapon_node.get("is_charge_weapon")
+			if bypass_charge:
+				is_charged_type = false
 		
 		# 如果不是蓄力武器，直接发起攻击状态
 		if not is_charged_type:
@@ -130,6 +165,9 @@ func _handle_input() -> void:
 			_play_charge_animation()
 		
 	if Input.is_action_just_released("attack"):
+		if in_ultimate_mode and weapon_wheel[current_weapon_index] == "hammer":
+			return
+
 		var cur_weapon_id = weapon_wheel[current_weapon_index]
 		var is_charged_type = false
 		if is_instance_valid(current_weapon_node):
@@ -148,28 +186,33 @@ func _handle_input() -> void:
 			print("蓄力释放，执行攻击")
 
 
-# 处理切换武器并攻击
+# 处理切换武器；只有连携技真的触发时才进入攻击态
 func _switch_and_attack(new_index: int) -> void:
+	if in_ultimate_mode:
+		return
+
 	if new_index < 0 or new_index >= weapon_wheel.size(): return
 	var prev_weapon = weapon_wheel[current_weapon_index]
 	var new_weapon_id = weapon_wheel[new_index]
 
 	# 无论是否切换同样武器，只要发起按键都结算旧武器状态
+	var combo_triggered := false
 	if is_instance_valid(current_weapon_node):
-		current_weapon_node.on_switch_out(new_weapon_id)
+		combo_triggered = current_weapon_node.on_switch_out(new_weapon_id)
 		
 	current_weapon_index = new_index
 	var new_weapon = weapon_wheel[current_weapon_index]
 	
 	_update_weapon_visual()
 	
-	# 切枪算作攻击，进入Attack状态并传递连携信息
-	c_state_machine.change_state(STATE_ATTACK, {
-		"weapon": new_weapon, 
-		"prev_weapon": prev_weapon, 
-		"is_switch": true
-	})
-	print("切换攻击，从 ", prev_weapon, " 切换到 ", new_weapon)
+	if combo_triggered:
+		# 只有连携技命中时才把切枪视为一次攻击
+		c_state_machine.change_state(STATE_ATTACK, {
+			"weapon": new_weapon, 
+			"prev_weapon": prev_weapon, 
+			"is_switch": true
+		})
+		print("切换攻击，从 ", prev_weapon, " 切换到 ", new_weapon)
 
 # 核心演示逻辑：更换棍子颜色
 func _update_weapon_visual() -> void:
@@ -323,22 +366,20 @@ func _spear_poke_animation() -> void:
 func player_attack():
 	var character = self
 	var current_weapon_node = character.current_weapon_node
-	var is_bow = current_weapon_node != null and current_weapon_node.weapon_name == "弓"
+	var move_speed_multiplier := 1.0
+	if is_instance_valid(current_weapon_node):
+		move_speed_multiplier = current_weapon_node.movement_speed_multiplier
 		
-	if is_bow:
-		# 弓箭攻击时必定无法移动
-		character.velocity = Vector2.ZERO
+	# 攻击时保持可移动，但根据当前武器调整移速
+	if Input.get_axis("move_left", "move_right") != 0:
+		character.toward = int(Input.get_axis("move_left", "move_right"))
+		character.velocity.x = character.toward * character.speed * move_speed_multiplier
+		character.anim.play("walk")
+	elif Input.get_axis("up", "down") != 0:
+		character.velocity.y = int(Input.get_axis("up", "down")) * character.speed * move_speed_multiplier
 	else:
-		# 其它武器支持普通移动（或者根据你的游戏设定修改）
-		if Input.get_axis("move_left", "move_right") != 0:
-			character.toward = int(Input.get_axis("move_left", "move_right"))
-			character.velocity.x = character.toward * character.speed
-			character.anim.play("walk")
-		elif Input.get_axis("up", "down") != 0:
-			character.velocity.y = int(Input.get_axis("up", "down")) * character.speed
-		else:
-			if character.hp > 0:
-				character.velocity = Vector2.ZERO
+		if character.hp > 0:
+			character.velocity = Vector2.ZERO
 
 ## ---- 状态机重构：重写基类方法 ----
 func begin_attack(msg: Dictionary) -> bool:
@@ -386,3 +427,103 @@ func get_attack_duration() -> float:
 	if is_instance_valid(current_weapon_node):
 		return current_weapon_node.attack_duration
 	return 0.3
+
+func add_ultimate_point(amount: int = 1) -> void:
+	if amount <= 0:
+		return
+	ultimate_points = min(ULTIMATE_MAX_POINTS, ultimate_points + amount)
+	print("[Ultimate] 点数: ", ultimate_points, "/", ULTIMATE_MAX_POINTS)
+	if ultimate_points == ULTIMATE_MAX_POINTS:
+		print("[Ultimate] 大招已就绪！可以按下 ultimate 键释放！")
+
+func on_ultimate_started() -> void:
+	ultimate_cycle_index = -1
+
+func on_ultimate_ended() -> void:
+	ultimate_cycle_index = -1
+
+func _try_cast_ultimate() -> void:
+	if in_ultimate_mode:
+		return
+	if ultimate_points < ULTIMATE_MAX_POINTS:
+		print("[Ultimate] 点数不足: ", ultimate_points, "/", ULTIMATE_MAX_POINTS)
+		return
+	print("[Ultimate] 大招触发！状态锁定接管：开始连续乱舞！")
+	ultimate_points = 0
+	in_ultimate_mode = true
+	on_ultimate_started()
+	
+	# 这里大招是一直存在的BUFF状态（而不是切换节点），由定时器负责结束，以免跟基础的Attack状态相冲突结束
+	var timer := get_tree().create_timer(15.0)
+	timer.timeout.connect(func():
+		in_ultimate_mode = false
+		on_ultimate_ended()
+		print("[Ultimate] 大招时间到，效果结束")
+	)
+
+func _cycle_ultimate_weapon_before_attack() -> void:
+	if ultimate_weapon_cycle.is_empty():
+		return
+
+	ultimate_cycle_index = (ultimate_cycle_index + 1) % ultimate_weapon_cycle.size()
+	var target_weapon_id = ultimate_weapon_cycle[ultimate_cycle_index]
+	var idx = weapon_wheel.find(target_weapon_id)
+	if idx == -1:
+		weapon_wheel.append(target_weapon_id)
+		idx = weapon_wheel.size() - 1
+
+	current_weapon_index = idx
+	_update_weapon_visual()
+
+func apply_ultimate_arrow_rain(target: Node) -> void:
+	if not in_ultimate_mode or not is_instance_valid(target) or target.get("is_dead"):
+		return
+	if target.has_meta("ultimate_rain"):
+		return
+	target.set_meta("ultimate_rain", true)
+	print("弓箭雨降临：目标 ", target.name)
+	
+	var rain_timer = Timer.new()
+	rain_timer.wait_time = 0.5
+	rain_timer.autostart = true
+	var count = [0]
+	rain_timer.timeout.connect(func():
+		if not is_instance_valid(target) or target.get("is_dead") or count[0] >= 10:
+			if is_instance_valid(target):
+				target.remove_meta("ultimate_rain")
+			if is_instance_valid(rain_timer):
+				rain_timer.queue_free()
+			return
+		count[0] += 1
+		spawn_ultimate_followup_arrow(target)
+	)
+	target.add_child(rain_timer)
+
+func spawn_ultimate_followup_arrow(target: Node) -> void:
+	if not in_ultimate_mode:
+		return
+	if not is_instance_valid(target):
+		return
+	if target.get("is_dead"):
+		return
+	if not ULTIMATE_ARROW_SCENE:
+		return
+	if not is_instance_valid(get_tree().current_scene):
+		return
+
+	var arrow = ULTIMATE_ARROW_SCENE.instantiate()
+	var random_offset_x = randf_range(-24.0, 24.0)
+	var spawn_pos = target.global_position + Vector2(random_offset_x, -220.0)
+	arrow.global_position = spawn_pos
+	arrow.direction = (target.global_position - spawn_pos).normalized()
+	arrow.speed = 900.0
+	arrow.life_time = 1.2
+	arrow.direct_damage = ULTIMATE_ARROW_DAMAGE
+	arrow.trigger_weapon_on_hit = false
+
+	if all_weapons.has("bow"):
+		arrow.weapon_owner = all_weapons["bow"]
+	else:
+		arrow.weapon_owner = current_weapon_node
+
+	get_tree().current_scene.add_child(arrow)

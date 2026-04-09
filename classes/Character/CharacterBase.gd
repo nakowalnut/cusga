@@ -7,6 +7,7 @@ const STATE_DIED = "Died"
 const STATE_IDLE = "Idle"
 const STATE_ATTACK = "Attack"
 const STATE_WALK = "Walk"
+const STATE_ULTIMATE = "Ultimate"
 
 ## 基础属性
 @export var character_weapon: WeaponBase
@@ -26,8 +27,6 @@ var hp: float:
 	
 ## 状态定义
 var is_dead: bool = false
-var is_invulnerable: bool = false
-@export var invulnerability_duration: float = 0.2
 var is_attacking: bool = false
 ## 状态机节点
 @export_group("角色状态")
@@ -45,7 +44,7 @@ func _ready() -> void:
 
 ## 伤害处理
 func take_damage(amount: float):
-	if is_dead or is_invulnerable:
+	if is_dead:
 		return
 	
 	current_health -= amount
@@ -62,14 +61,20 @@ func take_damage(amount: float):
 	else:
 		if c_state_machine and c_state_machine.states.has(STATE_HURT):
 			c_state_machine.change_state(STATE_HURT)
-		_trigger_invulnerability()
 
-## 触发无敌帧
-func _trigger_invulnerability():
-	is_invulnerable = true
-	get_tree().create_timer(invulnerability_duration).timeout.connect(
-		func(): is_invulnerable = false
-	)
+## 应用击退效果
+func apply_knockback(force: Vector2) -> void:
+	if is_dead:
+		return
+	
+	# 如果处于动作强控状态（如使用了 Tween 的某些攻击），尝试打断
+	if self.has_method("cancel_action_tweens"):
+		self.call("cancel_action_tweens")
+	
+	# 设置初始击退速度，并强制进入受击物理判定
+	velocity = force
+	if c_state_machine and c_state_machine.states.has(STATE_HURT):
+		c_state_machine.change_state(STATE_HURT)
 
 ## 死亡逻辑
 func die():
