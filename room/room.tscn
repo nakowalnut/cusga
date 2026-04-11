@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://c8sqivq1b6gr8"]
 
 [ext_resource type="Script" uid="uid://7qygnd4f2x23" path="res://room/room.gd" id="1_tku2a"]
-[ext_resource type="PackedScene" uid="uid://d2p4jo23pjljy" path="res://Scenes/Enemies/Slime.tscn" id="2_qx3y5"]
-[ext_resource type="PackedScene" uid="uid://soq6wbhlf35h" path="res://Scenes/Enemies/EnemyTest.tscn" id="3_fntg6"]
+[ext_resource type="PackedScene" uid="uid://cxfsacver3vl0" path="res://enemyscenes/orcs.tscn" id="2_tku2a"]
 [ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://Scenes/Player/player.tscn" id="4_et4wo"]
 [ext_resource type="Texture2D" uid="uid://bxm80s3rbat5y" path="res://room/未标题.png" id="13_t7mnq"]
 
@@ -26,9 +25,9 @@ size = Vector2(97, 99)
 [node name="room" type="Node2D" unique_id=518830409]
 y_sort_enabled = true
 script = ExtResource("1_tku2a")
-enemy_scenes = Array[PackedScene]([ExtResource("2_qx3y5"), ExtResource("3_fntg6")])
+enemy_scenes = Array[PackedScene]([ExtResource("2_tku2a")])
 enemy_count = 6
-max_per_type = 3
+max_per_type = 6
 metadata/_edit_lock_ = true
 
 [node name="enemy_spawn_point" type="Node2D" parent="." unique_id=1592720160]

@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://bdqrgj34swdbi"]
+
+[ext_resource type="PackedScene" uid="uid://cxfsacver3vl0" path="res://enemyscenes/orcs.tscn" id="1_j2g16"]
+
+[node name="Orc" unique_id=1209539370 instance=ExtResource("1_j2g16")]

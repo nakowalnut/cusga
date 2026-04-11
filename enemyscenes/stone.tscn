@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://0tjix7fb3joh"]
+
+[ext_resource type="Script" uid="uid://cf0mdevg1e7rb" path="res://enemyscenes/stone.gd" id="1_6s6ed"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rq0vd"]
+
+[node name="stone" type="Area2D" unique_id=1952345815]
+script = ExtResource("1_6s6ed")
+speed = 300.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=690812044]
+shape = SubResource("CircleShape2D_rq0vd")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=847412878]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1999517652]

@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://cxfsacver3vl0"]
+
+[ext_resource type="Script" uid="uid://dmsrpacqa1uin" path="res://enemyscenes/orc_enemy.gd" id="1_65yf8"]
+[ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://assets/images/characters/slime/icon.png" id="2_65yf8"]
+[ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="3_6ccgh"]
+[ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="4_7wbjw"]
+[ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="5_mdf43"]
+[ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="6_dd206"]
+[ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="7_x1y2g"]
+[ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="8_2ctsx"]
+[ext_resource type="Script" uid="uid://bo6ptf42wuque" path="res://classes/CharacterState/c_states/stun.gd" id="9_2vhux"]
+[ext_resource type="Script" uid="uid://dua2sujx6ct0d" path="res://classes/FieldOfView2D/FieldOfView2D.gd" id="10_7jhrv"]
+[ext_resource type="Script" uid="uid://8aonm0qx2cdq" path="res://enemyscenes/club_weapon.gd" id="11_65yf8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rmkui"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7wbjw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_65yf8"]
+
+[node name="Orc" type="CharacterBody2D" unique_id=1209539370 node_paths=PackedStringArray("character_weapon", "attack_timer", "c_state_machine")]
+visible = false
+script = ExtResource("1_65yf8")
+character_weapon = NodePath("WeaponHolder/club_weapon")
+attack_timer = NodePath("AttackTimer")
+c_state_machine = NodePath("StateMachine")
+metadata/_custom_type_script = "uid://couuhdcbsiyre"
+
+[node name="orc" type="Sprite2D" parent="." unique_id=1358446001]
+texture = ExtResource("2_65yf8")
+region_enabled = true
+region_filter_clip_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=783164097]
+shape = SubResource("RectangleShape2D_rmkui")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1600901942]
+
+[node name="StateMachine" type="Node" parent="." unique_id=1949968876 node_paths=PackedStringArray("character")]
+script = ExtResource("3_6ccgh")
+character = NodePath("..")
+metadata/_custom_type_script = "uid://dyp5hiohmgn1i"
+
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=854453555]
+script = ExtResource("4_7wbjw")
+metadata/_custom_type_script = "uid://dtjunbbhi11cp"
+
+[node name="AttackState" type="Node" parent="StateMachine" unique_id=461330879]
+script = ExtResource("5_mdf43")
+metadata/_custom_type_script = "uid://d3wjjimrma8i6"
+
+[node name="WalkState" type="Node" parent="StateMachine" unique_id=660535297]
+script = ExtResource("6_dd206")
+metadata/_custom_type_script = "uid://bcrvjymso8owa"
+
+[node name="DieState" type="Node" parent="StateMachine" unique_id=1201837223]
+script = ExtResource("7_x1y2g")
+metadata/_custom_type_script = "uid://vqdmlojjhhyw"
+
+[node name="HurtState" type="Node" parent="StateMachine" unique_id=225108927]
+script = ExtResource("8_2ctsx")
+metadata/_custom_type_script = "uid://be7e7v1oxgfla"
+
+[node name="StunState" type="Node" parent="StateMachine" unique_id=1811632938]
+script = ExtResource("9_2vhux")
+
+[node name="FieldOfView2D" type="Area2D" parent="." unique_id=1291735272]
+script = ExtResource("10_7jhrv")
+angle = 180.0
+auto_rotate = true
+rotation_speed = 100.96
+debug_draw = true
+metadata/_custom_type_script = "uid://dua2sujx6ct0d"
+
+[node name="AttackTimer" type="Timer" parent="." unique_id=1232378393]
+
+[node name="hitBox" type="Area2D" parent="." unique_id=1155692736]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox" unique_id=1793122916]
+shape = SubResource("RectangleShape2D_7wbjw")
+
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=1181862892]
+
+[node name="club_weapon" type="Node2D" parent="WeaponHolder" unique_id=1210247512]
+script = ExtResource("11_65yf8")
+metadata/_custom_type_script = "uid://cps2jovt78giv"
+
+[node name="HitArea" type="Area2D" parent="WeaponHolder/club_weapon" unique_id=1554405307]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHolder/club_weapon/HitArea" unique_id=1693779651]
+shape = SubResource("RectangleShape2D_65yf8")

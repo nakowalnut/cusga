@@ -1,0 +1,30 @@
+extends Enemy
+
+var attack_tween: Tween
+
+func reset_enemy():
+	if attack_tween: attack_tween.kill()
+	super.reset_enemy()
+
+func pre_attack(_msg):
+	if not is_instance_valid(GameManager.player): return
+	
+	var target_pos = GameManager.player.global_position
+	var dir = global_position.direction_to(target_pos)
+	
+	attack_tween = create_tween()
+	# 1. 蓄力（稍微后撤）
+	attack_tween.tween_property(self, "global_position", global_position - dir * 10, 0.2)
+	# 2. 跨步挥击
+	attack_tween.tween_property(self, "global_position", global_position + dir * 30, 0.1)
+	attack_tween.tween_callback(func():
+		if character_weapon:
+			character_weapon.attack(target_pos)
+	)
+	# 3. 收招并返回
+	attack_tween.tween_interval(0.2)
+	attack_tween.tween_property(self, "global_position", global_position, 0.2)
+	attack_tween.tween_callback(attack_callback)
+
+func attack_callback():
+	if c_state_machine: c_state_machine.change_state(CharacterBase.STATE_IDLE)
