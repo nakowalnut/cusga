@@ -33,6 +33,7 @@ func attack(target_pos: Vector2) -> void:
 		arrow.damage = damage
 		# 传入 bow 自身以便子弹命中时增加 combo
 		arrow.weapon_owner = self 
+		arrow.trigger_weapon_on_hit = not is_combo_active
 		get_tree().current_scene.add_child(arrow)
 	else:
 		print("未找到箭矢场景 res://classes/Weapons/arrow_projectile.tscn")

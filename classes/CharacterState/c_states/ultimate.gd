@@ -1,13 +1,15 @@
 extends State
 class_name UltimateState
 
-@export var duration: float = 100.0
-
 func enter(_msg: Dictionary = {}) -> void:
 	if character is Player:
 		character.in_ultimate_mode = true
 		character.on_ultimate_started()
 	state_entered.emit()
+
+	var duration := 15.0
+	if character is Player:
+		duration = character.ULTIMATE_DURATION
 
 	var timer := get_tree().create_timer(duration)
 	timer.timeout.connect(_on_duration_timeout)

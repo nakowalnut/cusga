@@ -17,7 +17,9 @@ func execute(player: CharacterBase, current_weapon: WeaponBase, next_weapon_name
 			break
 
 		var mouse_pos := player.get_global_mouse_position()
+		current_weapon.is_combo_active = true
 		current_weapon.attack(mouse_pos)
+		current_weapon.is_combo_active = false
 
 		var color_tween = create_tween()
 		player.modulate = Color(0.8, 1.0, 0.8)

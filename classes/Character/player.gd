@@ -2,6 +2,7 @@ extends CharacterBase
 class_name Player
 
 @export var ULTIMATE_MAX_POINTS: int = 3 # 测试大招次数，平时是10
+@export var ULTIMATE_DURATION: float = 150.0 # 大招持续时间，可在Inspector里调整
 const ULTIMATE_ARROW_SCENE = preload("res://Scenes/Prefab/arrow_projectile.tscn")
 const ULTIMATE_ARROW_DAMAGE: float = 4.0
 
@@ -454,7 +455,7 @@ func _try_cast_ultimate() -> void:
 	on_ultimate_started()
 	
 	# 这里大招是一直存在的BUFF状态（而不是切换节点），由定时器负责结束，以免跟基础的Attack状态相冲突结束
-	var timer := get_tree().create_timer(15.0)
+	var timer := get_tree().create_timer(ULTIMATE_DURATION)
 	timer.timeout.connect(func():
 		in_ultimate_mode = false
 		on_ultimate_ended()

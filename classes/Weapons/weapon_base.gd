@@ -13,6 +13,7 @@ var attack_range: float = 50.0
 
 var current_combo: int = 0
 var is_synergy_ready: bool = false
+var is_combo_active: bool = false
 @export var weapon_owner: CharacterBase
 
 func _ready() -> void:

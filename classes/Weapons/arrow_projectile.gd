@@ -45,12 +45,13 @@ func _hit(target: Node) -> void:
 
 		if direct_damage >= 0.0:
 			target.take_damage(direct_damage)
-			if trigger_weapon_on_hit and is_instance_valid(weapon_owner):
-				weapon_owner.on_hit(target)
 		else:
-			# 触发武器的命中逻辑从而叠加 combo
-			if is_instance_valid(weapon_owner):
-				weapon_owner.on_hit(target)
+			target.take_damage(damage)
+			
+		# 是否触发武器的命中逻辑从而叠加 combo
+		if trigger_weapon_on_hit and is_instance_valid(weapon_owner):
+			weapon_owner.on_hit(target)
+			
 		queue_free()
 
 func _draw() -> void:
