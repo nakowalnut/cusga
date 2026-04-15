@@ -17,6 +17,10 @@ func _init() -> void:
 	movement_speed_multiplier = 0.5
 	color = Color.GREEN
 	max_combo = 8
+	attack_wind_up = 0.14
+	attack_active = 0.06
+	attack_recovery = 0.16
+	attack_cooldown = 0.12
 
 func attack(target_pos: Vector2) -> void:
 	if _is_hammer_synergy_active():

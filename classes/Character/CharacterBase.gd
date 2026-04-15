@@ -16,11 +16,10 @@ const STATE_ULTIMATE = "Ultimate"
 @export var speed: float = 300
 @export var debug_mode: bool = false
 @onready var current_health: float = max_health
-@export var attack_timer: Timer
-@export var attack_cooldown_time: float = 1.0
 @export var sight_range: Array[int] = [50, 500]## 感知范围，【临近值，最远值】
 var toward: int = 1# 面向方向 (Walk/Hurt 等状态依赖)
 @onready var anim: Node ##存储动画
+@onready var attack_controller: AttackController = get_node_or_null("AttackController")
 var hp: float:
 	get: return current_health
 	set(value): current_health = value
@@ -39,8 +38,15 @@ signal hurt
 signal died
 
 func _ready() -> void:
-	if attack_timer:
-		attack_timer.one_shot = true
+	if not is_instance_valid(attack_controller):
+		attack_controller = AttackController.new()
+		attack_controller.name = "AttackController"
+		add_child(attack_controller)
+
+	if attack_controller and not attack_controller.active_started.is_connected(_on_attack_active_started):
+		attack_controller.active_started.connect(_on_attack_active_started)
+	if attack_controller and not attack_controller.attack_ended.is_connected(_on_attack_ended):
+		attack_controller.attack_ended.connect(_on_attack_ended)
 
 ## 伤害处理
 func take_damage(amount: float):
@@ -97,7 +103,16 @@ func _init_weapons() -> void:
 	pass
 
 func begin_attack(msg: Dictionary) -> bool:
+	if attack_controller and not attack_controller.can_start_attack():
+		return false
+
+	if attack_controller and is_instance_valid(character_weapon):
+		attack_controller.configure_from_weapon(character_weapon)
+
+	is_attacking = true
 	pre_attack(msg)
+	if attack_controller:
+		return attack_controller.start_attack()
 	return true
 
 func pre_attack(msg: Dictionary):
@@ -123,5 +138,8 @@ func process_idle(delta: float) -> void:
 func on_death_state_entered() -> void:
 	pass
 
-func get_attack_duration() -> float:
-	return 0.3 # 保持与原 attack.gd 相同的默认锁定时间基线
+func _on_attack_active_started(_duration: float) -> void:
+	execute_attack()
+
+func _on_attack_ended() -> void:
+	end_attack()

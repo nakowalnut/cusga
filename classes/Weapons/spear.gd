@@ -11,7 +11,10 @@ func _init() -> void:
 	attack_speed_multiplier = 1.2
 	color = Color.RED
 	max_combo = 3
-	attack_duration = 0.45
+	attack_wind_up = 0.08
+	attack_active = 0.16
+	attack_recovery = 0.21
+	attack_cooldown = 0.10
 
 func attack(_target_pos: Vector2) -> void:
 	# 矛：对范围内所有敌人造成少量伤害

@@ -47,8 +47,7 @@ func process_movement(delta: float) -> void:
 			if c_state_machine: c_state_machine.change_state(STATE_IDLE)
 		elif dist <= sight_range[0]:
 			velocity = Vector2.ZERO
-			if attack_timer and attack_timer.is_stopped():
-				attack_timer.start(attack_cooldown_time)
+			if attack_controller and attack_controller.can_start_attack():
 				if c_state_machine: c_state_machine.change_state(STATE_ATTACK)
 		else:
 			velocity = position.direction_to(GameManager.player.position) * speed
@@ -60,8 +59,7 @@ func process_idle(delta: float) -> void:
 		if dist >= sight_range[1]:
 			pass
 		elif dist <= sight_range[0]:
-			if attack_timer and attack_timer.is_stopped():
-				attack_timer.start(attack_cooldown_time)
+			if attack_controller and attack_controller.can_start_attack():
 				if c_state_machine: c_state_machine.change_state(STATE_ATTACK)
 		else:
 			if c_state_machine: c_state_machine.change_state(STATE_WALK)

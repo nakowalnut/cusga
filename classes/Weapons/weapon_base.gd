@@ -8,7 +8,11 @@ var attack_range: float = 50.0
 @export var movement_speed_multiplier: float = 1.0
 @export var color: Color = Color.WHITE
 @export var max_combo: int = 5
-@export var attack_duration: float = 0.3 # 统一攻击硬直时长
+@export_group("Attack Timing")
+@export var attack_wind_up: float = 0.05
+@export var attack_active: float = 0.12
+@export var attack_recovery: float = 0.18
+@export var attack_cooldown: float = 0.08
 @export var is_charge_weapon: bool = false # 是否需要蓄力
 
 var current_combo: int = 0

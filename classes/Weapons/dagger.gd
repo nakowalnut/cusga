@@ -21,7 +21,10 @@ func _init() -> void:
 	attack_speed_multiplier = 1.6 # 提高攻速
 	color = Color.BLUE
 	max_combo = 5
-	attack_duration = 0.2 # 短快攻击
+	attack_wind_up = 0.03
+	attack_active = 0.08
+	attack_recovery = 0.09
+	attack_cooldown = 0.05
 	is_charge_weapon = true
 
 func _ready() -> void:

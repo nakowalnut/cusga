@@ -11,10 +11,8 @@ const ULTIMATE_ARROW_DAMAGE: float = 4.0
 
 ## 检查是否处于无法切换状态的硬直中
 func can_change_state() -> bool:
-	# 1. 检查是否正在播放攻击动画 
-	if animation_player.is_playing():
-		var anim_name = animation_player.current_animation
-		if anim_name.begins_with("attack"):
+	# 1. 检查是否处于攻击流程中
+	if attack_controller and attack_controller.is_busy():
 			return false
 	
 	# 2. 检查基础状态机当前是否处于 受击 或 死亡 状态
@@ -35,6 +33,8 @@ var ultimate_points: int = 0
 var in_ultimate_mode: bool = false
 var ultimate_weapon_cycle: Array[String] = ["sword", "dagger", "spear", "hammer"]
 var ultimate_cycle_index: int = -1
+@export_group("Weapon Tuning")
+@export var weapon_tuning_profiles: Array[WeaponTuningProfile] = []
 
 # 演示用节点引用
 @onready var weapon_holder = $WeaponHolder
@@ -45,6 +45,7 @@ var ultimate_cycle_index: int = -1
 func _ready() -> void:
 	anim = $AnimationPlayer
 	GameManager.player = self
+	super._ready()
 	
 	# 初始化连携管理器
 	var combo_manager = ComboManagerClass.new()
@@ -58,6 +59,13 @@ func _ready() -> void:
 	weapon_hitbox.area_entered.connect(_on_weapon_hitbox_area_entered)
 	weapon_hitbox.body_entered.connect(_on_weapon_hitbox_body_entered)
 	weapon_hitbox.monitoring = false
+	if attack_controller:
+		if not attack_controller.active_started.is_connected(_on_attack_active_started_player):
+			attack_controller.active_started.connect(_on_attack_active_started_player)
+		if not attack_controller.recovery_started.is_connected(_on_attack_recovery_started_player):
+			attack_controller.recovery_started.connect(_on_attack_recovery_started_player)
+		if not attack_controller.attack_ended.is_connected(_on_attack_ended_player):
+			attack_controller.attack_ended.connect(_on_attack_ended_player)
 
 func take_damage(amount: float) -> void:
 	if is_instance_valid(current_weapon_node) and current_weapon_node.has_method("handle_take_damage"):
@@ -81,8 +89,21 @@ func _init_weapons() -> void:
 	
 	for key in all_weapons:
 		var wp = all_weapons[key]
+		_apply_weapon_tuning(key, wp)
 		wp.weapon_owner = self
 		weapon_holder.add_child(wp)
+
+func _apply_weapon_tuning(weapon_id: String, weapon: WeaponBase) -> void:
+	if not is_instance_valid(weapon):
+		return
+	for profile in weapon_tuning_profiles:
+		if not is_instance_valid(profile):
+			continue
+		if profile.weapon_id == weapon_id:
+			profile.apply_to(weapon)
+			if debug_mode:
+				print("应用武器调参: ", weapon_id)
+			return
 
 func _physics_process(_delta: float) -> void:
 	if is_dead:
@@ -310,16 +331,12 @@ func pre_attack(msg):
 		print("使用武器普通攻击: ", weapon.weapon_name)
 		_play_attack_visual(current_weapon_id)
 	
-	# 调用武器子类的特定攻击逻辑（位移、射箭等）
-	var mouse_pos = get_global_mouse_position()
-	weapon.attack(mouse_pos)
-	
 	_update_weapon_visual()
-	set_weapon_hitbox_active(true)
 
 func _play_attack_visual(weapon_id: String) -> void:
+	_apply_attack_animation_speed()
 	if weapon_id == "spear":
-		_spear_poke_animation()
+		_spear_poke_animation(_get_current_attack_total_duration())
 	else:
 		animation_player.play("Attack1") 
 
@@ -341,7 +358,7 @@ func _play_charge_animation() -> void:
 	current_weapon_tween.tween_property(weapon_sprite, "rotation", final_rotation, 0.4)
 	current_weapon_tween.parallel().tween_property(weapon_sprite, "position", final_position, 0.4)
 
-func _spear_poke_animation() -> void:
+func _spear_poke_animation(total_duration: float) -> void:
 	# 停止动画播放器，以免与代码Tween冲突
 	if animation_player.is_playing() and animation_player.current_animation.begins_with("Attack"):
 		animation_player.stop()
@@ -357,12 +374,14 @@ func _spear_poke_animation() -> void:
 	# 向本地 X 轴直接延伸进行“戳”的动作
 	# 父节点 weapon_holder 已经 look_at 指向了鼠标，因此增加 X 轴位置即为向前突刺
 	var target_pos = base_pos + Vector2(60, 0)
+	var poke_time = max(total_duration * 0.35, 0.04)
+	var back_time = max(total_duration * 0.65, 0.06)
 	
 	current_weapon_tween = create_tween()
 	# 快速突刺
-	current_weapon_tween.tween_property(weapon_sprite, "position", target_pos, 0.1).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	current_weapon_tween.tween_property(weapon_sprite, "position", target_pos, poke_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	# 慢速收回
-	current_weapon_tween.tween_property(weapon_sprite, "position", base_pos, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	current_weapon_tween.tween_property(weapon_sprite, "position", base_pos, back_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
 func player_attack():
 	var character = self
@@ -388,8 +407,14 @@ func begin_attack(msg: Dictionary) -> bool:
 		if c_state_machine:
 			c_state_machine.change_state(STATE_IDLE)
 		return false
+	if attack_controller and not attack_controller.can_start_attack():
+		return false
+	if attack_controller and is_instance_valid(current_weapon_node):
+		attack_controller.configure_from_weapon(current_weapon_node)
 	is_attacking = true
 	pre_attack(msg)
+	if attack_controller:
+		return attack_controller.start_attack()
 	return true
 
 func process_movement(delta: float) -> void:
@@ -416,18 +441,46 @@ func on_death_state_entered() -> void:
 
 func end_attack() -> void:
 	is_attacking = false
+	if animation_player:
+		animation_player.speed_scale = 1.0
 	set_weapon_hitbox_active(false)
 
 func process_attack_physics(delta: float) -> void:
 	player_attack()
 
 func execute_attack() -> void:
-	pass # Player在 pre_attack 中就触发了武器逻辑，这里留空或后续合并
-
-func get_attack_duration() -> float:
 	if is_instance_valid(current_weapon_node):
-		return current_weapon_node.attack_duration
+		var mouse_pos = get_global_mouse_position()
+		current_weapon_node.attack(mouse_pos)
+
+func _get_current_attack_total_duration() -> float:
+	if is_instance_valid(current_weapon_node):
+		return max(
+			current_weapon_node.attack_wind_up + current_weapon_node.attack_active + current_weapon_node.attack_recovery,
+			0.01
+		)
 	return 0.3
+
+func _apply_attack_animation_speed() -> void:
+	if not animation_player:
+		return
+	if not animation_player.has_animation("Attack1"):
+		return
+	var total_time = _get_current_attack_total_duration()
+	var anim_len = animation_player.get_animation("Attack1").length
+	if anim_len <= 0.0:
+		animation_player.speed_scale = 1.0
+		return
+	animation_player.speed_scale = anim_len / total_time
+
+func _on_attack_active_started_player(_duration: float) -> void:
+	set_weapon_hitbox_active(true)
+
+func _on_attack_recovery_started_player(_duration: float) -> void:
+	set_weapon_hitbox_active(false)
+
+func _on_attack_ended_player() -> void:
+	set_weapon_hitbox_active(false)
 
 func add_ultimate_point(amount: int = 1) -> void:
 	if amount <= 0:
