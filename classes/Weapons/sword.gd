@@ -11,7 +11,10 @@ func _init() -> void:
 	attack_speed_multiplier = 1.0
 	color = Color.WHITE
 	max_combo = 5
-	attack_duration = 0.35 # 稍微长一点的挥砍时间
+	attack_wind_up = 0.06
+	attack_active = 0.12
+	attack_recovery = 0.17
+	attack_cooldown = 0.10
 
 func attack(_target_pos: Vector2) -> void:
 	# 长剑泛用：对附近 1-3 名敌人造成伤害

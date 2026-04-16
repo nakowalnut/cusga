@@ -3,16 +3,23 @@ class_name WeaponBase
 
 @export var weapon_name: String = "未命名武器"
 @export var damage: float = 10.0
+@export var crit_rate: float = 0.05 # 暴击率
+@export var crit_damage_multiplier: float = 2.0 # 暴击伤害倍率
 var attack_range: float = 50.0
 @export var attack_speed_multiplier: float = 1.0
 @export var movement_speed_multiplier: float = 1.0
 @export var color: Color = Color.WHITE
 @export var max_combo: int = 5
-@export var attack_duration: float = 0.3 # 统一攻击硬直时长
+@export_group("Attack Timing")
+@export var attack_wind_up: float = 0.05
+@export var attack_active: float = 0.12
+@export var attack_recovery: float = 0.18
+@export var attack_cooldown: float = 0.08
 @export var is_charge_weapon: bool = false # 是否需要蓄力
 
 var current_combo: int = 0
 var is_synergy_ready: bool = false
+var is_combo_active: bool = false
 @export var weapon_owner: CharacterBase
 
 func _ready() -> void:
@@ -59,13 +66,20 @@ func deal_damage(target: Node, override_damage: float = -1.0) -> void:
 		var applied_damage = damage
 		if override_damage >= 0.0:
 			applied_damage = override_damage
+			
+		# 计算暴击
+		var is_crit = false
+		if randf() < crit_rate:
+			applied_damage *= crit_damage_multiplier
+			is_crit = true
 
 		# 如果该武器的拥有者是玩家，并且目标不是玩家，则打印伤害调试信息
 		if is_instance_valid(weapon_owner) and weapon_owner is Player and not (target is Player):
 			var prev_hp = target.get("current_health")
 			target.take_damage(applied_damage)
 			var after_hp = target.get("current_health")
-			print("玩家伤害:", weapon_owner.name, "->", target.name, " 伤害:", applied_damage, " HP:", prev_hp, "->", after_hp)
+			var crit_str = " [暴击!]" if is_crit else ""
+			print("玩家伤害:", weapon_owner.name, "->", target.name, " 伤害:", applied_damage, crit_str, " HP:", prev_hp, "->", after_hp)
 		else:
 			# 默认造成伤害
 			target.take_damage(applied_damage)

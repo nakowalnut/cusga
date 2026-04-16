@@ -2,12 +2,40 @@
 
 [ext_resource type="Script" uid="uid://l4denkeet557" path="res://classes/Character/player.gd" id="1_cyojo"]
 [ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_1kbk7"]
+[ext_resource type="Script" uid="uid://qrpcfidw6ndm" path="res://classes/Weapons/weapon_tuning_profile.gd" id="2_jhyir"]
 [ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_uiqp4"]
 [ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_hvfru"]
 [ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_a06cl"]
 [ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="6_0u5uq"]
 [ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="7_jlvik"]
-[ext_resource type="Script" path="res://classes/CharacterState/c_states/ultimate.gd" id="8_ultimate"]
+[ext_resource type="Script" uid="uid://2xhyj4jnqk1c" path="res://classes/CharacterState/c_states/ultimate.gd" id="8_ultimate"]
+[ext_resource type="Script" uid="uid://dcqm55fatplw8" path="res://classes/Character/AttackController.gd" id="9_gk6dx"]
+[ext_resource type="Script" uid="uid://dxjnhi0x1g88y" path="res://classes/CharacterState/c_states/dodge.gd" id="10_dodge"]
+
+[sub_resource type="Resource" id="Resource_74mp2"]
+script = ExtResource("2_jhyir")
+weapon_id = "sword"
+metadata/_custom_type_script = "uid://qrpcfidw6ndm"
+
+[sub_resource type="Resource" id="Resource_oikmp"]
+script = ExtResource("2_jhyir")
+weapon_id = "dagger"
+metadata/_custom_type_script = "uid://qrpcfidw6ndm"
+
+[sub_resource type="Resource" id="Resource_06tpx"]
+script = ExtResource("2_jhyir")
+weapon_id = "hammer"
+metadata/_custom_type_script = "uid://qrpcfidw6ndm"
+
+[sub_resource type="Resource" id="Resource_7g0yx"]
+script = ExtResource("2_jhyir")
+weapon_id = "spear"
+metadata/_custom_type_script = "uid://qrpcfidw6ndm"
+
+[sub_resource type="Resource" id="Resource_dey5f"]
+script = ExtResource("2_jhyir")
+weapon_id = "bow"
+metadata/_custom_type_script = "uid://qrpcfidw6ndm"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f60y1"]
 
@@ -91,7 +119,9 @@ _data = {
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_cyojo")
+weapon_tuning_profiles = Array[ExtResource("2_jhyir")]([SubResource("Resource_74mp2"), SubResource("Resource_oikmp"), SubResource("Resource_06tpx"), SubResource("Resource_7g0yx"), SubResource("Resource_dey5f")])
 max_health = 10000000.0
+dodge_duration = 0.09
 c_state_machine = NodePath("StateMachine")
 metadata/_custom_type_script = "uid://l4denkeet557"
 
@@ -154,6 +184,9 @@ metadata/_custom_type_script = "uid://be7e7v1oxgfla"
 [node name="UltimateState" type="Node" parent="StateMachine" unique_id=154443218]
 script = ExtResource("8_ultimate")
 
+[node name="DodgeState" type="Node" parent="StateMachine" unique_id=987654321]
+script = ExtResource("10_dodge")
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1710193980]
 libraries/ = SubResource("AnimationLibrary_0u5uq")
 
@@ -164,3 +197,7 @@ sprite_frames = SubResource("SpriteFrames_htcer")
 zoom = Vector2(1.32, 1.32)
 position_smoothing_enabled = true
 position_smoothing_speed = 15.0
+
+[node name="AttackController" type="Node" parent="." unique_id=2092965174]
+script = ExtResource("9_gk6dx")
+metadata/_custom_type_script = "uid://dcqm55fatplw8"

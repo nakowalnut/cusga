@@ -26,7 +26,10 @@ func _init() -> void:
 	attack_speed_multiplier = 0.5 
 	color = Color.BLACK
 	max_combo = 3
-	attack_duration = 0.6 # 重型武器硬直长
+	attack_wind_up = 0.12
+	attack_active = 0.18
+	attack_recovery = 0.30
+	attack_cooldown = 0.16
 	is_charge_weapon = true
 
 func attack(target_pos: Vector2) -> void:

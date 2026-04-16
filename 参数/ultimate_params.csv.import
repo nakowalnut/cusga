@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://db5dyytvwa8ou"
+
+[deps]
+
+files=["res://参数/ultimate_params.说明.translation", "res://参数/ultimate_params.建议值.translation"]
+
+source_file="res://参数/ultimate_params.csv"
+dest_files=["res://参数/ultimate_params.说明.translation", "res://参数/ultimate_params.建议值.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

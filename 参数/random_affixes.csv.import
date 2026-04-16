@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://mej0xdh1g7is"
+
+[deps]
+
+files=["res://参数/random_affixes.效果范围（数值随机）.translation", "res://参数/random_affixes.en.translation"]
+
+source_file="res://参数/random_affixes.csv"
+dest_files=["res://参数/random_affixes.效果范围（数值随机）.translation", "res://参数/random_affixes.en.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

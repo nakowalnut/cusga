@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://c1j3dqih1ugkk"
+
+[deps]
+
+files=["res://参数/set_1_high_freq_combo.套装效果.translation", "res://参数/set_1_high_freq_combo.适配玩法.translation"]
+
+source_file="res://参数/set_1_high_freq_combo.csv"
+dest_files=["res://参数/set_1_high_freq_combo.套装效果.translation", "res://参数/set_1_high_freq_combo.适配玩法.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

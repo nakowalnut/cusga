@@ -2,7 +2,7 @@ extends WeaponBase
 class_name Slimer
 
 @export var synergy_damage: float = 20.0
-@onready var weapon_holder: Node2D = $WeaponHolder
+@onready var weapon_holder: Node2D = get_parent() as Node2D
 
 
 func _init() -> void:

@@ -17,6 +17,10 @@ func _init() -> void:
 	movement_speed_multiplier = 0.5
 	color = Color.GREEN
 	max_combo = 8
+	attack_wind_up = 0.14
+	attack_active = 0.06
+	attack_recovery = 0.16
+	attack_cooldown = 0.12
 
 func attack(target_pos: Vector2) -> void:
 	if _is_hammer_synergy_active():
@@ -33,6 +37,7 @@ func attack(target_pos: Vector2) -> void:
 		arrow.damage = damage
 		# 传入 bow 自身以便子弹命中时增加 combo
 		arrow.weapon_owner = self 
+		arrow.trigger_weapon_on_hit = not is_combo_active
 		get_tree().current_scene.add_child(arrow)
 	else:
 		print("未找到箭矢场景 res://classes/Weapons/arrow_projectile.tscn")
