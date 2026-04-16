@@ -8,12 +8,16 @@ const STATE_IDLE = "Idle"
 const STATE_ATTACK = "Attack"
 const STATE_WALK = "Walk"
 const STATE_ULTIMATE = "Ultimate"
+const STATE_DODGE = "Dodge"
 
 ## 基础属性
 @export var character_weapon: WeaponBase
 @export_group("基础属性")
+@export var damage_reduction_ratio: float = 0.2 # 减免伤害比率
 @export var max_health: float = 100.0
 @export var speed: float = 300
+@export var dodge_speed: float = 800.0
+@export var dodge_duration: float = 0.2
 @export var debug_mode: bool = false
 @onready var current_health: float = max_health
 @export var sight_range: Array[int] = [50, 500]## 感知范围，【临近值，最远值】
@@ -27,6 +31,7 @@ var hp: float:
 ## 状态定义
 var is_dead: bool = false
 var is_attacking: bool = false
+var is_invulnerable: bool = false
 ## 状态机节点
 @export_group("角色状态")
 @export var c_state_machine: StateMachine
@@ -50,7 +55,7 @@ func _ready() -> void:
 
 ## 伤害处理
 func take_damage(amount: float):
-	if is_dead:
+	if is_dead or is_invulnerable:
 		return
 	
 	current_health -= amount

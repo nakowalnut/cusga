@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cd7d5e42h4h2x"
+
+[deps]
+
+files=["res://参数/combo_params.技能效果类型.translation", "res://参数/combo_params.伤害值.translation", "res://参数/combo_params.特殊效果.translation", "res://参数/combo_params.备注.translation"]
+
+source_file="res://参数/combo_params.csv"
+dest_files=["res://参数/combo_params.技能效果类型.translation", "res://参数/combo_params.伤害值.translation", "res://参数/combo_params.特殊效果.translation", "res://参数/combo_params.备注.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

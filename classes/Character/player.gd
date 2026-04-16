@@ -3,6 +3,10 @@ class_name Player
 
 @export var ULTIMATE_MAX_POINTS: int = 3 # 测试大招次数，平时是10
 @export var ULTIMATE_DURATION: float = 150.0 # 大招持续时间，可在Inspector里调整
+
+@export_group("Stats")
+
+
 const ULTIMATE_ARROW_SCENE = preload("res://Scenes/Prefab/arrow_projectile.tscn")
 const ULTIMATE_ARROW_DAMAGE: float = 4.0
 
@@ -68,10 +72,13 @@ func _ready() -> void:
 			attack_controller.attack_ended.connect(_on_attack_ended_player)
 
 func take_damage(amount: float) -> void:
+	# 实装伤害减免比率：实际伤害 = 原始伤害 * (1.0 - 减免比率)
+	var final_damage = amount * (1.0 - damage_reduction_ratio)
+	
 	if is_instance_valid(current_weapon_node) and current_weapon_node.has_method("handle_take_damage"):
-		if current_weapon_node.handle_take_damage(amount):
+		if current_weapon_node.handle_take_damage(final_damage):
 			return
-	super.take_damage(amount)
+	super.take_damage(final_damage)
 
 func apply_knockback(force: Vector2) -> void:
 	if is_instance_valid(current_weapon_node) and current_weapon_node.has_method("handle_apply_knockback"):
@@ -144,6 +151,11 @@ func _on_weapon_hitbox_body_entered(body: Node2D) -> void:
 		print("攻击到了(Body)！", body.name)
 
 func _handle_input() -> void:
+	if Input.is_action_just_pressed("dodge"):
+		if can_change_state():
+			c_state_machine.change_state(STATE_DODGE)
+			return
+
 	if Input.is_action_just_pressed("ultimate"):
 		_try_cast_ultimate()
 		return

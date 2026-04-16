@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://ckh4gstytnofd"
+
+[deps]
+
+files=["res://参数/set_2_charge_burst.套装效果.translation", "res://参数/set_2_charge_burst.适配玩法.translation"]
+
+source_file="res://参数/set_2_charge_burst.csv"
+dest_files=["res://参数/set_2_charge_burst.套装效果.translation", "res://参数/set_2_charge_burst.适配玩法.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cfghva00tebs"
+
+[deps]
+
+files=["res://参数/player_params.说明.translation", "res://参数/player_params.初始建议值.translation", "res://参数/player_params.备注.translation"]
+
+source_file="res://参数/player_params.csv"
+dest_files=["res://参数/player_params.说明.translation", "res://参数/player_params.初始建议值.translation", "res://参数/player_params.备注.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

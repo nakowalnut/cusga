@@ -5,6 +5,8 @@ class_name WeaponTuningProfile
 
 @export_group("Core")
 @export var damage: float = -1.0
+@export var crit_rate: float = -1.0 # 暴击率调优
+@export var crit_damage_multiplier: float = -1.0 # 暴击伤害倍率调优
 @export var attack_speed_multiplier: float = -1.0
 @export var movement_speed_multiplier: float = -1.0
 @export var max_combo: int = -1
@@ -21,6 +23,10 @@ func apply_to(weapon: WeaponBase) -> void:
 
 	if damage >= 0.0:
 		weapon.damage = damage
+	if crit_rate >= 0.0:
+		weapon.crit_rate = crit_rate
+	if crit_damage_multiplier >= 0.0:
+		weapon.crit_damage_multiplier = crit_damage_multiplier
 	if attack_speed_multiplier >= 0.0:
 		weapon.attack_speed_multiplier = attack_speed_multiplier
 	if movement_speed_multiplier >= 0.0:

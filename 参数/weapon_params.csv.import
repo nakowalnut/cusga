@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://nkjyccnmrrsv"
+
+[deps]
+
+files=["res://参数/weapon_params.长剑.translation", "res://参数/weapon_params.短剑.translation", "res://参数/weapon_params.弓.translation", "res://参数/weapon_params.锤子.translation", "res://参数/weapon_params.矛.translation"]
+
+source_file="res://参数/weapon_params.csv"
+dest_files=["res://参数/weapon_params.长剑.translation", "res://参数/weapon_params.短剑.translation", "res://参数/weapon_params.弓.translation", "res://参数/weapon_params.锤子.translation", "res://参数/weapon_params.矛.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

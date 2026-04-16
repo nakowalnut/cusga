@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dqed0428riye7"
+
+[deps]
+
+files=["res://参数/set_3_combo_cycle.套装效果.translation", "res://参数/set_3_combo_cycle.适配玩法.translation"]
+
+source_file="res://参数/set_3_combo_cycle.csv"
+dest_files=["res://参数/set_3_combo_cycle.套装效果.translation", "res://参数/set_3_combo_cycle.适配玩法.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true
