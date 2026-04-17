@@ -122,6 +122,7 @@ script = ExtResource("1_cyojo")
 weapon_tuning_profiles = Array[ExtResource("2_jhyir")]([SubResource("Resource_74mp2"), SubResource("Resource_oikmp"), SubResource("Resource_06tpx"), SubResource("Resource_7g0yx"), SubResource("Resource_dey5f")])
 max_health = 10000000.0
 dodge_duration = 0.09
+debug_mode = true
 c_state_machine = NodePath("StateMachine")
 metadata/_custom_type_script = "uid://l4denkeet557"
 

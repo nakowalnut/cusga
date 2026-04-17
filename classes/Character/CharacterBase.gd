@@ -58,8 +58,20 @@ func take_damage(amount: float):
 	if is_dead or is_invulnerable:
 		return
 	
+	var old_health = current_health
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)
+
+	if debug_mode:
+		var character_type = ""
+		if self.get_class() == "Player" or self is Player:
+			character_type = "玩家"
+		elif self.get_class() == "Enemy" or self is Enemy:
+			character_type = "敌人"
+		else:
+			character_type = "角色"
+		
+		print("[%s] 血量变化: %.2f -> %.2f (伤害: %.2f)" % [character_type, old_health, current_health, amount])
 	
 	emit_signal("damaged", amount)
 	emit_signal("health_changed", current_health, max_health)

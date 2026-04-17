@@ -45,11 +45,19 @@ var ultimate_cycle_index: int = -1
 @onready var weapon_sprite = $WeaponHolder/CurrentWeapon 
 @onready var weapon_hitbox = $WeaponHolder/CurrentWeapon/HitBox
 @onready var attack_collider = $AttackHitBox/AttackCollider
+@onready var modifier_system: ModifierSystem = get_node_or_null("ModifierSystem")
+@onready var equipment_manager: EquipmentManager = get_node_or_null("EquipmentManager")
+
+@export_group("Equipment")
+@export var default_equip_head: String = ""
+@export var default_equip_body: String = ""
+@export var default_equip_foot: String = ""
 
 func _ready() -> void:
 	anim = $AnimationPlayer
 	GameManager.player = self
 	super._ready()
+	_init_combat_systems()
 	
 	# 初始化连携管理器
 	var combo_manager = ComboManagerClass.new()
@@ -71,14 +79,69 @@ func _ready() -> void:
 		if not attack_controller.attack_ended.is_connected(_on_attack_ended_player):
 			attack_controller.attack_ended.connect(_on_attack_ended_player)
 
+func _init_combat_systems() -> void:
+	if not is_instance_valid(modifier_system):
+		modifier_system = ModifierSystem.new()
+		modifier_system.name = "ModifierSystem"
+		add_child(modifier_system)
+
+	if not is_instance_valid(equipment_manager):
+		equipment_manager = EquipmentManager.new()
+		equipment_manager.name = "EquipmentManager"
+		add_child(equipment_manager)
+
+	equipment_manager.modifier_system = modifier_system
+
+	modifier_system.set_base_stats({
+		"max_hp": max_health,
+		"speed": speed,
+		"damage_reduction": damage_reduction_ratio
+	})
+
+	if not EventBus.on_stat_changed.is_connected(_on_modifier_stat_changed):
+		EventBus.on_stat_changed.connect(_on_modifier_stat_changed)
+
+	if default_equip_head != "":
+		equipment_manager.equip_item("head", default_equip_head)
+	if default_equip_body != "":
+		equipment_manager.equip_item("body", default_equip_body)
+	if default_equip_foot != "":
+		equipment_manager.equip_item("foot", default_equip_foot)
+
+	_sync_stats_from_modifier()
+
+func _sync_stats_from_modifier() -> void:
+	if not is_instance_valid(modifier_system):
+		return
+	max_health = modifier_system.get_stat("max_hp")
+	speed = modifier_system.get_stat("speed")
+	damage_reduction_ratio = clamp(modifier_system.get_stat("damage_reduction"), 0.0, 0.95)
+	current_health = clamp(current_health, 0.0, max_health)
+
+func _on_modifier_stat_changed(stat_name: String, new_value: float) -> void:
+	match stat_name:
+		"max_hp":
+			max_health = new_value
+			current_health = clamp(current_health, 0.0, max_health)
+		"speed":
+			speed = new_value
+		"damage_reduction":
+			damage_reduction_ratio = clamp(new_value, 0.0, 0.95)
+		_:
+			pass
+
 func take_damage(amount: float) -> void:
 	# 实装伤害减免比率：实际伤害 = 原始伤害 * (1.0 - 减免比率)
-	var final_damage = amount * (1.0 - damage_reduction_ratio)
+	var dr := damage_reduction_ratio
+	if is_instance_valid(modifier_system):
+		dr = clamp(modifier_system.get_stat("damage_reduction"), 0.0, 0.95)
+	var final_damage = amount * (1.0 - dr)
 	
 	if is_instance_valid(current_weapon_node) and current_weapon_node.has_method("handle_take_damage"):
 		if current_weapon_node.handle_take_damage(final_damage):
 			return
 	super.take_damage(final_damage)
+	EventBus.on_damage_taken.emit(final_damage, self)
 
 func apply_knockback(force: Vector2) -> void:
 	if is_instance_valid(current_weapon_node) and current_weapon_node.has_method("handle_apply_knockback"):
@@ -398,17 +461,20 @@ func _spear_poke_animation(total_duration: float) -> void:
 func player_attack():
 	var character = self
 	var current_weapon_node = character.current_weapon_node
-	var move_speed_multiplier := 1.0
+	var move_speed_multiplier: float = 1.0
+	var base_move_speed: float = float(character.speed)
+	if is_instance_valid(modifier_system):
+		base_move_speed = modifier_system.get_stat("speed")
 	if is_instance_valid(current_weapon_node):
-		move_speed_multiplier = current_weapon_node.movement_speed_multiplier
+		move_speed_multiplier = float(current_weapon_node.get("movement_speed_multiplier") if current_weapon_node.get("movement_speed_multiplier") != null else 1.0)
 		
 	# 攻击时保持可移动，但根据当前武器调整移速
 	if Input.get_axis("move_left", "move_right") != 0:
 		character.toward = int(Input.get_axis("move_left", "move_right"))
-		character.velocity.x = character.toward * character.speed * move_speed_multiplier
+		character.velocity.x = character.toward * base_move_speed * move_speed_multiplier
 		character.anim.play("walk")
 	elif Input.get_axis("up", "down") != 0:
-		character.velocity.y = int(Input.get_axis("up", "down")) * character.speed * move_speed_multiplier
+		character.velocity.y = int(Input.get_axis("up", "down")) * base_move_speed * move_speed_multiplier
 	else:
 		if character.hp > 0:
 			character.velocity = Vector2.ZERO
@@ -430,12 +496,15 @@ func begin_attack(msg: Dictionary) -> bool:
 	return true
 
 func process_movement(delta: float) -> void:
+	var current_speed := speed
+	if is_instance_valid(modifier_system):
+		current_speed = modifier_system.get_stat("speed")
 	if Input.get_axis("move_left", "move_right") != 0:
 		toward = int(Input.get_axis("move_left", "move_right"))
-		velocity.x = toward * speed
+		velocity.x = toward * current_speed
 		if anim and anim.has_animation("walk"): anim.play("walk")
 	if Input.get_axis("up", "down") != 0:
-		velocity.y = int(Input.get_axis("up", "down")) * speed
+		velocity.y = int(Input.get_axis("up", "down")) * current_speed
 		
 	if Input.get_axis("move_left", "move_right") == 0 and Input.get_axis("up", "down") == 0:
 		if hp > 0 and c_state_machine:
@@ -483,7 +552,10 @@ func _apply_attack_animation_speed() -> void:
 	if anim_len <= 0.0:
 		animation_player.speed_scale = 1.0
 		return
-	animation_player.speed_scale = anim_len / total_time
+	var atk_speed_multiplier := 1.0
+	if is_instance_valid(modifier_system):
+		atk_speed_multiplier = max(modifier_system.get_stat("atk_speed"), 0.1)
+	animation_player.speed_scale = (anim_len / total_time) * atk_speed_multiplier
 
 func _on_attack_active_started_player(_duration: float) -> void:
 	set_weapon_hitbox_active(true)
