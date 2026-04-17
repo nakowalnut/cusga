@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bygegdp6mqkvh"
+
+[deps]
+
+files=["res://Data/random_affixes.name.translation", "res://Data/random_affixes.stat.translation", "res://Data/random_affixes.min.translation", "res://Data/random_affixes.max.translation", "res://Data/random_affixes.desc.translation"]
+
+source_file="res://Data/random_affixes.csv"
+dest_files=["res://Data/random_affixes.name.translation", "res://Data/random_affixes.stat.translation", "res://Data/random_affixes.min.translation", "res://Data/random_affixes.max.translation", "res://Data/random_affixes.desc.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

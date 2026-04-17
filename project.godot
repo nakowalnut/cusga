@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameManager="*res://classes/Global/game_manager.gd"
+DataManager="*uid://bdnm2duxc2jx0"
 
 [display]
 
