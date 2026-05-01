@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nitc23gt5e1v"
-path="res://.godot/imported/切换为锤子.png-4a8185006bacebd962ec0a585e6aca48.ctex"
+uid="uid://badg1lp7i45vs"
+path="res://.godot/imported/锤子.png-c17530cf1145460a647dd30545716c67.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/切换为锤子.png"
-dest_files=["res://.godot/imported/切换为锤子.png-4a8185006bacebd962ec0a585e6aca48.ctex"]
+source_file="res://assets/images/characters/基础攻击/锤子.png"
+dest_files=["res://.godot/imported/锤子.png-c17530cf1145460a647dd30545716c67.ctex"]
 
 [params]
 

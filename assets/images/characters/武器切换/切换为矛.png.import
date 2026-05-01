@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkmn4ax3vk5ae"
-path="res://.godot/imported/长剑.png-01ba2bb21603514cb96e17d811255734.ctex"
+uid="uid://cw18upoenn3e7"
+path="res://.godot/imported/切换为矛.png-ad52238815b19bc5715dd5c662fd4547.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/长剑.png"
-dest_files=["res://.godot/imported/长剑.png-01ba2bb21603514cb96e17d811255734.ctex"]
+source_file="res://assets/images/characters/武器切换/切换为矛.png"
+dest_files=["res://.godot/imported/切换为矛.png-ad52238815b19bc5715dd5c662fd4547.ctex"]
 
 [params]
 

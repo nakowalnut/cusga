@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4nslp8c1c1ny"
-path="res://.godot/imported/切换为弓箭.png-b636bab26d8a6793d6d430e823ad1cec.ctex"
+uid="uid://ifxslkhewadm"
+path="res://.godot/imported/短剑.png-68553079e7e6d18dfc3cb8ae24860e71.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/切换为弓箭.png"
-dest_files=["res://.godot/imported/切换为弓箭.png-b636bab26d8a6793d6d430e823ad1cec.ctex"]
+source_file="res://assets/images/characters/基础攻击/短剑.png"
+dest_files=["res://.godot/imported/短剑.png-68553079e7e6d18dfc3cb8ae24860e71.ctex"]
 
 [params]
 

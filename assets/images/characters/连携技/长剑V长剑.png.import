@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://covji7hdc3fx"
-path="res://.godot/imported/切换到长剑.png-e771040a7bf5717577e4f730edcd1211.ctex"
+uid="uid://k0dkv0nwhjih"
+path="res://.godot/imported/长剑V长剑.png-098809ee0eacb765e74215b5629e5f20.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/切换到长剑.png"
-dest_files=["res://.godot/imported/切换到长剑.png-e771040a7bf5717577e4f730edcd1211.ctex"]
+source_file="res://assets/images/characters/连携技/长剑V长剑.png"
+dest_files=["res://.godot/imported/长剑V长剑.png-098809ee0eacb765e74215b5629e5f20.ctex"]
 
 [params]
 

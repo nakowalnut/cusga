@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqdsfvjvfbqi1"
-path="res://.godot/imported/拉弓.png-a353492af79a566d86b166847deb49d1.ctex"
+uid="uid://b4nslp8c1c1ny"
+path="res://.godot/imported/切换为弓箭.png-3bc50e32fd29fc217927819e6d1d634d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/拉弓.png"
-dest_files=["res://.godot/imported/拉弓.png-a353492af79a566d86b166847deb49d1.ctex"]
+source_file="res://assets/images/characters/武器切换/切换为弓箭.png"
+dest_files=["res://.godot/imported/切换为弓箭.png-3bc50e32fd29fc217927819e6d1d634d.ctex"]
 
 [params]
 
