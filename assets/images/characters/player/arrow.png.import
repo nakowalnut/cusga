@@ -2,25 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlm21yy31cir0"
-<<<<<<<< HEAD:assets/images/characters/player/arrow.png.import
+uid="uid://cvam86rbpal4u"
 path="res://.godot/imported/arrow.png-b1835ef240190f60365f7ca812581106.ctex"
-========
-path="res://.godot/imported/arrow.png-b11f460044faf1473ff16bb9af9e84c1.ctex"
->>>>>>>> main:assets/images/characters/Basic attack/arrow.png.import
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-<<<<<<<< HEAD:assets/images/characters/player/arrow.png.import
 source_file="res://assets/images/characters/player/arrow.png"
 dest_files=["res://.godot/imported/arrow.png-b1835ef240190f60365f7ca812581106.ctex"]
-========
-source_file="res://assets/images/characters/Basic attack/arrow.png"
-dest_files=["res://.godot/imported/arrow.png-b11f460044faf1473ff16bb9af9e84c1.ctex"]
->>>>>>>> main:assets/images/characters/Basic attack/arrow.png.import
 
 [params]
 

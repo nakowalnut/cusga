@@ -2,25 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://covji7hdc3fx"
-<<<<<<<< HEAD:assets/images/characters/player/cutsword.png.import
+uid="uid://cgbgw7cces62m"
 path="res://.godot/imported/cutsword.png-628e760b42ffc7953f41108fe8c70bb7.ctex"
-========
-path="res://.godot/imported/Switch to longsword.png-783c7564b729f9f4c032f1cbbe344816.ctex"
->>>>>>>> main:assets/images/characters/Weapon switching/Switch to longsword.png.import
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-<<<<<<<< HEAD:assets/images/characters/player/cutsword.png.import
 source_file="res://assets/images/characters/player/cutsword.png"
 dest_files=["res://.godot/imported/cutsword.png-628e760b42ffc7953f41108fe8c70bb7.ctex"]
-========
-source_file="res://assets/images/characters/Weapon switching/Switch to longsword.png"
-dest_files=["res://.godot/imported/Switch to longsword.png-783c7564b729f9f4c032f1cbbe344816.ctex"]
->>>>>>>> main:assets/images/characters/Weapon switching/Switch to longsword.png.import
 
 [params]
 
