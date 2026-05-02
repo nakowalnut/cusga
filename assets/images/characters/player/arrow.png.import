@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ifxslkhewadm"
-path="res://.godot/imported/短剑.png-0c604cfec8cd13c574aacfd471a46b4e.ctex"
+uid="uid://dlm21yy31cir0"
+path="res://.godot/imported/arrow.png-b1835ef240190f60365f7ca812581106.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/短剑.png"
-dest_files=["res://.godot/imported/短剑.png-0c604cfec8cd13c574aacfd471a46b4e.ctex"]
+source_file="res://assets/images/characters/player/arrow.png"
+dest_files=["res://.godot/imported/arrow.png-b1835ef240190f60365f7ca812581106.ctex"]
 
 [params]
 

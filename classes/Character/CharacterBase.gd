@@ -11,6 +11,7 @@ const STATE_ULTIMATE = "Ultimate"
 const STATE_DODGE = "Dodge"
 
 ## 基础属性
+@onready var attack_controller: AttackController = get_node_or_null("AttackController")
 @export var character_weapon: WeaponBase
 @export_group("基础属性")
 @export var damage_reduction_ratio: float = 0.2 # 减免伤害比率
@@ -22,8 +23,10 @@ const STATE_DODGE = "Dodge"
 @onready var current_health: float = max_health
 @export var sight_range: Array[int] = [50, 500]## 感知范围，【临近值，最远值】
 var toward: int = 1# 面向方向 (Walk/Hurt 等状态依赖)
-@onready var anim: Node ##存储动画
-@onready var attack_controller: AttackController = get_node_or_null("AttackController")
+
+@export_group("动画")
+@onready var anim: AnimationPlayer ##存储动画
+
 var hp: float:
 	get: return current_health
 	set(value): current_health = value

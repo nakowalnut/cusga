@@ -3,7 +3,7 @@ class_name Player
 
 @export var ULTIMATE_MAX_POINTS: int = 3 # 测试大招次数，平时是10
 @export var ULTIMATE_DURATION: float = 150.0 # 大招持续时间，可在Inspector里调整
-
+@export var animationsprite2d_node: AnimatedSprite2D
 @export_group("Stats")
 
 
@@ -326,10 +326,23 @@ func _update_weapon_visual() -> void:
 		weapon_sprite.rotation = -1.16588
 	
 	# 通过调制颜色 (Self Modulate) 来模拟武器切换
-	if weapon_sprite:
-		weapon_sprite.self_modulate = weapon.color
-		_apply_weapon_transforms(current_weapon_id, weapon.color)
-
+	#if weapon_sprite:
+		#weapon_sprite.self_modulate = weapon.color
+		#_apply_weapon_transforms(current_weapon_id, weapon.color)
+		
+	#武器切换（视觉）
+	match current_weapon_id:
+		"sword":
+			animationsprite2d_node.animation = "sword"
+		"spear":
+			pass
+		"dagger":
+			pass
+		"bow":
+			animationsprite2d_node.animation = "bow"
+		"hammer":
+			animationsprite2d_node.animation = "hammer"
+	
 func _apply_weapon_transforms(weapon_id: String, weapon_color: Color) -> void:
 	# 视觉与物理同步变化：CurrentWeapon 是 HitBox 的父节点，缩放会同时影响碰撞判定
 	weapon_sprite.scale = Vector2(1.0, 1.125)

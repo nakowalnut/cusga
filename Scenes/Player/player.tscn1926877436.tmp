@@ -56,11 +56,11 @@ size = Vector2(10, 35)
 
 [sub_resource type="Animation" id="Animation_htcer"]
 resource_name = "Attack1"
-length = 0.5
+length = 0.4
 step = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
-tracks/0/enabled = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("WeaponHolder/CurrentWeapon:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
@@ -72,7 +72,7 @@ tracks/0/keys = {
 }
 tracks/1/type = "value"
 tracks/1/imported = false
-tracks/1/enabled = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("WeaponHolder/CurrentWeapon:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
@@ -81,32 +81,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(0.5, 2, 2),
 "update": 0,
 "values": [-1.16588, 0.43633232, -1.16588]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = false
-tracks/2/path = NodePath("AnimatedSprite2D:animation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"sword"]
-}
-tracks/3/type = "method"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("AnimatedSprite2D")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [&"", 1.0, false],
-"method": &"play"
-}]
 }
 
 [sub_resource type="Animation" id="Animation_dd0ac"]
@@ -134,30 +108,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [-1.16588]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("AnimatedSprite2D:animation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"sword"]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("AnimatedSprite2D:frame")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [7]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0u5uq"]
@@ -402,11 +352,10 @@ animations = [{
 "speed": 20.0
 }]
 
-[node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("animationsprite2d_node", "c_state_machine")]
+[node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("c_state_machine")]
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_cyojo")
-animationsprite2d_node = NodePath("AnimatedSprite2D")
 weapon_tuning_profiles = Array[ExtResource("2_jhyir")]([SubResource("Resource_74mp2"), SubResource("Resource_oikmp"), SubResource("Resource_06tpx"), SubResource("Resource_7g0yx"), SubResource("Resource_dey5f")])
 max_health = 10000000.0
 dodge_duration = 0.09
@@ -425,7 +374,6 @@ shape = SubResource("CircleShape2D_v0iea")
 [node name="WeaponHolder" type="Node2D" parent="." unique_id=2146487382]
 
 [node name="CurrentWeapon" type="Sprite2D" parent="WeaponHolder" unique_id=1031291387]
-visible = false
 position = Vector2(22, -5)
 rotation = -1.16588
 scale = Vector2(1, 1.125)
@@ -480,11 +428,7 @@ script = ExtResource("10_dodge")
 libraries/ = SubResource("AnimationLibrary_0u5uq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1687143012]
-position = Vector2(7, 9)
-scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_htcer")
-animation = &"sword"
-frame = 7
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1838557750]
 zoom = Vector2(1.32, 1.32)
