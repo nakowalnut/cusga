@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqdsfvjvfbqi1"
-path="res://.godot/imported/拉弓.png-e505a82b1b673b1a5321f337fd08479c.ctex"
+uid="uid://dlm21yy31cir0"
+path="res://.godot/imported/arrow.png-b11f460044faf1473ff16bb9af9e84c1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/基础攻击/拉弓.png"
-dest_files=["res://.godot/imported/拉弓.png-e505a82b1b673b1a5321f337fd08479c.ctex"]
+source_file="res://assets/images/characters/Basic attack/arrow.png"
+dest_files=["res://.godot/imported/arrow.png-b11f460044faf1473ff16bb9af9e84c1.ctex"]
 
 [params]
 

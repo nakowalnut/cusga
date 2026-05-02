@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cw18upoenn3e7"
-path="res://.godot/imported/切换为矛.png-ad52238815b19bc5715dd5c662fd4547.ctex"
+uid="uid://b4nslp8c1c1ny"
+path="res://.godot/imported/Switch to Bow.png-944f4f6f34020d5baf64dabca073e57d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/武器切换/切换为矛.png"
-dest_files=["res://.godot/imported/切换为矛.png-ad52238815b19bc5715dd5c662fd4547.ctex"]
+source_file="res://assets/images/characters/Weapon switching/Switch to Bow.png"
+dest_files=["res://.godot/imported/Switch to Bow.png-944f4f6f34020d5baf64dabca073e57d.ctex"]
 
 [params]
 

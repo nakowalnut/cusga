@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6vl5eynbgm81"
-path="res://.godot/imported/切换为短剑.png-ba8cac8aae7b25ac7a4a19f7c2acd69b.ctex"
+uid="uid://dqdsfvjvfbqi1"
+path="res://.godot/imported/bow.png-5efd695185b1fe92a30d2725c61b6fc3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/武器切换/切换为短剑.png"
-dest_files=["res://.godot/imported/切换为短剑.png-ba8cac8aae7b25ac7a4a19f7c2acd69b.ctex"]
+source_file="res://assets/images/characters/Basic attack/bow.png"
+dest_files=["res://.godot/imported/bow.png-5efd695185b1fe92a30d2725c61b6fc3.ctex"]
 
 [params]
 

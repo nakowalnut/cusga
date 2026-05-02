@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://badg1lp7i45vs"
-path="res://.godot/imported/锤子.png-c17530cf1145460a647dd30545716c67.ctex"
+uid="uid://covji7hdc3fx"
+path="res://.godot/imported/Switch to longsword.png-783c7564b729f9f4c032f1cbbe344816.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/基础攻击/锤子.png"
-dest_files=["res://.godot/imported/锤子.png-c17530cf1145460a647dd30545716c67.ctex"]
+source_file="res://assets/images/characters/Weapon switching/Switch to longsword.png"
+dest_files=["res://.godot/imported/Switch to longsword.png-783c7564b729f9f4c032f1cbbe344816.ctex"]
 
 [params]
 

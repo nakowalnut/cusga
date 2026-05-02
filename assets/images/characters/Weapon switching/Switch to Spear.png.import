@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bu48hp7ru3ayk"
-path="res://.godot/imported/长剑v短剑.png-eb5f9cb015ccb11d09f7eeeb65f05bbb.ctex"
+uid="uid://cw18upoenn3e7"
+path="res://.godot/imported/Switch to Spear.png-8a9879626a7dcbe5f0907dbc6899101b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/连携技/长剑v短剑.png"
-dest_files=["res://.godot/imported/长剑v短剑.png-eb5f9cb015ccb11d09f7eeeb65f05bbb.ctex"]
+source_file="res://assets/images/characters/Weapon switching/Switch to Spear.png"
+dest_files=["res://.godot/imported/Switch to Spear.png-8a9879626a7dcbe5f0907dbc6899101b.ctex"]
 
 [params]
 

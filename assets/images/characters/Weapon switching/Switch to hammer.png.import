@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbn68liowghrv"
-path="res://.godot/imported/长矛.png-95b11bffc8b0dd68a646e59dace3c5f0.ctex"
+uid="uid://nitc23gt5e1v"
+path="res://.godot/imported/Switch to hammer.png-eca3a31567939d03d0adf8a17145d075.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/基础攻击/长矛.png"
-dest_files=["res://.godot/imported/长矛.png-95b11bffc8b0dd68a646e59dace3c5f0.ctex"]
+source_file="res://assets/images/characters/Weapon switching/Switch to hammer.png"
+dest_files=["res://.godot/imported/Switch to hammer.png-eca3a31567939d03d0adf8a17145d075.ctex"]
 
 [params]
 

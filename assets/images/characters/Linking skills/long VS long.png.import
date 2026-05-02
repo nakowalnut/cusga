@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkmn4ax3vk5ae"
-path="res://.godot/imported/长剑.png-4df13819532c712378f84bed8a055629.ctex"
+uid="uid://k0dkv0nwhjih"
+path="res://.godot/imported/long VS long.png-bda8f78f0be5435b644007ea0d358442.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/基础攻击/长剑.png"
-dest_files=["res://.godot/imported/长剑.png-4df13819532c712378f84bed8a055629.ctex"]
+source_file="res://assets/images/characters/Linking skills/long VS long.png"
+dest_files=["res://.godot/imported/long VS long.png-bda8f78f0be5435b644007ea0d358442.ctex"]
 
 [params]
 

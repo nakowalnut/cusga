@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nitc23gt5e1v"
-path="res://.godot/imported/切换为锤子.png-0aa71fa6e373923e451d7752717c0d3c.ctex"
+uid="uid://bbn68liowghrv"
+path="res://.godot/imported/spear.png-1f8b9b614611426ef9679b5bc371e9b7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/characters/武器切换/切换为锤子.png"
-dest_files=["res://.godot/imported/切换为锤子.png-0aa71fa6e373923e451d7752717c0d3c.ctex"]
+source_file="res://assets/images/characters/Basic attack/spear.png"
+dest_files=["res://.godot/imported/spear.png-1f8b9b614611426ef9679b5bc371e9b7.ctex"]
 
 [params]
 
