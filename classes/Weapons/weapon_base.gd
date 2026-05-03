@@ -18,13 +18,6 @@ var attack_range: float = 50.0
 @export var is_charge_weapon: bool = false # 是否需要蓄力
 
 var current_combo: int = 0
-
-func play_attack_visual(visual_system: Node, total_duration: float) -> void:
-	pass
-
-func update_weapon_visual(visual_system: Node) -> void:
-	pass
-
 var is_synergy_ready: bool = false
 var is_combo_active: bool = false
 @export var weapon_owner: CharacterBase

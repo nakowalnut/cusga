@@ -1,6 +1,8 @@
 extends State
 class_name DiedState
 
+var _death_timer: SceneTreeTimer
+
 func enter(msg: Dictionary = {}) -> void:
 	character.velocity = Vector2.ZERO
 	character.set_deferred("collision_layer", 0)
@@ -8,8 +10,9 @@ func enter(msg: Dictionary = {}) -> void:
 	if character.anim is AnimationPlayer and character.anim.has_animation("died"):
 		character.anim.play("died")
 	print("dead")
-	var death_timer := get_tree().create_timer(1)
-	death_timer.timeout.connect(_on_death_timer_timeout)
+	_death_timer = get_tree().create_timer(1)
+	_death_timer.timeout.connect(_on_death_timer_timeout)
+	add_child(_death_timer)
 
 func _on_death_timer_timeout() -> void:
 	if is_instance_valid(character):
