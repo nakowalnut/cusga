@@ -142,7 +142,3 @@ func _explode_at(point: Vector2) -> void:
 				target.move_and_slide()
 				
 	add_combo(1)
-
-
-func update_weapon_visual(visual_system: Node) -> void:
-	visual_system.weapon_sprite.scale = Vector2(1.0, 1.125)

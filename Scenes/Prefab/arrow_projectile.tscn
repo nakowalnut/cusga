@@ -2,21 +2,10 @@
 
 [ext_resource type="Script" uid="uid://dq46qlf6ulevh" path="res://classes/Weapons/arrow_projectile.gd" id="1_rna2p"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rna2p"]
-radius = 5.0
-height = 50.0
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_m17rx"]
-load_path = "res://.godot/imported/arrow.png-b1835ef240190f60365f7ca812581106.ctex"
+[sub_resource type="CircleShape2D" id="CircleShape2D_jwl2x"]
 
 [node name="Area2D" type="Area2D" unique_id=1048618060]
 script = ExtResource("1_rna2p")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1392021571]
-rotation = 1.5707964
-shape = SubResource("CapsuleShape2D_rna2p")
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1823578835]
-position = Vector2(17.74, -15.22)
-scale = Vector2(0.1, 0.1)
-texture = SubResource("CompressedTexture2D_m17rx")
+shape = SubResource("CircleShape2D_jwl2x")

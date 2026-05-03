@@ -37,28 +37,3 @@ func on_hit(target: Node) -> void:
 				# 眩晕敌人增加 combo (需求: 累计眩晕敌人3人次)
 				add_combo(1)
 				print("长矛眩晕了敌人！当前眩晕计数已刷新")
-
-func play_attack_visual(visual_system: Node, total_duration: float) -> void:
-	if visual_system.animation_player.is_playing() and visual_system.animation_player.current_animation.begins_with("Attack"):
-		visual_system.animation_player.stop()
-
-	if visual_system.current_weapon_tween and visual_system.current_weapon_tween.is_valid():
-		visual_system.current_weapon_tween.kill()
-		
-	var base_pos = Vector2(22, -5)
-	visual_system.weapon_sprite.position = base_pos
-	visual_system.weapon_sprite.rotation = 0.0
-	
-	var target_pos = base_pos + Vector2(60, 0)
-	var poke_time = max(total_duration * 0.35, 0.04)
-	var back_time = max(total_duration * 0.65, 0.06)
-	
-	visual_system.current_weapon_tween = visual_system._create_tween()
-	visual_system.current_weapon_tween.tween_property(visual_system.weapon_sprite, "position", target_pos, poke_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	visual_system.current_weapon_tween.tween_property(visual_system.weapon_sprite, "position", base_pos, back_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-
-func update_weapon_visual(visual_system: Node) -> void:
-	visual_system.weapon_sprite.scale = Vector2(1.6, 0.55)
-	visual_system.weapon_sprite.rotation = 0.0
-
-

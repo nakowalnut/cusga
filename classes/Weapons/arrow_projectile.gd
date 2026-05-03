@@ -53,3 +53,12 @@ func _hit(target: Node) -> void:
 			weapon_owner.on_hit(target)
 			
 		queue_free()
+
+func _draw() -> void:
+	# 绘制一个小三角形（素材代替）
+	var points = PackedVector2Array([
+		Vector2(10, 0),
+		Vector2(-5, -5),
+		Vector2(-5, 5)
+	])
+	draw_polygon(points, [Color.YELLOW, Color.YELLOW, Color.YELLOW])
