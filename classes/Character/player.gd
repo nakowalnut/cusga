@@ -312,7 +312,7 @@ func _switch_and_attack(new_index: int) -> void:
 		})
 		print("切换攻击，从 ", prev_weapon, " 切换到 ", new_weapon)
 
-# 核心演示逻辑：更换棍子颜色
+# 核心演示逻辑
 func _update_weapon_visual() -> void:
 	if weapon_wheel.size() == 0: return
 	
@@ -326,30 +326,19 @@ func _update_weapon_visual() -> void:
 		weapon_sprite.position = Vector2(22, -5)
 		weapon_sprite.rotation = -1.16588
 	
-	# 通过调制颜色 (Self Modulate) 来模拟武器切换
-	#if weapon_sprite:
-		#weapon_sprite.self_modulate = weapon.color
-		#_apply_weapon_transforms(current_weapon_id, weapon.color)
+
 		
 	prev_weapon_ani.animation = animationsprite2d_node.animation
 	new_weapon_ani.animation = current_weapon_id
+	prev_weapon_ani.visible = true
+	new_weapon_ani.visible = true
 	animation_player.play("switchweapon")
 	prev_weapon_ani.frame = 0
 	new_weapon_ani.frame = 0
-	# switchweapon 动画轨道的连续更新会锁死子节点帧，动画结束后手动恢复播放
-	_ensure_child_plays_after_switch(current_weapon_id)
-	#武器切换（视觉）
-	match current_weapon_id:
-		"sword":
-			animationsprite2d_node.animation = "sword"
-		"spear":
-			pass
-		"dagger":
-			pass
-		"bow":
-			animationsprite2d_node.animation = "bow"
-		"hammer":
-			animationsprite2d_node.animation = "hammer"
+	_ensure_parent_plays_after_switch(current_weapon_id)
+
+	if current_weapon_id in ["sword", "bow", "hammer", "spear", "dagger"]:
+		animationsprite2d_node.animation = current_weapon_id
 	
 func _apply_weapon_transforms(weapon_id: String, weapon_color: Color) -> void:
 	# 视觉与物理同步变化：CurrentWeapon 是 HitBox 的父节点，缩放会同时影响碰撞判定
@@ -434,37 +423,32 @@ func pre_attack(msg):
 
 func _play_attack_visual(weapon_id: String) -> void:
 	_apply_attack_animation_speed()
-	if weapon_id == "spear":
-		_spear_poke_animation(_get_current_attack_total_duration())
-	else:
-		# 隐藏父节点 Weaponanim，避免与子节点重叠
-		animationsprite2d_node.self_modulate.a = 0.0
-		# 在当前的子节点上播放正确的武器动画
-		var active_child := _get_active_weapon_child()
-		if weapon_id in ["sword", "bow", "hammer"]:
-			active_child.animation = weapon_id
-			active_child.play(weapon_id)
-		animation_player.play("Attack1")
 
-## 返回当前可见的武器动画子节点（基于 modulate.a 判断）
-func _get_active_weapon_child() -> AnimatedSprite2D:
-	if new_weapon_ani.modulate.a > prev_weapon_ani.modulate.a:
-		return new_weapon_ani
-	return prev_weapon_ani
+	# 在当前的子节点上播放正确的武器动画
+	if weapon_id in ["sword", "bow", "hammer" , "spear", "dagger"]:
+		animationsprite2d_node.animation = weapon_id
+		animationsprite2d_node.play(weapon_id)
+	animation_player.play("Attack1")
 
-## switchweapon 动画结束后，恢复子节点的播放（因为动画轨道的连续更新会锁死帧）
-func _ensure_child_plays_after_switch(weapon_id: String) -> void:
-	if not animation_player.is_playing():
-		new_weapon_ani.play(weapon_id)
+func _ensure_parent_plays_after_switch(weapon_id: String) -> void:
+	if not animation_player.is_playing() or animation_player.current_animation != "switchweapon":
+		_finish_switch_to_parent(weapon_id)
 		return
-	# 断开之前的连接，防止重复绑定
 	if animation_player.animation_finished.is_connected(_on_switchweapon_finished):
 		animation_player.animation_finished.disconnect(_on_switchweapon_finished)
 	animation_player.animation_finished.connect(_on_switchweapon_finished.bind(weapon_id), CONNECT_ONE_SHOT)
 
 func _on_switchweapon_finished(anim_name: String, weapon_id: String) -> void:
 	if anim_name == "switchweapon":
-		new_weapon_ani.play(weapon_id)
+		_finish_switch_to_parent(weapon_id)
+
+func _finish_switch_to_parent(weapon_id: String) -> void:
+	prev_weapon_ani.visible = false
+	new_weapon_ani.visible = false
+	animationsprite2d_node.self_modulate = Color(1, 1, 1, 1)
+	if weapon_id in ["sword", "bow", "hammer", "spear", "dagger"]:
+		animationsprite2d_node.animation = weapon_id
+		animationsprite2d_node.play(weapon_id)
 
 var current_weapon_tween: Tween
 
