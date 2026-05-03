@@ -866,14 +866,12 @@ animation = &"sword"
 frame = 7
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Weaponanim" unique_id=660344501]
-visible = false
 rotation = -3.1415927
 sprite_frames = SubResource("SpriteFrames_htcer")
 animation = &"sword"
 frame = 7
 
 [node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="Weaponanim" unique_id=22588117]
-visible = false
 modulate = Color(1, 1, 1, 0)
 rotation = -3.1415927
 sprite_frames = SubResource("SpriteFrames_htcer")
