@@ -12,11 +12,17 @@
 [ext_resource type="Script" uid="uid://dcqm55fatplw8" path="res://classes/Character/AttackController.gd" id="9_gk6dx"]
 [ext_resource type="Script" uid="uid://dxjnhi0x1g88y" path="res://classes/CharacterState/c_states/dodge.gd" id="10_dodge"]
 <<<<<<< HEAD
+<<<<<<< HEAD
 [ext_resource type="Texture2D" uid="uid://bfowx0on5ldw1" path="res://assets/images/characters/player/hammer.png" id="11_06tpx"]
 [ext_resource type="Texture2D" uid="uid://d1ntaim80urwg" path="res://assets/images/characters/player/bow.png" id="11_7g0yx"]
 [ext_resource type="Texture2D" uid="uid://cu6l4rv7biylh" path="res://assets/images/characters/player/sword.png" id="11_oikmp"]
 [ext_resource type="Texture2D" uid="uid://cvkxavgp4f5kf" path="res://assets/images/characters/walk.png" id="15_dey5f"]
 [ext_resource type="Texture2D" uid="uid://dh6f1pgb5mgum" path="res://assets/images/characters/Basic attack/spear.png" id="15_r5xpd"]
+=======
+[ext_resource type="Texture2D" uid="uid://badg1lp7i45vs" path="res://assets/images/characters/player/hammer.png" id="11_06tpx"]
+[ext_resource type="Texture2D" uid="uid://dqdsfvjvfbqi1" path="res://assets/images/characters/player/bow.png" id="11_7g0yx"]
+[ext_resource type="Texture2D" uid="uid://bkmn4ax3vk5ae" path="res://assets/images/characters/player/sword.png" id="11_oikmp"]
+>>>>>>> parent of cc1250f (player.gd瘦身)
 =======
 [ext_resource type="Texture2D" uid="uid://badg1lp7i45vs" path="res://assets/images/characters/player/hammer.png" id="11_06tpx"]
 [ext_resource type="Texture2D" uid="uid://dqdsfvjvfbqi1" path="res://assets/images/characters/player/bow.png" id="11_7g0yx"]
@@ -172,6 +178,7 @@ _data = {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [sub_resource type="AtlasTexture" id="AtlasTexture_h5u0x"]
 atlas = ExtResource("15_dey5f")
 region = Rect2(0, 1998, 666, 666)
@@ -302,6 +309,8 @@ animations = [{
 
 =======
 >>>>>>> parent of cc1250f (player.gd瘦身)
+=======
+>>>>>>> parent of cc1250f (player.gd瘦身)
 [sub_resource type="AtlasTexture" id="AtlasTexture_m6ahd"]
 atlas = ExtResource("11_7g0yx")
 region = Rect2(2664, 0, 666, 666)
@@ -395,6 +404,7 @@ atlas = ExtResource("11_06tpx")
 region = Rect2(0, 0, 666, 666)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [sub_resource type="AtlasTexture" id="AtlasTexture_8g0gh"]
 atlas = ExtResource("15_r5xpd")
 region = Rect2(0, 0, 666, 666)
@@ -427,6 +437,8 @@ region = Rect2(666, 666, 666, 666)
 atlas = ExtResource("11_oikmp")
 region = Rect2(0, 0, 666, 666)
 
+=======
+>>>>>>> parent of cc1250f (player.gd瘦身)
 =======
 >>>>>>> parent of cc1250f (player.gd瘦身)
 [sub_resource type="AtlasTexture" id="AtlasTexture_06tpx"]
@@ -546,6 +558,7 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 <<<<<<< HEAD
+<<<<<<< HEAD
 "texture": SubResource("AtlasTexture_8g0gh")
 }, {
 "duration": 1.0,
@@ -573,6 +586,9 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_aqm4k")
+=======
+"texture": SubResource("AtlasTexture_06tpx")
+>>>>>>> parent of cc1250f (player.gd瘦身)
 =======
 "texture": SubResource("AtlasTexture_06tpx")
 >>>>>>> parent of cc1250f (player.gd瘦身)
@@ -693,6 +709,7 @@ position_smoothing_speed = 15.0
 script = ExtResource("9_gk6dx")
 metadata/_custom_type_script = "uid://dcqm55fatplw8"
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 [node name="playeranimation" type="AnimatedSprite2D" parent="." unique_id=1185142295]
 visible = false
@@ -720,5 +737,7 @@ rotation = -3.1415927
 sprite_frames = SubResource("SpriteFrames_htcer")
 animation = &"sword"
 frame = 7
+=======
+>>>>>>> parent of cc1250f (player.gd瘦身)
 =======
 >>>>>>> parent of cc1250f (player.gd瘦身)

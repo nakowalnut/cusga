@@ -59,6 +59,7 @@ func _ready() -> void:
 	anim = $AnimationPlayer
 	GameManager.player = self
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
 	if torso_sprite:
 		torso_sprite.visible = false
@@ -74,6 +75,8 @@ func _ready() -> void:
 	ultimate_manager.name = "UltimateManager"
 	add_child(ultimate_manager)
 
+=======
+>>>>>>> parent of cc1250f (player.gd瘦身)
 =======
 >>>>>>> parent of cc1250f (player.gd瘦身)
 	super._ready()
