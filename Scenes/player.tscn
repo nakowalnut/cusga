@@ -10,18 +10,9 @@ radius = 20.22375
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v0iea"]
 size = Vector2(40, 5)
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_cvnsp"]
-size = Vector2(10, 35)
-
 [node name="Player" type="CharacterBody2D" unique_id=68082897]
 collision_layer = 2
 script = ExtResource("1_v0iea")
-max_health = null
-speed = null
-debug_mode = null
-attack_cooldown_time = null
-sight_range = null
-invulnerability_duration = null
 
 [node name="PlayerCollider" type="CollisionShape2D" parent="." unique_id=348578568]
 shape = SubResource("CapsuleShape2D_f60y1")
@@ -39,6 +30,3 @@ position = Vector2(22, -5)
 rotation = -1.16588
 scale = Vector2(1, 1.125)
 texture = SubResource("PlaceholderTexture2D_v0iea")
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=698285220]
-texture = SubResource("PlaceholderTexture2D_cvnsp")

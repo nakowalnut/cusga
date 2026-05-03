@@ -48,6 +48,8 @@ var ultimate_cycle_index: int = -1
 @onready var attack_collider = $AttackHitBox/AttackCollider
 @onready var modifier_system: ModifierSystem = get_node_or_null("ModifierSystem")
 @onready var equipment_manager: EquipmentManager = get_node_or_null("EquipmentManager")
+@onready var playeranimation = $playeranimation
+@onready var torso_sprite = $Sprite2D
 
 @export_group("Equipment")
 @export var default_equip_head: String = ""
@@ -61,6 +63,9 @@ var ultimate_manager: UltimateSkillManager
 func _ready() -> void:
 	anim = $AnimationPlayer
 	GameManager.player = self
+	
+	if torso_sprite:
+		torso_sprite.visible = false
 	
 	weapon_visual_system = PlayerWeaponVisualSystem.new(self, weapon_sprite, prev_weapon_ani, new_weapon_ani, animation_player, animationsprite2d_node)
 	add_child(weapon_visual_system)
@@ -325,20 +330,52 @@ func process_movement(delta: float) -> void:
 	var current_speed := speed
 	if is_instance_valid(modifier_system):
 		current_speed = modifier_system.get_stat("speed")
-	if Input.get_axis("move_left", "move_right") != 0:
-		toward = int(Input.get_axis("move_left", "move_right"))
+	var move_left = Input.get_axis("move_left", "move_right") != 0
+	var move_right = Input.get_axis("move_left", "move_right") != 0
+	var move_up = Input.get_axis("up", "down") != 0
+	var move_down = Input.get_axis("up", "down") != 0
+	var move_dir_x = int(Input.get_axis("move_left", "move_right"))
+	var move_dir_y = int(Input.get_axis("up", "down"))
+
+	if move_dir_x != 0:
+		toward = move_dir_x
 		velocity.x = toward * current_speed
-		if anim and anim.has_animation("walk"): anim.play("walk")
-	if Input.get_axis("up", "down") != 0:
-		velocity.y = int(Input.get_axis("up", "down")) * current_speed
-		
-	if Input.get_axis("move_left", "move_right") == 0 and Input.get_axis("up", "down") == 0:
+		if playeranimation:
+			playeranimation.visible = true
+			if move_dir_x < 0:
+				playeranimation.animation = "walkleft"
+				playeranimation.flip_h = false
+			else:
+				playeranimation.animation = "walkright"
+				playeranimation.flip_h = false
+			if not playeranimation.is_playing():
+				playeranimation.play()
+	if move_dir_y != 0:
+		velocity.y = move_dir_y * current_speed
+		if playeranimation:
+			playeranimation.visible = true
+			if move_dir_y < 0:
+				playeranimation.animation = "walkright"
+				playeranimation.flip_h = false
+			else:
+				playeranimation.animation = "walkdown"
+				playeranimation.flip_h = false
+			if not playeranimation.is_playing():
+				playeranimation.play()
+
+	if move_dir_x == 0 and move_dir_y == 0:
 		if hp > 0 and c_state_machine:
 			c_state_machine.change_state(STATE_IDLE)
+		if playeranimation:
+			playeranimation.stop()
+			playeranimation.frame = 0
 
 func process_idle(delta: float) -> void:
 	velocity = Vector2.ZERO
-	# 检查是否应该切换到移动状态
+	if playeranimation:
+		playeranimation.visible = true
+		playeranimation.stop()
+		playeranimation.frame = 0
 	if Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right") or Input.is_action_pressed("up") or Input.is_action_pressed("down"):
 		if c_state_machine:
 			c_state_machine.change_state(STATE_WALK)
