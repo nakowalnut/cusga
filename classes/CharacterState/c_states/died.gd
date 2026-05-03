@@ -12,7 +12,7 @@ func enter(msg: Dictionary = {}) -> void:
 	print("dead")
 	_death_timer = get_tree().create_timer(1)
 	_death_timer.timeout.connect(_on_death_timer_timeout)
-	add_child(_death_timer)
+
 
 func _on_death_timer_timeout() -> void:
 	if is_instance_valid(character):
