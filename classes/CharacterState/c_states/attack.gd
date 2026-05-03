@@ -18,7 +18,7 @@ func enter(msg: Dictionary = {}) -> void:
 	match msg.get("anim"):
 		0:
 			if "animation_player" in character:
-				character.animation_player.play("attack1")
+				character.animation_player.play("Attack1")
 		1:
 			if "animation_player" in character:
 				character.animation_player.play("attack2")

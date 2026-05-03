@@ -7,10 +7,13 @@ func enter(msg: Dictionary = {}) -> void:
 	character.set_deferred("collision_mask", 0)
 	if character.anim is AnimationPlayer and character.anim.has_animation("died"):
 		character.anim.play("died")
-	#elif character.anim is AnimatedSprite2D:
-		#character.anim.play("died")
 	print("dead")
-	get_tree().create_timer(1).timeout.connect(func():character.queue_free())
+	var death_timer := get_tree().create_timer(1)
+	death_timer.timeout.connect(_on_death_timer_timeout)
+
+func _on_death_timer_timeout() -> void:
+	if is_instance_valid(character):
+		character.queue_free()
 	
 func get_state_name() -> String:
 	return CharacterBase.STATE_DIED

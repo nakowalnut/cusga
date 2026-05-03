@@ -11,7 +11,7 @@ func _ready() -> void:
 		add_child(hurt_timer)
 		
 func enter(msg: Dictionary = {}) -> void:
-	if character.hp >= 0:
+	if character.hp > 0:
 		if character.debug_mode:
 			print("Entering Hurt State")
 		#if character.anim is AnimatedSprite2D and "sprite_frames" in character.anim:

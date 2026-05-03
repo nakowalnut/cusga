@@ -35,3 +35,7 @@ func on_hit(target: Node) -> void:
 	if not target.get("is_dead"):
 		deal_damage(target)
 		add_combo(1)
+
+
+func update_weapon_visual(visual_system: Node) -> void:
+	visual_system.weapon_sprite.scale = Vector2(1.0, 1.125)

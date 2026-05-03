@@ -98,6 +98,33 @@ func on_hit(target: Node) -> void:
 		if target.has_method("take_damage"):
 			deal_damage(target, damage * current_multiplier)
 
+func update_weapon_visual(visual_system: Node) -> void:
+	visual_system.weapon_sprite.scale = Vector2(0.9, 1.0)
+	_build_hammer_head(self.color, visual_system)
+
+func _build_hammer_head(base_color: Color, visual_system: Node) -> void:
+	if not visual_system.weapon_sprite:
+		return
+	visual_system._clear_custom_weapon_shapes()
+	_add_hammer_square(Vector2(18.0, -8.0), 11.0, base_color.lightened(0.15), "Top", visual_system)
+	_add_hammer_square(Vector2(24.0, -2.0), 13.0, base_color, "Middle", visual_system)
+	_add_hammer_square(Vector2(18.0, 7.0), 10.0, base_color.darkened(0.2), "Bottom", visual_system)
+
+func _add_hammer_square(center: Vector2, size: float, fill_color: Color, suffix: String, visual_system: Node) -> void:
+	var half := size * 0.5
+	var block := Polygon2D.new()
+	block.name = "CustomShape_Hammer_" + suffix
+	block.polygon = PackedVector2Array([
+		Vector2(-half, -half),
+		Vector2(half, -half),
+		Vector2(half, half),
+		Vector2(-half, half)
+	])
+	block.position = center
+	block.color = fill_color
+	visual_system.weapon_sprite.add_child(block)
+
+
 func handle_take_damage(amount: float) -> bool:
 	if is_charging:
 		var w_owner = weapon_owner
