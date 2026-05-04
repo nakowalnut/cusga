@@ -2,15 +2,10 @@ extends CharacterBase
 class_name Player
 @export var prev_weapon_ani: AnimatedSprite2D
 @export var new_weapon_ani: AnimatedSprite2D
-#@export var ULTIMATE_MAX_POINTS: int = 3 # 测试大招次数，平时是10
-#@export var ULTIMATE_DURATION: float = 150.0 # 大招持续时间，可在Inspector里调整
 @export var animationsprite2d_node: AnimatedSprite2D
 @export_group("Stats")
 @export var weapon_manager: WeaponManager
 @export var ultimate_system: UltimateSystem
-
-#const ULTIMATE_ARROW_SCENE = preload("res://Scenes/Prefab/arrow_projectile.tscn")
-#const ULTIMATE_ARROW_DAMAGE: float = 4.0
 
 ## ---- 常量定义 ----
 @onready var animation_player = $AnimationPlayer
@@ -26,8 +21,6 @@ func can_change_state() -> bool:
 		return false
 		
 	return true
-
-
 
 # 演示用节点引用
 @onready var weapon_holder = $WeaponHolder
@@ -55,7 +48,7 @@ func _ready() -> void:
 	
 	if weapon_manager:
 		# 必须先绑定信号，再初始化武器（init_weapons 内部会 emit weapon_switched）
-		weapon_manager.weapon_switched.connect(func(w_id): _update_weapon_visual())
+		weapon_manager.weapon_switched.connect(func(w_id): weapon_manager.update_weapon_visual())
 		weapon_manager.init_weapons()
 
 	# 连接武器自己的攻击判定信号
@@ -63,12 +56,7 @@ func _ready() -> void:
 	weapon_hitbox.body_entered.connect(_on_weapon_hitbox_body_entered)
 	weapon_hitbox.monitoring = false
 	if attack_controller:
-		if not attack_controller.active_started.is_connected(_on_attack_active_started_player):
-			attack_controller.active_started.connect(_on_attack_active_started_player)
-		if not attack_controller.recovery_started.is_connected(_on_attack_recovery_started_player):
-			attack_controller.recovery_started.connect(_on_attack_recovery_started_player)
-		if not attack_controller.attack_ended.is_connected(_on_attack_ended_player):
-			attack_controller.attack_ended.connect(_on_attack_ended_player)
+		pass
 
 func _init_combat_systems() -> void:
 	if not is_instance_valid(modifier_system):
@@ -149,16 +137,10 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 	
 	# 让武器支架指向鼠标
-	_rotate_weapon_to_mouse()
+	weapon_manager.rotate_weapon_to_mouse(get_global_mouse_position())
 	
 	# 输入处理
 	_handle_input()
-
-func _rotate_weapon_to_mouse() -> void:
-	if weapon_holder:
-		var mouse_pos = get_global_mouse_position()
-		weapon_holder.look_at(mouse_pos)
-
 
 func _on_weapon_hitbox_area_entered(area: Area2D) -> void:
 	if area is FieldOfView2D:
@@ -193,7 +175,6 @@ func _handle_input() -> void:
 
 	##从UltimateSystem获取状态
 	var is_ult = ultimate_system and ultimate_system.in_ultimate_mode
-	
 
 	if not is_ult and weapon_manager:
 		for i in range(1, weapon_manager.weapon_wheel.size() + 1):
@@ -229,7 +210,7 @@ func _handle_input() -> void:
 				"is_switch": false
 			})
 		else:
-			_play_charge_animation()
+			weapon_manager.play_charge_animation()
 
 	if Input.is_action_just_released("attack"):
 		if weapon_manager:
@@ -242,64 +223,6 @@ func _handle_input() -> void:
 					"is_switch": false
 				})
 
-
-# 核心演示逻辑
-func _update_weapon_visual() -> void:
-	if weapon_manager.weapon_wheel.size() == 0: return
-	
-	var current_weapon_id = weapon_manager.weapon_wheel[weapon_manager.current_weapon_index]
-	var weapon = weapon_manager.all_weapons[current_weapon_id]
-	weapon_manager.current_weapon_node = weapon
-	var hammer = weapon_manager.all_weapons.get("hammer")
-	if is_instance_valid(hammer) and hammer.has_method("_clear_custom_weapon_shapes"):
-		hammer._clear_custom_weapon_shapes()
-	
-	# 重置被Tween影响的位置和旋转，防止切枪时由于动画残留导致表现错乱
-	if weapon_sprite:
-		weapon_sprite.position = Vector2(22, -5)
-		weapon_sprite.rotation = -1.16588
-	
-
-		
-	prev_weapon_ani.animation = animationsprite2d_node.animation
-	new_weapon_ani.animation = current_weapon_id
-	prev_weapon_ani.visible = true
-	new_weapon_ani.visible = true
-	animation_player.play("switchweapon")
-	prev_weapon_ani.frame = 0
-	new_weapon_ani.frame = 0
-	# switchweapon 动画轨道的连续更新会锁死子节点帧，动画结束后手动恢复播放
-	_ensure_parent_plays_after_switch(current_weapon_id)
-	
-	# 武器切换（视觉）设置
-	if current_weapon_id in ["sword", "bow", "hammer", "spear", "dagger"]:
-		animationsprite2d_node.animation = current_weapon_id
-	
-func _apply_weapon_transforms(weapon_id: String, weapon_color: Color) -> void:
-	# 视觉与物理同步变化：CurrentWeapon 是 HitBox 的父节点，缩放会同时影响碰撞判定
-	weapon_sprite.scale = Vector2(1.0, 1.125)
-	
-	match weapon_id:
-		"dagger":
-			# 短剑：更短
-			weapon_sprite.scale = Vector2(0.5, 1.125)
-		"spear":
-			# 矛：更细、更长
-			weapon_sprite.scale = Vector2(1.6, 0.55)
-			# 矛头方向与鼠标一致：本地旋转归零，由 weapon_holder.look_at 接管朝向
-			weapon_sprite.rotation = 0.0
-		"hammer":
-			weapon_sprite.scale = Vector2(0.9, 1.0)
-			var hammer = weapon_manager.all_weapons.get("hammer")
-			if is_instance_valid(hammer) and hammer.has_method("build_hammer_head"):
-				hammer.build_hammer_head(weapon_color)
-	
-	# 如果有攻击判定，可以在这里调整碰撞盒大小模拟不同武器长度
-	# attack_collider.shape.extents = Vector2(weapon.attack_range, 10)
-
-func set_weapon_hitbox_active(active: bool) -> void:
-	if weapon_hitbox:
-		weapon_hitbox.monitoring = active
 ##预攻击
 func pre_attack(msg):
 	var current_weapon_id = msg.get("weapon", weapon_manager.weapon_wheel[weapon_manager.current_weapon_index])
@@ -318,7 +241,7 @@ func pre_attack(msg):
 	await get_tree().create_timer(0.5).timeout
 
 	if is_switch:
-		_update_weapon_visual()
+		weapon_manager.update_weapon_visual()
 
 func _play_attack_visual(weapon_id: String) -> void:
 	_apply_attack_animation_speed()
@@ -329,70 +252,6 @@ func _play_attack_visual(weapon_id: String) -> void:
 		animationsprite2d_node.animation = weapon_id
 		animationsprite2d_node.play(weapon_id)
 	animation_player.play("Attack1")
-
-func _ensure_parent_plays_after_switch(weapon_id: String) -> void:
-	if not animation_player.is_playing() or animation_player.current_animation != "switchweapon":
-		_finish_switch_to_parent(weapon_id)
-		return
-	# 断开之前的连接，防止重复绑定
-	if animation_player.animation_finished.is_connected(_on_switchweapon_finished):
-		animation_player.animation_finished.disconnect(_on_switchweapon_finished)
-	animation_player.animation_finished.connect(_on_switchweapon_finished.bind(weapon_id), CONNECT_ONE_SHOT)
-
-func _on_switchweapon_finished(anim_name: String, weapon_id: String) -> void:
-	if anim_name == "switchweapon":
-		_finish_switch_to_parent(weapon_id)
-
-func _finish_switch_to_parent(weapon_id: String) -> void:
-	prev_weapon_ani.visible = false
-	new_weapon_ani.visible = false
-	animationsprite2d_node.self_modulate = Color(1, 1, 1, 1)
-	if weapon_id in ["sword", "bow", "hammer", "spear", "dagger"]:
-		animationsprite2d_node.animation = weapon_id
-		animationsprite2d_node.play(weapon_id)
-
-var current_weapon_tween: Tween
-
-func _play_charge_animation() -> void:
-	if animation_player.is_playing() and animation_player.current_animation.begins_with("Attack"):
-		animation_player.stop()
-	
-	if current_weapon_tween and current_weapon_tween.is_valid():
-		current_weapon_tween.kill()
-		
-	current_weapon_tween = create_tween()
-	# 蓄力时将武器向后方高高举起 (旋转角度后仰，并稍微收回)
-	var final_rotation = weapon_sprite.rotation - deg_to_rad(45.0)
-	var final_position = weapon_sprite.position + Vector2(-10, -10)
-	
-	current_weapon_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	current_weapon_tween.tween_property(weapon_sprite, "rotation", final_rotation, 0.4)
-	current_weapon_tween.parallel().tween_property(weapon_sprite, "position", final_position, 0.4)
-
-func _spear_poke_animation(total_duration: float) -> void:
-	# 停止动画播放器，以免与代码Tween冲突
-	if animation_player.is_playing() and animation_player.current_animation.begins_with("Attack"):
-		animation_player.stop()
-
-	if current_weapon_tween and current_weapon_tween.is_valid():
-		current_weapon_tween.kill()
-		
-	var base_pos = Vector2(22, -5)
-	weapon_sprite.position = base_pos
-	# 矛的默认角度由 weapon_holder.look_at 驱动，这里保持本地零旋转
-	weapon_sprite.rotation = 0.0
-	
-	# 向本地 X 轴直接延伸进行“戳”的动作
-	# 父节点 weapon_holder 已经 look_at 指向了鼠标，因此增加 X 轴位置即为向前突刺
-	var target_pos = base_pos + Vector2(60, 0)
-	var poke_time = max(total_duration * 0.35, 0.04)
-	var back_time = max(total_duration * 0.65, 0.06)
-	
-	current_weapon_tween = create_tween()
-	# 快速突刺
-	current_weapon_tween.tween_property(weapon_sprite, "position", target_pos, poke_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	# 慢速收回
-	current_weapon_tween.tween_property(weapon_sprite, "position", base_pos, back_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
 func player_attack():
 	var character = self
@@ -460,7 +319,7 @@ func end_attack() -> void:
 	is_attacking = false
 	if animation_player:
 		animation_player.speed_scale = 1.0
-	set_weapon_hitbox_active(false)
+	weapon_manager.set_weapon_hitbox_active(false)
 
 func process_attack_physics(delta: float) -> void:
 	player_attack()
@@ -480,16 +339,6 @@ func _apply_attack_animation_speed() -> void:
 		atk_speed_multiplier = max(modifier_system.get_stat("atk_speed"), 0.1)
 	animation_player.speed_scale = (anim_len / total_time) * atk_speed_multiplier
 
-func _on_attack_active_started_player(_duration: float) -> void:
-	weapon_manager.execute_attack(get_global_mouse_position())
-	set_weapon_hitbox_active(true)
-
-func _on_attack_recovery_started_player(_duration: float) -> void:
-	set_weapon_hitbox_active(false)
-
-func _on_attack_ended_player() -> void:
-	set_weapon_hitbox_active(false)
-
-func add_ultimate_point() -> void:
-	if ultimate_system:
-		ultimate_system.add_point()
+#func add_ultimate_point() -> void:
+	#if ultimate_system:
+		#ultimate_system.add_point()

@@ -69,8 +69,8 @@ func trigger_combo(player: CharacterBase, current_weapon: WeaponBase, next_weapo
 		
 		combo_instance.execute(player, current_weapon, next_weapon_name)
 		EventBus.on_combo_triggered.emit(1, current_weapon, player)
-		if player is Player and player.has_method("add_ultimate_point"):
-			player.add_ultimate_point(1)
+		if player is Player and player.ultimate_system:
+			player.ultimate_system.add_point()
 		
 		if is_bow_hammer:
 			return false

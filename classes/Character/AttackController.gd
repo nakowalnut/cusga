@@ -173,11 +173,11 @@ func _setup_character_references() -> void:
 
 func _connect_default_handlers() -> void:
 	if not active_started.is_connected(_on_active_started_default):
-		active_started.connect(_on_active_started_default, CONNECT_ONE_SHOT)
+		active_started.connect(_on_active_started_default)
 	if not recovery_started.is_connected(_on_recovery_started_default):
-		recovery_started.connect(_on_recovery_started_default, CONNECT_ONE_SHOT)
+		recovery_started.connect(_on_recovery_started_default)
 	if not attack_ended.is_connected(_on_attack_ended_default):
-		attack_ended.connect(_on_attack_ended_default, CONNECT_ONE_SHOT)
+		attack_ended.connect(_on_attack_ended_default)
 
 func _on_active_started_default(_duration: float) -> void:
 	if is_instance_valid(weapon_manager):
