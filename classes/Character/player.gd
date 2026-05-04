@@ -154,10 +154,10 @@ func _physics_process(_delta: float) -> void:
 	# 输入处理
 	_handle_input()
 
-#func _rotate_weapon_to_mouse() -> void:
-	#if weapon_holder:
-		#var mouse_pos = get_global_mouse_position()
-		#weapon_holder.look_at(mouse_pos)
+func _rotate_weapon_to_mouse() -> void:
+	if weapon_holder:
+		var mouse_pos = get_global_mouse_position()
+		weapon_holder.look_at(mouse_pos)
 
 
 func _on_weapon_hitbox_area_entered(area: Area2D) -> void:
