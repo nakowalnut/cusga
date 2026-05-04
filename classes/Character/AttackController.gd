@@ -25,6 +25,11 @@ var _phase: AttackPhase = AttackPhase.IDLE
 var _phase_timer: Timer
 var _cooldown_timer: Timer
 
+@export var animation_player: AnimationPlayer
+@export var weapon_manager: WeaponManager
+@export var weapon_hitbox: Area2D
+
+var _atk_speed_multiplier: float = 1.0
 var _wind_up_time: float = 0.0
 var _active_time: float = 0.0
 var _recovery_time: float = 0.0
@@ -41,6 +46,9 @@ func _ready() -> void:
 	_cooldown_timer.timeout.connect(_on_cooldown_timeout)
 	add_child(_cooldown_timer)
 
+	_setup_character_references()
+	_connect_default_handlers()
+
 func configure_attack_timing(wind_up: float, active: float, recovery: float, cooldown: float) -> void:
 	_wind_up_time = max(wind_up, 0.0)
 	_active_time = max(active, 0.0)
@@ -50,6 +58,7 @@ func configure_attack_timing(wind_up: float, active: float, recovery: float, coo
 func configure_from_weapon(weapon: WeaponBase) -> void:
 	if not is_instance_valid(weapon):
 		configure_attack_timing(default_wind_up, default_active, default_recovery, default_cooldown)
+		_atk_speed_multiplier = 1.0
 		return
 
 	configure_attack_timing(
@@ -58,6 +67,16 @@ func configure_from_weapon(weapon: WeaponBase) -> void:
 		weapon.attack_recovery,
 		weapon.attack_cooldown
 	)
+
+	_atk_speed_multiplier = 1.0
+	if is_instance_valid(weapon_manager) and is_instance_valid(weapon_manager.current_weapon_node):
+		var cur_wp = weapon_manager.current_weapon_node
+		if cur_wp.has_method("get_atk_speed_multiplier"):
+			_atk_speed_multiplier = max(cur_wp.get_atk_speed_multiplier(), 0.1)
+		elif cur_wp.get("atk_speed_multiplier") != null:
+			_atk_speed_multiplier = max(float(cur_wp.get("atk_speed_multiplier")), 0.1)
+	elif is_instance_valid(weapon) and weapon.get("atk_speed_multiplier") != null:
+		_atk_speed_multiplier = max(float(weapon.get("atk_speed_multiplier")), 0.1)
 
 func can_start_attack() -> bool:
 	return _phase == AttackPhase.IDLE and not is_on_cooldown()
@@ -139,6 +158,55 @@ func _start_cooldown() -> void:
 		return
 	emit_signal("cooldown_started", _cooldown_time)
 	_cooldown_timer.start(_cooldown_time)
+
+func _setup_character_references() -> void:
+	var parent_node = get_parent()
+	if parent_node and parent_node.has_method("get"):
+		if not is_instance_valid(animation_player):
+			animation_player = parent_node.get("animation_player")
+		if not is_instance_valid(weapon_manager):
+			weapon_manager = parent_node.get("weapon_manager")
+		if not is_instance_valid(weapon_hitbox):
+			var wh = parent_node.get_node_or_null("WeaponHolder/CurrentWeapon/HitBox")
+			if wh:
+				weapon_hitbox = wh
+
+func _connect_default_handlers() -> void:
+	if not active_started.is_connected(_on_active_started_default):
+		active_started.connect(_on_active_started_default, CONNECT_ONE_SHOT)
+	if not recovery_started.is_connected(_on_recovery_started_default):
+		recovery_started.connect(_on_recovery_started_default, CONNECT_ONE_SHOT)
+	if not attack_ended.is_connected(_on_attack_ended_default):
+		attack_ended.connect(_on_attack_ended_default, CONNECT_ONE_SHOT)
+
+func _on_active_started_default(_duration: float) -> void:
+	if is_instance_valid(weapon_manager):
+		var parent_node = get_parent()
+		if parent_node and parent_node.has_method("get_global_mouse_position"):
+			weapon_manager.execute_attack(parent_node.get_global_mouse_position())
+	if is_instance_valid(weapon_hitbox):
+		weapon_hitbox.monitoring = true
+	_apply_animation_speed()
+
+func _on_recovery_started_default(_duration: float) -> void:
+	if is_instance_valid(weapon_hitbox):
+		weapon_hitbox.monitoring = false
+
+func _on_attack_ended_default() -> void:
+	if is_instance_valid(weapon_hitbox):
+		weapon_hitbox.monitoring = false
+
+func _apply_animation_speed() -> void:
+	if not is_instance_valid(animation_player):
+		return
+	if not animation_player.has_animation("Attack1"):
+		return
+	var total_time = _wind_up_time + _active_time + _recovery_time
+	var anim_len = animation_player.get_animation("Attack1").length
+	if anim_len <= 0.0:
+		animation_player.speed_scale = 1.0
+		return
+	animation_player.speed_scale = (anim_len / total_time) * _atk_speed_multiplier
 
 func _on_phase_timeout() -> void:
 	match _phase:

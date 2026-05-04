@@ -154,10 +154,10 @@ func _physics_process(_delta: float) -> void:
 	# 输入处理
 	_handle_input()
 
-func _rotate_weapon_to_mouse() -> void:
-	if weapon_holder:
-		var mouse_pos = get_global_mouse_position()
-		weapon_holder.look_at(mouse_pos)
+#func _rotate_weapon_to_mouse() -> void:
+	#if weapon_holder:
+		#var mouse_pos = get_global_mouse_position()
+		#weapon_holder.look_at(mouse_pos)
 
 
 func _on_weapon_hitbox_area_entered(area: Area2D) -> void:
@@ -415,7 +415,7 @@ func player_attack():
 		if character.hp > 0:
 			character.velocity = Vector2.ZERO
 
-## 重写基类方法 
+## 重写基类方法 ds
 func begin_attack(msg: Dictionary) -> bool:
 	if weapon_manager.weapon_wheel.size() == 0:
 		if c_state_machine:
@@ -493,23 +493,3 @@ func _on_attack_ended_player() -> void:
 func add_ultimate_point() -> void:
 	if ultimate_system:
 		ultimate_system.add_point()
-
-
-func _try_cast_ultimate() -> void:
-	if ultimate_system.in_ultimate_mode:
-		return
-	if ultimate_system.ultimate_points < ultimate_system.ULTIMATE_MAX_POINTS:
-		print("[Ultimate] 点数不足: ", ultimate_system.ultimate_points, "/", ultimate_system.ULTIMATE_MAX_POINTS)
-		return
-	print("[Ultimate] 大招触发！")
-	ultimate_system.ultimate_points = 0
-	ultimate_system.in_ultimate_mode = true
-	ultimate_system.on_ultimate_started()
-	
-	# 这里大招是一直存在的BUFF状态（而不是切换节点），由定时器负责结束，以免跟基础的Attack状态相冲突结束
-	var timer := get_tree().create_timer(ultimate_system.ULTIMATE_DURATION)
-	timer.timeout.connect(func():
-		ultimate_system.in_ultimate_mode = false
-		ultimate_system.on_ultimate_ended()
-		print("[Ultimate] 大招时间到，效果结束")
-	)

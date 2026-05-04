@@ -754,7 +754,7 @@ animations = [{
 "speed": 20.0
 }]
 
-[node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("prev_weapon_ani", "new_weapon_ani", "animationsprite2d_node", "weapon_manager", "ultimate_system", "c_state_machine")]
+[node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("prev_weapon_ani", "new_weapon_ani", "animationsprite2d_node", "weapon_manager", "ultimate_system")]
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_cyojo")
@@ -763,9 +763,16 @@ new_weapon_ani = NodePath("Weaponanim/AnimatedSprite2D2")
 animationsprite2d_node = NodePath("Weaponanim")
 weapon_manager = NodePath("WeaponManager")
 ultimate_system = NodePath("UltimateSystem")
-max_health = 10000000.0
-dodge_duration = 0.09
-c_state_machine = NodePath("StateMachine")
+default_equip_head = null
+default_equip_body = null
+default_equip_foot = null
+damage_reduction_ratio = null
+max_health = null
+speed = null
+dodge_speed = null
+dodge_duration = null
+debug_mode = null
+sight_range = null
 metadata/_custom_type_script = "uid://l4denkeet557"
 
 [node name="PlayerCollider" type="CollisionShape2D" parent="." unique_id=768710490]
