@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://l4denkeet557" path="res://classes/Character/player.gd" id="1_cyojo"]
 [ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_1kbk7"]
-[ext_resource type="Script" uid="uid://qrpcfidw6ndm" path="res://classes/Weapons/weapon_tuning_profile.gd" id="2_jhyir"]
 [ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_uiqp4"]
 [ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_hvfru"]
 [ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_a06cl"]
@@ -16,31 +15,8 @@
 [ext_resource type="Texture2D" uid="uid://cu6l4rv7biylh" path="res://assets/images/characters/player/sword.png" id="11_oikmp"]
 [ext_resource type="Texture2D" uid="uid://cvkxavgp4f5kf" path="res://assets/images/characters/walk.png" id="15_dey5f"]
 [ext_resource type="Texture2D" uid="uid://dh6f1pgb5mgum" path="res://assets/images/characters/Basic attack/spear.png" id="15_r5xpd"]
-
-[sub_resource type="Resource" id="Resource_74mp2"]
-script = ExtResource("2_jhyir")
-weapon_id = "sword"
-metadata/_custom_type_script = "uid://qrpcfidw6ndm"
-
-[sub_resource type="Resource" id="Resource_oikmp"]
-script = ExtResource("2_jhyir")
-weapon_id = "dagger"
-metadata/_custom_type_script = "uid://qrpcfidw6ndm"
-
-[sub_resource type="Resource" id="Resource_06tpx"]
-script = ExtResource("2_jhyir")
-weapon_id = "hammer"
-metadata/_custom_type_script = "uid://qrpcfidw6ndm"
-
-[sub_resource type="Resource" id="Resource_7g0yx"]
-script = ExtResource("2_jhyir")
-weapon_id = "spear"
-metadata/_custom_type_script = "uid://qrpcfidw6ndm"
-
-[sub_resource type="Resource" id="Resource_dey5f"]
-script = ExtResource("2_jhyir")
-weapon_id = "bow"
-metadata/_custom_type_script = "uid://qrpcfidw6ndm"
+[ext_resource type="Script" uid="uid://dftq3cb5fll4j" path="res://classes/Character/WeaponManager.gd" id="17_hnuln"]
+[ext_resource type="Script" uid="uid://ci2rqkltm2wjj" path="res://classes/Character/UltimateSystem.gd" id="18_aqm4k"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f60y1"]
 
@@ -778,14 +754,15 @@ animations = [{
 "speed": 20.0
 }]
 
-[node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("prev_weapon_ani", "new_weapon_ani", "animationsprite2d_node", "c_state_machine")]
+[node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("prev_weapon_ani", "new_weapon_ani", "animationsprite2d_node", "weapon_manager", "ultimate_system", "c_state_machine")]
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_cyojo")
 prev_weapon_ani = NodePath("Weaponanim/AnimatedSprite2D")
 new_weapon_ani = NodePath("Weaponanim/AnimatedSprite2D2")
 animationsprite2d_node = NodePath("Weaponanim")
-weapon_tuning_profiles = Array[ExtResource("2_jhyir")]([SubResource("Resource_74mp2"), SubResource("Resource_oikmp"), SubResource("Resource_06tpx"), SubResource("Resource_7g0yx"), SubResource("Resource_dey5f")])
+weapon_manager = NodePath("WeaponManager")
+ultimate_system = NodePath("UltimateSystem")
 max_health = 10000000.0
 dodge_duration = 0.09
 c_state_machine = NodePath("StateMachine")
@@ -893,3 +870,13 @@ rotation = -3.1415927
 sprite_frames = SubResource("SpriteFrames_htcer")
 animation = &"sword"
 frame = 7
+
+[node name="WeaponManager" type="Node" parent="." unique_id=1539856718 node_paths=PackedStringArray("player", "weapon_holder")]
+script = ExtResource("17_hnuln")
+player = NodePath("..")
+weapon_holder = NodePath("../WeaponHolder")
+
+[node name="UltimateSystem" type="Node" parent="." unique_id=1865626000 node_paths=PackedStringArray("player", "weapon_manager")]
+script = ExtResource("18_aqm4k")
+player = NodePath("..")
+weapon_manager = NodePath("../WeaponManager")
