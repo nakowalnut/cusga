@@ -27,20 +27,7 @@ func can_change_state() -> bool:
 		
 	return true
 
-# 武器库 (实体的 Node 节点)
-#var all_weapons: Dictionary = {}
 
-# 当前武器轮 (玩家可自定义顺序)
-#var weapon_wheel: Array[String] = ["sword", "spear", "dagger", "bow", "hammer"]
-#var current_weapon_index: int = 0
-
-#var current_weapon_node: WeaponBase = null
-#var ultimate_points: int = 0
-#var in_ultimate_mode: bool = false
-#var ultimate_weapon_cycle: Array[String] = ["sword", "dagger", "spear", "hammer"]
-#var ultimate_cycle_index: int = -1
-#@export_group("Weapon Tuning")
-#@export var weapon_tuning_profiles: Array[WeaponTuningProfile] = []
 
 # 演示用节点引用
 @onready var weapon_holder = $WeaponHolder
@@ -153,32 +140,6 @@ func apply_knockback(force: Vector2) -> void:
 			return
 	super.apply_knockback(force)
 
-#func _init_weapons() -> void:
-	# 实例化所有武器，并放入节点树成为子节点，这样就可以使用 Timer 或者 process 逻辑
-	#all_weapons["sword"] = SwordWeapon.new()
-	#all_weapons["spear"] = SpearWeapon.new()
-	#all_weapons["dagger"] = DaggerWeapon.new()
-	#all_weapons["bow"] = BowWeapon.new()
-	#all_weapons["hammer"] = HammerWeapon.new()
-	#
-	#for key in all_weapons:
-		#var wp = all_weapons[key]
-		#_apply_weapon_tuning(key, wp)
-		#wp.weapon_owner = self
-		#weapon_holder.add_child(wp)
-
-#func _apply_weapon_tuning(weapon_id: String, weapon: WeaponBase) -> void:
-	#if not is_instance_valid(weapon):
-		#return
-	#for profile in weapon_tuning_profiles:
-		#if not is_instance_valid(profile):
-			#continue
-		#if profile.weapon_id == weapon_id:
-			#profile.apply_to(weapon)
-			#if debug_mode:
-				#print("应用武器调参: ", weapon_id)
-			#return
-
 func _physics_process(_delta: float) -> void:
 	if is_dead:
 		velocity = Vector2.ZERO
@@ -271,37 +232,16 @@ func _handle_input() -> void:
 			_play_charge_animation()
 
 	if Input.is_action_just_released("attack"):
-		if weapon_manager: weapon_manager.on_attack_released() # 需在WeaponManager实现
-		# 保留原有的释放逻辑
+		if weapon_manager:
+			weapon_manager.on_attack_released()
+			if weapon_manager.is_charge_weapon():
+				var cur_id = weapon_manager.get_current_weapon_id()
+				c_state_machine.change_state(STATE_ATTACK, {
+					"weapon": cur_id,
+					"prev_weapon": cur_id,
+					"is_switch": false
+				})
 
-
-# 处理切换武器；只有连携技真的触发时才进入攻击态
-#func _switch_and_attack(new_index: int) -> void:
-	#if in_ultimate_mode:
-		#return
-#
-	#if new_index < 0 or new_index >= weapon_wheel.size(): return
-	#var prev_weapon = weapon_wheel[current_weapon_index]
-	#var new_weapon_id = weapon_wheel[new_index]
-#
-	## 无论是否切换同样武器，只要发起按键都结算旧武器状态
-	#var combo_triggered := false
-	#if is_instance_valid(current_weapon_node):
-		#combo_triggered = current_weapon_node.on_switch_out(new_weapon_id)
-		#
-	#current_weapon_index = new_index
-	#var new_weapon = weapon_wheel[current_weapon_index]
-	#
-	#_update_weapon_visual()
-	
-	#if combo_triggered:
-		# 只有连携技命中时才把切枪视为一次攻击
-		#c_state_machine.change_state(STATE_ATTACK, {
-			#"weapon": new_weapon, 
-			#"prev_weapon": prev_weapon, 
-			#"is_switch": true
-		#})
-		#print("切换攻击，从 ", prev_weapon, " 切换到 ", new_weapon)
 
 # 核心演示逻辑
 func _update_weapon_visual() -> void:
@@ -310,7 +250,9 @@ func _update_weapon_visual() -> void:
 	var current_weapon_id = weapon_manager.weapon_wheel[weapon_manager.current_weapon_index]
 	var weapon = weapon_manager.all_weapons[current_weapon_id]
 	weapon_manager.current_weapon_node = weapon
-	_clear_custom_weapon_shapes()
+	var hammer = weapon_manager.all_weapons.get("hammer")
+	if is_instance_valid(hammer) and hammer.has_method("_clear_custom_weapon_shapes"):
+		hammer._clear_custom_weapon_shapes()
 	
 	# 重置被Tween影响的位置和旋转，防止切枪时由于动画残留导致表现错乱
 	if weapon_sprite:
@@ -347,49 +289,13 @@ func _apply_weapon_transforms(weapon_id: String, weapon_color: Color) -> void:
 			# 矛头方向与鼠标一致：本地旋转归零，由 weapon_holder.look_at 接管朝向
 			weapon_sprite.rotation = 0.0
 		"hammer":
-			# 锤子：杆保持中等长度，头部由多个方块拼接
 			weapon_sprite.scale = Vector2(0.9, 1.0)
-			_build_hammer_head(weapon_color)
-		_:
-			pass
+			var hammer = weapon_manager.all_weapons.get("hammer")
+			if is_instance_valid(hammer) and hammer.has_method("build_hammer_head"):
+				hammer.build_hammer_head(weapon_color)
 	
 	# 如果有攻击判定，可以在这里调整碰撞盒大小模拟不同武器长度
 	# attack_collider.shape.extents = Vector2(weapon.attack_range, 10)
-
-
-func _clear_custom_weapon_shapes() -> void:
-	if not weapon_sprite:
-		return
-	for child in weapon_sprite.get_children():
-		if child.name.begins_with("CustomShape_"):
-			child.free()
-
-
-func _build_hammer_head(base_color: Color) -> void:
-	if not weapon_sprite:
-		return
-	# 防御性清理：避免同帧重复构建时出现残留
-	_clear_custom_weapon_shapes()
-	_add_hammer_square(Vector2(18.0, -8.0), 11.0, base_color.lightened(0.15), "Top")
-	_add_hammer_square(Vector2(24.0, -2.0), 13.0, base_color, "Middle")
-	_add_hammer_square(Vector2(18.0, 7.0), 10.0, base_color.darkened(0.2), "Bottom")
-
-
-func _add_hammer_square(center: Vector2, size: float, fill_color: Color, suffix: String) -> void:
-	var half := size * 0.5
-	var block := Polygon2D.new()
-	block.name = "CustomShape_Hammer_" + suffix
-	block.polygon = PackedVector2Array([
-		Vector2(-half, -half),
-		Vector2(half, -half),
-		Vector2(half, half),
-		Vector2(-half, half)
-	])
-	block.position = center
-	block.color = fill_color
-	weapon_sprite.add_child(block)
-
-
 
 func set_weapon_hitbox_active(active: bool) -> void:
 	if weapon_hitbox:
@@ -509,7 +415,7 @@ func player_attack():
 		if character.hp > 0:
 			character.velocity = Vector2.ZERO
 
-## ---- 状态机重构：重写基类方法 ----
+## 重写基类方法 
 func begin_attack(msg: Dictionary) -> bool:
 	if weapon_manager.weapon_wheel.size() == 0:
 		if c_state_machine:
@@ -559,25 +465,12 @@ func end_attack() -> void:
 func process_attack_physics(delta: float) -> void:
 	player_attack()
 
-func execute_attack() -> void:
-	if is_instance_valid(weapon_manager.current_weapon_node):
-		var mouse_pos = get_global_mouse_position()
-		weapon_manager.current_weapon_node.attack(mouse_pos)
-
-func _get_current_attack_total_duration() -> float:
-	if is_instance_valid(weapon_manager.current_weapon_node):
-		return max(
-			weapon_manager.current_weapon_node.attack_wind_up + weapon_manager.current_weapon_node.attack_active + weapon_manager.current_weapon_node.attack_recovery,
-			0.01
-		)
-	return 0.3
-
 func _apply_attack_animation_speed() -> void:
 	if not animation_player:
 		return
 	if not animation_player.has_animation("Attack1"):
 		return
-	var total_time = _get_current_attack_total_duration()
+	var total_time = weapon_manager.get_attack_total_duration()
 	var anim_len = animation_player.get_animation("Attack1").length
 	if anim_len <= 0.0:
 		animation_player.speed_scale = 1.0
@@ -588,6 +481,7 @@ func _apply_attack_animation_speed() -> void:
 	animation_player.speed_scale = (anim_len / total_time) * atk_speed_multiplier
 
 func _on_attack_active_started_player(_duration: float) -> void:
+	weapon_manager.execute_attack(get_global_mouse_position())
 	set_weapon_hitbox_active(true)
 
 func _on_attack_recovery_started_player(_duration: float) -> void:
@@ -596,19 +490,10 @@ func _on_attack_recovery_started_player(_duration: float) -> void:
 func _on_attack_ended_player() -> void:
 	set_weapon_hitbox_active(false)
 
-func add_ultimate_point(amount: int = 1) -> void:
-	if amount <= 0:
-		return
-	ultimate_system.ultimate_points = min(ultimate_system.ULTIMATE_MAX_POINTS, ultimate_system.ultimate_points + amount)
-	print("[Ultimate] 点数: ", ultimate_system.ultimate_points, "/", ultimate_system.ULTIMATE_MAX_POINTS)
-	if ultimate_system.ultimate_points == ultimate_system.ULTIMATE_MAX_POINTS:
-		print("[Ultimate] 大招已就绪！可以按下 ultimate 键释放！")
+func add_ultimate_point() -> void:
+	if ultimate_system:
+		ultimate_system.add_point()
 
-#func on_ultimate_started() -> void:
-	#ultimate_cycle_index = -1
-
-#func on_ultimate_ended() -> void:
-	#ultimate_cycle_index = -1
 
 func _try_cast_ultimate() -> void:
 	if ultimate_system.in_ultimate_mode:
@@ -628,70 +513,3 @@ func _try_cast_ultimate() -> void:
 		ultimate_system.on_ultimate_ended()
 		print("[Ultimate] 大招时间到，效果结束")
 	)
-
-#func _cycle_ultimate_weapon_before_attack() -> void:
-	#if ultimate_weapon_cycle.is_empty():
-		#return
-#
-	#ultimate_cycle_index = (ultimate_cycle_index + 1) % ultimate_weapon_cycle.size()
-	#var target_weapon_id = ultimate_weapon_cycle[ultimate_cycle_index]
-	#var idx = weapon_wheel.find(target_weapon_id)
-	#if idx == -1:
-		#weapon_wheel.append(target_weapon_id)
-		#idx = weapon_wheel.size() - 1
-#
-	#current_weapon_index = idx
-	#_update_weapon_visual()
-
-#func apply_ultimate_arrow_rain(target: Node) -> void:
-	#if not in_ultimate_mode or not is_instance_valid(target) or target.get("is_dead"):
-		#return
-	#if target.has_meta("ultimate_rain"):
-		#return
-	#target.set_meta("ultimate_rain", true)
-	#print("弓箭雨降临：目标 ", target.name)
-	#
-	#var rain_timer = Timer.new()
-	#rain_timer.wait_time = 0.5
-	#rain_timer.autostart = true
-	#var count = [0]
-	#rain_timer.timeout.connect(func():
-		#if not is_instance_valid(target) or target.get("is_dead") or count[0] >= 10:
-			#if is_instance_valid(target):
-				#target.remove_meta("ultimate_rain")
-			#if is_instance_valid(rain_timer):
-				#rain_timer.queue_free()
-			#return
-		#count[0] += 1
-		#spawn_ultimate_followup_arrow(target)
-	#)
-	#target.add_child(rain_timer)
-
-#func spawn_ultimate_followup_arrow(target: Node) -> void:
-	#if not in_ultimate_mode:
-		#return
-	#if not is_instance_valid(target):
-		#return
-	#if target.get("is_dead"):
-		#return
-	#if not ULTIMATE_ARROW_SCENE:
-		#return
-	#if not is_instance_valid(get_tree().current_scene):
-		#return
-#
-	#var arrow = ULTIMATE_ARROW_SCENE.instantiate()
-	#var random_offset_x = randf_range(-24.0, 24.0)
-	#var spawn_pos = target.global_position + Vector2(random_offset_x, -220.0)
-	#arrow.global_position = spawn_pos
-	#arrow.direction = (target.global_position - spawn_pos).normalized()
-	#arrow.speed = 900.0
-	#arrow.life_time = 1.2
-	#arrow.direct_damage = ULTIMATE_ARROW_DAMAGE
-	#arrow.trigger_weapon_on_hit = false
-
-	#if all_weapons.has("bow"):
-		#arrow.weapon_owner = all_weapons["bow"]
-	#else:
-		#arrow.weapon_owner = current_weapon_node
-#
-	#get_tree().current_scene.add_child(arrow)

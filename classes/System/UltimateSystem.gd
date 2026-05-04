@@ -24,11 +24,25 @@ func add_point() -> void:
 		print("大招能量: ", ultimate_points, "/", ULTIMATE_MAX_POINTS)
 
 func try_cast_ultimate() -> void:
-	if ultimate_points >= ULTIMATE_MAX_POINTS and not in_ultimate_mode:
-		in_ultimate_mode = true
-		ultimate_points = 0
-		print("大招开启")
-		# 触发大招相关的状态逻辑...
+	if in_ultimate_mode:
+		return
+	if ultimate_points < ULTIMATE_MAX_POINTS:
+		print("[Ultimate] 点数不足: ", ultimate_points, "/", ULTIMATE_MAX_POINTS)
+		return
+	print("[Ultimate] 大招触发！")
+	ultimate_points = 0
+	in_ultimate_mode = true
+	
+	if player and player.has_method("on_ultimate_started"):
+		player.on_ultimate_started()
+	
+	var timer: SceneTreeTimer = Engine.get_main_loop().create_timer(ULTIMATE_DURATION)
+	timer.timeout.connect(func():
+		in_ultimate_mode = false
+		if player and player.has_method("on_ultimate_ended"):
+			player.on_ultimate_ended()
+		print("[Ultimate] 大招时间到，效果结束")
+	)
 
 func cycle_weapon() -> void:
 	ultimate_cycle_index = (ultimate_cycle_index + 1) % ultimate_weapon_cycle.size()

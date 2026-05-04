@@ -104,3 +104,12 @@ func switch_and_combo(new_index: int) -> Dictionary:
 		"prev_weapon": prev_weapon_id,
 		"new_weapon": new_weapon_id
 	}
+
+func get_attack_total_duration() -> float:
+	if is_instance_valid(current_weapon_node):
+		return max(current_weapon_node.attack_wind_up + current_weapon_node.attack_active + current_weapon_node.attack_recovery, 0.01)
+	return 0.3
+
+func execute_attack(mouse_pos: Vector2) -> void:
+	if is_instance_valid(current_weapon_node):
+		current_weapon_node.attack(mouse_pos)

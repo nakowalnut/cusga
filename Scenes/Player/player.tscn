@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://cvkxavgp4f5kf" path="res://assets/images/characters/walk.png" id="15_dey5f"]
 [ext_resource type="Texture2D" uid="uid://dh6f1pgb5mgum" path="res://assets/images/characters/Basic attack/spear.png" id="15_r5xpd"]
 [ext_resource type="Script" uid="uid://dftq3cb5fll4j" path="res://classes/Character/WeaponManager.gd" id="17_hnuln"]
-[ext_resource type="Script" uid="uid://ci2rqkltm2wjj" path="res://classes/Character/UltimateSystem.gd" id="18_aqm4k"]
+[ext_resource type="Script" uid="uid://ci2rqkltm2wjj" path="res://classes/System/UltimateSystem.gd" id="18_aqm4k"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f60y1"]
 
