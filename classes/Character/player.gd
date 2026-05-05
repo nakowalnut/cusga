@@ -9,6 +9,7 @@ class_name Player
 
 ## ---- 常量定义 ----
 @onready var animation_player = $AnimationPlayer
+@onready var player_anim: AnimatedSprite2D = $playeranimation
 
 ## 检查是否处于无法切换状态的硬直中
 func can_change_state() -> bool:
@@ -297,13 +298,34 @@ func process_movement(delta: float) -> void:
 	if Input.get_axis("move_left", "move_right") != 0:
 		toward = int(Input.get_axis("move_left", "move_right"))
 		velocity.x = toward * current_speed
-		if anim and anim.has_animation("walk"): anim.play("walk")
+		play_walk_animation()
 	if Input.get_axis("up", "down") != 0:
 		velocity.y = int(Input.get_axis("up", "down")) * current_speed
 		
 	if Input.get_axis("move_left", "move_right") == 0 and Input.get_axis("up", "down") == 0:
 		if hp > 0 and c_state_machine:
 			c_state_machine.change_state(STATE_IDLE)
+
+func play_walk_animation() -> void:
+	if not player_anim:
+		return
+	var anim_name = "walkright"
+	if toward == -1:
+		anim_name = "walkleft"
+	elif toward == 1:
+		anim_name = "walkright"
+	# 垂直方向优先覆盖
+	#if velocity.y > 0:
+		#anim_name = "walkdown"
+	#elif velocity.y < 0:
+		#anim_name = "walkdown"toward只定义左右没定义上下，这样写会出毛病就算了
+	if player_anim.is_playing() and player_anim.animation == anim_name:
+		return
+	player_anim.play(anim_name)
+
+func stop_walk_animation() -> void:
+	if player_anim:
+		player_anim.stop()
 
 func process_idle(delta: float) -> void:
 	velocity = Vector2.ZERO

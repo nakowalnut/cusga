@@ -2,11 +2,10 @@ extends State
 class_name WalkState
 
 func enter(msg: Dictionary = {}) -> void:
-	pass
-	#character.anim.play("walk")
+	character.play_walk_animation()
 	
 func exit() -> void:
-	pass
+	character.stop_walk_animation()
 
 func physics_process(_delta: float) -> void:
 	character.get_velocity()
@@ -17,4 +16,3 @@ func physics_process(_delta: float) -> void:
 	character.move_and_slide()
 func get_state_name() -> String:
 	return CharacterBase.STATE_WALK
-	

@@ -155,6 +155,12 @@ func process_movement(delta: float) -> void:
 func process_idle(delta: float) -> void:
 	pass
 
+func play_walk_animation() -> void:
+	pass
+
+func stop_walk_animation() -> void:
+	pass
+
 func on_death_state_entered() -> void:
 	pass
 

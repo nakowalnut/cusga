@@ -6,7 +6,7 @@ signal hit_registered(target: Node)
 
 @export var player: CharacterBase
 @export var weapon_holder: Node2D
-@export var weapon_tuning_profiles: Array = []
+@export var weapon_tuning_profiles: Array[WeaponTuningProfile] = []
 @export var weapon_sprite: Node2D
 @export var weapon_hitbox: Area2D
 @export var animation_player: AnimationPlayer
@@ -220,6 +220,9 @@ func spear_poke_animation(total_duration: float) -> void:
 func rotate_weapon_to_mouse(mouse_pos: Vector2) -> void:
 	if weapon_holder:
 		weapon_holder.look_at(mouse_pos)
+		# 当鼠标在左边时翻转Y轴，避免武器倒挂
+		var is_left = mouse_pos.x < weapon_holder.global_position.x
+		weapon_holder.scale.y = -1.0 if is_left else 1.0
 
 func ensure_parent_plays_after_switch(weapon_id: String) -> void:
 	if not animation_player.is_playing() or animation_player.current_animation != "switchweapon":
