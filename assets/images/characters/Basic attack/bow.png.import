@@ -2,25 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqdsfvjvfbqi1"
-<<<<<<<< HEAD:assets/images/characters/player/bow.png.import
-path="res://.godot/imported/bow.png-fc2eaea5fdc57ebb6d8f12b48527d0a5.ctex"
-========
+uid="uid://bpgyx1wm0itpt"
 path="res://.godot/imported/bow.png-5efd695185b1fe92a30d2725c61b6fc3.ctex"
->>>>>>>> main:assets/images/characters/Basic attack/bow.png.import
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-<<<<<<<< HEAD:assets/images/characters/player/bow.png.import
-source_file="res://assets/images/characters/player/bow.png"
-dest_files=["res://.godot/imported/bow.png-fc2eaea5fdc57ebb6d8f12b48527d0a5.ctex"]
-========
 source_file="res://assets/images/characters/Basic attack/bow.png"
 dest_files=["res://.godot/imported/bow.png-5efd695185b1fe92a30d2725c61b6fc3.ctex"]
->>>>>>>> main:assets/images/characters/Basic attack/bow.png.import
 
 [params]
 

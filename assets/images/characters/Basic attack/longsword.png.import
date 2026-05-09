@@ -2,25 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkmn4ax3vk5ae"
-<<<<<<<< HEAD:assets/images/characters/player/sword.png.import
-path="res://.godot/imported/sword.png-ae103c2c3b6132392c88152ffa5d1b5e.ctex"
-========
+uid="uid://dgkqlccbi5lq8"
 path="res://.godot/imported/longsword.png-0f2a49de51bc0199f52fa2110e434462.ctex"
->>>>>>>> main:assets/images/characters/Basic attack/longsword.png.import
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-<<<<<<<< HEAD:assets/images/characters/player/sword.png.import
-source_file="res://assets/images/characters/player/sword.png"
-dest_files=["res://.godot/imported/sword.png-ae103c2c3b6132392c88152ffa5d1b5e.ctex"]
-========
 source_file="res://assets/images/characters/Basic attack/longsword.png"
 dest_files=["res://.godot/imported/longsword.png-0f2a49de51bc0199f52fa2110e434462.ctex"]
->>>>>>>> main:assets/images/characters/Basic attack/longsword.png.import
 
 [params]
 
