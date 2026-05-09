@@ -149,22 +149,30 @@ func update_weapon_visual() -> void:
 	# 武器切换（视觉）设置
 	if current_weapon_id in ["sword", "bow", "hammer", "spear", "dagger"]:
 		animationsprite2d_node.animation = current_weapon_id
+	
+	# 应用武器缩放和偏移
+	apply_weapon_transforms(current_weapon_id, Color.WHITE)
 
 func apply_weapon_transforms(weapon_id: String, weapon_color: Color) -> void:
-	# 视觉与物理同步变化：CurrentWeapon 是 HitBox 的父节点，缩放会同时影响碰撞判定
-	weapon_sprite.scale = Vector2(1.0, 1.125)
+	# 重置为默认缩放和位置
+	animationsprite2d_node.scale = Vector2(0.25, 0.25)
+	animationsprite2d_node.position = Vector2(6, 8)
 	
 	match weapon_id:
+		"bow":
+			# 弓：缩小并调整偏移
+			animationsprite2d_node.scale = Vector2(0.125, 0.125)  # 缩小一半
+			animationsprite2d_node.position = Vector2(10, -5)  # 调整位置
 		"dagger":
 			# 短剑：更短
-			weapon_sprite.scale = Vector2(0.5, 1.125)
+			animationsprite2d_node.scale = Vector2(0.125, 0.25)
 		"spear":
+			pass
 			# 矛：更细、更长
-			weapon_sprite.scale = Vector2(1.6, 0.55)
+			#animationsprite2d_node.scale = Vector2(0.4, 0.125)
 			# 矛头方向与鼠标一致：本地旋转归零，由 weapon_holder.look_at 接管朝向
-			weapon_sprite.rotation = 0.0
 		"hammer":
-			weapon_sprite.scale = Vector2(0.9, 1.0)
+			animationsprite2d_node.scale = Vector2(0.225, 0.25)
 			var hammer = all_weapons.get("hammer")
 			if is_instance_valid(hammer) and hammer.has_method("build_hammer_head"):
 				hammer.build_hammer_head(weapon_color)
@@ -244,3 +252,6 @@ func finish_switch_to_parent(weapon_id: String) -> void:
 	if weapon_id in ["sword", "bow", "hammer", "spear", "dagger"]:
 		animationsprite2d_node.animation = weapon_id
 		animationsprite2d_node.play(weapon_id)
+	
+	# 再次应用武器缩放和偏移（确保动画结束后设置生效）
+	apply_weapon_transforms(weapon_id, Color.WHITE)
