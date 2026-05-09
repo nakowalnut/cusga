@@ -7,6 +7,7 @@ var dodge_direction: Vector2 = Vector2.ZERO
 func enter(msg: Dictionary = {}) -> void:
 	dodge_timer = character.dodge_duration
 	character.is_invulnerable = true
+	EventBus.on_dodge.emit()
 	
 	# 确定闪避方向：鼠标指针相对于玩家的方向
 	var mouse_pos = character.get_global_mouse_position()

@@ -192,3 +192,7 @@ func _apply_hammer_synergy_stab(target: Node, from_pos: Vector2) -> void:
 	add_combo(1)
 	combo_timer.start(combo_timeout)
 	print("短剑：连携突刺触发，造成击飞")
+
+
+func update_weapon_visual(visual_system: Node) -> void:
+	visual_system.weapon_sprite.scale = Vector2(0.5, 1.125)
