@@ -1,0 +1,4 @@
+set_id,set_name,trigger,effects,raw_desc
+set_1,套装一,on_combo_x3,"[{""type"": ""next_combo_dmg_mult"", ""value"": 2.0}]",每触发3次不同的连携技，下一次连携技伤害翻倍
+set_2,套装二,on_combo,"[{""type"": ""next_charge_instant"", ""value"": true}]",连携技触发后，下一次蓄力攻击无需蓄力（直接满蓄力效果）
+set_3,套装三,passive,"[{""type"": ""combo_req_reduce"", ""value"": 1}]",所有连携技的触发条件计数需求-1

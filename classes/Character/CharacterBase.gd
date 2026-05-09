@@ -11,6 +11,7 @@ const STATE_ULTIMATE = "Ultimate"
 const STATE_DODGE = "Dodge"
 
 ## 基础属性
+@onready var attack_controller: AttackController = get_node_or_null("AttackController")
 @export var character_weapon: WeaponBase
 @export_group("基础属性")
 @export var damage_reduction_ratio: float = 0.2 # 减免伤害比率
@@ -22,8 +23,10 @@ const STATE_DODGE = "Dodge"
 @onready var current_health: float = max_health
 @export var sight_range: Array[int] = [50, 500]## 感知范围，【临近值，最远值】
 var toward: int = 1# 面向方向 (Walk/Hurt 等状态依赖)
-@onready var anim: Node ##存储动画
-@onready var attack_controller: AttackController = get_node_or_null("AttackController")
+
+@export_group("动画")
+@onready var anim: AnimationPlayer ##存储动画
+
 var hp: float:
 	get: return current_health
 	set(value): current_health = value
@@ -58,8 +61,20 @@ func take_damage(amount: float):
 	if is_dead or is_invulnerable:
 		return
 	
+	var old_health = current_health
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)
+
+	if debug_mode:
+		var character_type = ""
+		if self.get_class() == "Player" or self is Player:
+			character_type = "玩家"
+		elif self.get_class() == "Enemy" or self is Enemy:
+			character_type = "敌人"
+		else:
+			character_type = "角色"
+		
+		print("[%s] 血量变化: %.2f -> %.2f (伤害: %.2f)" % [character_type, old_health, current_health, amount])
 	
 	emit_signal("damaged", amount)
 	emit_signal("health_changed", current_health, max_health)
@@ -138,6 +153,12 @@ func process_movement(delta: float) -> void:
 	pass
 
 func process_idle(delta: float) -> void:
+	pass
+
+func play_walk_animation() -> void:
+	pass
+
+func stop_walk_animation() -> void:
 	pass
 
 func on_death_state_entered() -> void:

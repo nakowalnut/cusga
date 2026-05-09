@@ -19,6 +19,8 @@ const ArrowScene = preload("res://Scenes/Prefab/arrow_projectile.tscn")
 var pending_blink_target: Node = null
 var blink_knockback_target: Node = null
 
+
+
 func _init() -> void:
 	weapon_name = "锤子"
 	damage = 25.0
@@ -31,7 +33,46 @@ func _init() -> void:
 	attack_recovery = 0.30
 	attack_cooldown = 0.16
 	is_charge_weapon = true
+## 获取武器精灵引用（由 player 在初始化时传入）
+var weapon_sprite: Sprite2D = null
 
+## 设置精灵引用，供锤头构建使用
+func set_weapon_sprite(sprite: Sprite2D) -> void:
+	weapon_sprite = sprite
+
+## 构建锤头（由外部调用）
+func build_hammer_head(base_color: Color) -> void:
+	if not is_instance_valid(weapon_sprite):
+		return
+	_clear_custom_weapon_shapes()
+	_add_hammer_square(Vector2(18.0, -8.0), 11.0, base_color.lightened(0.15), "Top")
+	_add_hammer_square(Vector2(24.0, -2.0), 13.0, base_color, "Middle")
+	_add_hammer_square(Vector2(18.0, 7.0), 10.0, base_color.darkened(0.2), "Bottom")
+
+## 清理自定义形状
+func _clear_custom_weapon_shapes() -> void:
+	if not is_instance_valid(weapon_sprite):
+		return
+	for child in weapon_sprite.get_children():
+		if child.name.begins_with("CustomShape_"):
+			child.queue_free()
+
+## 添加一块方形
+func _add_hammer_square(center: Vector2, size: float, fill_color: Color, suffix: String) -> void:
+	if not is_instance_valid(weapon_sprite):
+		return
+	var half := size * 0.5
+	var block := Polygon2D.new()
+	block.name = "CustomShape_Hammer_" + suffix
+	block.polygon = PackedVector2Array([
+		Vector2(-half, -half),
+		Vector2(half, -half),
+		Vector2(half, half),
+		Vector2(-half, half)
+	])
+	block.position = center
+	block.color = fill_color
+	weapon_sprite.add_child(block)
 func attack(target_pos: Vector2) -> void:
 	if is_instance_valid(weapon_owner) and weapon_owner.get("in_ultimate_mode"):
 		current_multiplier = max_charge_multiplier

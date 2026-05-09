@@ -18,7 +18,7 @@ func enter(msg: Dictionary = {}) -> void:
 	match msg.get("anim"):
 		0:
 			if "animation_player" in character:
-				character.animation_player.play("attack1")
+				character.animation_player.play("Attack1")
 		1:
 			if "animation_player" in character:
 				character.animation_player.play("attack2")
@@ -38,7 +38,7 @@ func exit() -> void:
 func physics_process(delta: float) -> void:
 	character.process_attack_physics(delta)
 	# 播放攻击动画，停止移动
-
+	
 		
 func get_state_name() -> String:
 	return CharacterBase.STATE_ATTACK

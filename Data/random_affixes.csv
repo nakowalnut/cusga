@@ -1,0 +1,7 @@
+id,name,stat_type,min_val,max_val,desc
+affix_attack,攻击类,attack,0.05,0.15,攻击力提高{val}%
+affix_crit_rate,暴击类,crit_rate,0.03,0.10,暴击率提高{val}%
+affix_combo_dmg,连携类,combo_dmg,0.05,0.10,连携技伤害提高{val}%
+affix_atk_speed,攻速类,atk_speed,0.05,0.10,武器攻击速度提高{val}%
+affix_dmg_reduce,生存类,damage_reduction,0.03,0.08,减伤提高{val}%
+affix_move_speed,移速类,move_speed,0.03,0.08,移速提高{val}%

@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://drjdi2hlww3j6"
+
+[deps]
+
+files=["res://Data/equipment_sets.set.translation", "res://Data/equipment_sets.trigger.translation", "res://Data/equipment_sets.effects.translation", "res://Data/equipment_sets.raw.translation"]
+
+source_file="res://Data/equipment_sets.csv"
+dest_files=["res://Data/equipment_sets.set.translation", "res://Data/equipment_sets.trigger.translation", "res://Data/equipment_sets.effects.translation", "res://Data/equipment_sets.raw.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

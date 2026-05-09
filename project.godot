@@ -22,6 +22,10 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameManager="*res://classes/Global/game_manager.gd"
+DataManager="*uid://bdnm2duxc2jx0"
+EventBus="*res://classes/System/EventBus.gd"
+CheatConsole="*res://Scenes/UI/CheatConsole.tscn"
+PoolManager="*uid://shaik7y1wus5"
 
 [display]
 
