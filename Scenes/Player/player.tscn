@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://l4denkeet557" path="res://classes/Character/player.gd" id="1_cyojo"]
 [ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_1kbk7"]
 [ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_uiqp4"]
+[ext_resource type="Texture2D" uid="uid://rw1lo0d3836u" path="res://assets/images/characters/Basic attack/short sword 1.png" id="4_aqm4k"]
 [ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_hvfru"]
 [ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_a06cl"]
 [ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="6_0u5uq"]
@@ -13,7 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://bfowx0on5ldw1" path="res://assets/images/characters/player/hammer.png" id="11_06tpx"]
 [ext_resource type="Texture2D" uid="uid://d1ntaim80urwg" path="res://assets/images/characters/player/bow.png" id="11_7g0yx"]
 [ext_resource type="Texture2D" uid="uid://cu6l4rv7biylh" path="res://assets/images/characters/player/sword.png" id="11_oikmp"]
-[ext_resource type="Texture2D" uid="uid://cvkxavgp4f5kf" path="res://assets/images/characters/walk.png" id="15_dey5f"]
+[ext_resource type="Texture2D" uid="uid://dgap01ae387yr" path="res://assets/images/characters/walk.png" id="15_dey5f"]
 [ext_resource type="Texture2D" uid="uid://dh6f1pgb5mgum" path="res://assets/images/characters/Basic attack/spear.png" id="15_r5xpd"]
 [ext_resource type="Script" uid="uid://qrpcfidw6ndm" path="res://classes/Weapons/weapon_tuning_profile.gd" id="17_aqm4k"]
 [ext_resource type="Script" uid="uid://dftq3cb5fll4j" path="res://classes/Character/WeaponManager.gd" id="17_hnuln"]
@@ -178,6 +179,30 @@ region = Rect2(1332, 0, 666, 666)
 atlas = ExtResource("11_7g0yx")
 region = Rect2(1998, 0, 666, 666)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_37mva"]
+atlas = ExtResource("4_aqm4k")
+region = Rect2(0, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vwcno"]
+atlas = ExtResource("4_aqm4k")
+region = Rect2(0, 666, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u8s58"]
+atlas = ExtResource("4_aqm4k")
+region = Rect2(2664, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d4a23"]
+atlas = ExtResource("4_aqm4k")
+region = Rect2(1998, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hlqkp"]
+atlas = ExtResource("4_aqm4k")
+region = Rect2(1332, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rbwwl"]
+atlas = ExtResource("4_aqm4k")
+region = Rect2(666, 0, 666, 666)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_rcvs5"]
 atlas = ExtResource("11_06tpx")
 region = Rect2(1998, 666, 666, 666)
@@ -327,6 +352,32 @@ animations = [{
 "loop": false,
 "name": &"bow",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_37mva")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vwcno")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u8s58")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d4a23")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hlqkp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rbwwl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_37mva")
+}],
+"loop": false,
+"name": &"dagger",
+"speed": 20.0
 }, {
 "frames": [],
 "loop": true,

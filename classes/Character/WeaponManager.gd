@@ -164,8 +164,10 @@ func apply_weapon_transforms(weapon_id: String, weapon_color: Color) -> void:
 			animationsprite2d_node.scale = Vector2(0.125, 0.125)  # 缩小一半
 			animationsprite2d_node.position = Vector2(10, -5)  # 调整位置
 		"dagger":
+			animationsprite2d_node.position = Vector2(-5, 5)
+			
 			# 短剑：更短
-			animationsprite2d_node.scale = Vector2(0.125, 0.25)
+			#animationsprite2d_node.scale = Vector2(0.125, 0.25)
 		"spear":
 			pass
 			# 矛：更细、更长

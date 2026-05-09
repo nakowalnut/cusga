@@ -7,7 +7,7 @@ func execute(player: CharacterBase, current_weapon: WeaponBase, next_weapon_name
 	if current_weapon is DaggerWeapon:
 		dagger_weapon = current_weapon as DaggerWeapon
 	else:
-		var all_weapons = player.get("all_weapons")
+		var all_weapons = player.weapon_manager.all_weapons
 		if all_weapons is Dictionary and all_weapons.has("dagger"):
 			var dagger_candidate = all_weapons["dagger"]
 			if dagger_candidate is DaggerWeapon:
@@ -19,7 +19,7 @@ func execute(player: CharacterBase, current_weapon: WeaponBase, next_weapon_name
 		print("【短剑 ⇄ 锤子】未找到短剑实例，无法施加强化")
 
 	var hammer_weapon: HammerWeapon = null
-	var all_weapons = player.get("all_weapons")
+	var all_weapons = player.weapon_manager.all_weapons
 	if all_weapons is Dictionary and all_weapons.has("hammer"):
 		var hammer_candidate = all_weapons["hammer"]
 		if hammer_candidate is HammerWeapon:
