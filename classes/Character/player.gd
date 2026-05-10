@@ -260,7 +260,14 @@ func pre_attack(msg):
 		print("使用武器普通攻击: ", weapon.weapon_name)
 		_play_attack_visual(current_weapon_id)
 	
-	await get_tree().create_timer(0.5).timeout
+	var real_wait_time = 0.5
+	if weapon_manager:
+		var atk_speed = 1.0
+		if is_instance_valid(modifier_system):
+			atk_speed = max(modifier_system.get_stat("atk_speed"), 0.1)
+		real_wait_time = weapon_manager.get_attack_total_duration() / atk_speed
+	
+	await get_tree().create_timer(real_wait_time).timeout
 
 	if is_switch:
 		weapon_manager.update_weapon_visual()
