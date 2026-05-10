@@ -73,6 +73,14 @@ func _add_hammer_square(center: Vector2, size: float, fill_color: Color, suffix:
 	block.position = center
 	block.color = fill_color
 	weapon_sprite.add_child(block)
+
+func _process(delta: float) -> void:
+	if is_charging and is_instance_valid(weapon_owner) and weapon_owner.has_method("apply_camera_shake"):
+		var charge_duration = (Time.get_ticks_msec() / 1000.0) - charge_start_time
+		var intensity = clamp(charge_duration, 0.0, 1.0) * 1.2
+		if intensity > 0.1:
+			weapon_owner.apply_camera_shake(intensity, 0.1)
+
 func attack(target_pos: Vector2) -> void:
 	if is_instance_valid(weapon_owner) and weapon_owner.get("in_ultimate_mode"):
 		current_multiplier = max_charge_multiplier
@@ -97,6 +105,11 @@ func attack(target_pos: Vector2) -> void:
 	if target.has_method("take_damage"):
 		deal_damage(target, damage * current_multiplier)
 		add_combo(1)
+		
+		# 锤子根据伤害倍率有相应的震动
+		if is_instance_valid(weapon_owner) and weapon_owner.has_method("apply_camera_shake"):
+			var shake_intensity = 5.0 + current_multiplier * 5.0
+			weapon_owner.apply_camera_shake(shake_intensity, 0.2 + current_multiplier * 0.05)
 
 	if is_instance_valid(blink_knockback_target) and not blink_knockback_target.get("is_dead"):
 		_apply_synergy_knockback(blink_knockback_target)
@@ -138,6 +151,11 @@ func on_hit(target: Node) -> void:
 	if not target.get("is_dead"):
 		if target.has_method("take_damage"):
 			deal_damage(target, damage * current_multiplier)
+			
+			# 锤子根据伤害倍率有相应的震动
+			if is_instance_valid(weapon_owner) and weapon_owner.has_method("apply_camera_shake"):
+				var shake_intensity = 5.0 + current_multiplier * 5.0
+				weapon_owner.apply_camera_shake(shake_intensity, 0.2 + current_multiplier * 0.05)
 
 func handle_take_damage(amount: float) -> bool:
 	if is_charging:

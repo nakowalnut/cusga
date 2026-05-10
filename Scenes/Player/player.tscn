@@ -879,6 +879,10 @@ _data = {
 
 [sub_resource type="Resource" id="Resource_rcvs5"]
 script = ExtResource("17_aqm4k")
+weapon_id = "sword"
+attack_speed_multiplier = 1.5
+attack_recovery = 0.05
+attack_cooldown = 0.02
 metadata/_custom_type_script = "uid://qrpcfidw6ndm"
 
 [node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("prev_weapon_ani", "new_weapon_ani", "animationsprite2d_node", "weapon_manager", "ultimate_system", "c_state_machine")]

@@ -36,6 +36,27 @@ func can_change_state() -> bool:
 @export var default_equip_body: String = ""
 @export var default_equip_foot: String = ""
 
+@onready var camera = $Camera2D
+
+var shake_intensity: float = 0.0
+var shake_decay: float = 0.0
+
+func apply_camera_shake(intensity: float, duration: float) -> void:
+	shake_intensity = intensity
+	if duration > 0:
+		shake_decay = intensity / duration
+	else:
+		shake_decay = intensity
+
+func _process(delta: float) -> void:
+	if shake_intensity > 0:
+		shake_intensity -= shake_decay * delta
+		shake_intensity = max(0, shake_intensity)
+		if is_instance_valid(camera):
+			camera.offset = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * shake_intensity
+	elif is_instance_valid(camera) and camera.offset != Vector2.ZERO:
+		camera.offset = Vector2.ZERO
+
 func _ready() -> void:
 	anim = $AnimationPlayer
 	GameManager.player = self
