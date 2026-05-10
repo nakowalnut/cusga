@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_a06cl"]
 [ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="6_0u5uq"]
 [ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="7_jlvik"]
+[ext_resource type="Texture2D" uid="uid://dfon2jhww8830" path="res://assets/images/characters/Linking skills/hammer VS hammer.png" id="8_rcvs5"]
 [ext_resource type="Script" uid="uid://2xhyj4jnqk1c" path="res://classes/CharacterState/c_states/ultimate.gd" id="8_ultimate"]
 [ext_resource type="Script" uid="uid://dcqm55fatplw8" path="res://classes/Character/AttackController.gd" id="9_gk6dx"]
 [ext_resource type="Script" uid="uid://dxjnhi0x1g88y" path="res://classes/CharacterState/c_states/dodge.gd" id="10_dodge"]
@@ -331,6 +332,22 @@ region = Rect2(1332, 0, 666, 666)
 atlas = ExtResource("11_oikmp")
 region = Rect2(666, 0, 666, 666)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_dbngi"]
+atlas = ExtResource("8_rcvs5")
+region = Rect2(0, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_geihd"]
+atlas = ExtResource("8_rcvs5")
+region = Rect2(666, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gs43p"]
+atlas = ExtResource("8_rcvs5")
+region = Rect2(1332, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oshob"]
+atlas = ExtResource("8_rcvs5")
+region = Rect2(1998, 0, 666, 666)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_htcer"]
 animations = [{
 "frames": [{
@@ -497,6 +514,23 @@ animations = [{
 "loop": false,
 "name": &"sword",
 "speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dbngi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_geihd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gs43p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oshob")
+}],
+"loop": true,
+"name": &"swordhammer",
+"speed": 5.0
 }]
 
 [sub_resource type="Animation" id="Animation_htcer"]
