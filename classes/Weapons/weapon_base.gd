@@ -17,13 +17,26 @@ var attack_range: float = 50.0
 @export var attack_cooldown: float = 0.08
 @export var is_charge_weapon: bool = false # 是否需要蓄力
 
+@export_group("Audio")
+@export var attack_sfx: AudioStream # 单个武器的攻击音效
+var sfx_player: AudioStreamPlayer2D
+
 var current_combo: int = 0
 var is_synergy_ready: bool = false
 var is_combo_active: bool = false
 @export var weapon_owner: CharacterBase
 
 func _ready() -> void:
-	pass
+	# 动态创建音频播放器节点并挂载到武器下
+	sfx_player = AudioStreamPlayer2D.new()
+	add_child(sfx_player)
+
+# 添加一个新方法专门用来播放该武器被分配的音效
+func play_attack_sound() -> void:
+	if attack_sfx and is_instance_valid(sfx_player):
+		sfx_player.pitch_scale = randf_range(0.9, 1.1) 
+		sfx_player.stream = attack_sfx
+		sfx_player.play()
 
 # 当玩家发起攻击时调用
 func attack(target_pos: Vector2) -> void:

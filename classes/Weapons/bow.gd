@@ -21,8 +21,13 @@ func _init() -> void:
 	attack_active = 0.06
 	attack_recovery = 0.16
 	attack_cooldown = 0.12
+	
+	if not attack_sfx:
+		attack_sfx = preload("res://assets/audio/attack_bow.wav")
 
 func attack(target_pos: Vector2) -> void:
+	play_attack_sound()
+	
 	if _is_hammer_synergy_active():
 		hammer_synergy_active_for_next_attack = false
 		_fire_explosive_arrow(target_pos)

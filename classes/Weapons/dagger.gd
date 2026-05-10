@@ -26,8 +26,12 @@ func _init() -> void:
 	attack_recovery = 0.09
 	attack_cooldown = 0.05
 	is_charge_weapon = true
+	
+	if not attack_sfx:
+		attack_sfx = preload("res://assets/audio/attack_light.wav")
 
 func _ready() -> void:
+	super._ready()
 	combo_timer = Timer.new()
 	combo_timer.one_shot = true
 	combo_timer.timeout.connect(_on_combo_timeout)
@@ -55,6 +59,8 @@ func on_attack_released() -> void:
 
 func attack(target_pos: Vector2) -> void:
 	if not is_instance_valid(weapon_owner): return
+
+	play_attack_sound()
 
 	# 长按闪现已结算，松开触发的 Attack 不再重复结算伤害。
 	if dash_pending or dash_executed_this_hold:
@@ -136,6 +142,8 @@ func _perform_dash(enemy: Node) -> void:
 		if is_instance_valid(weapon_owner) and weapon_owner.has_method("apply_camera_shake"):
 			weapon_owner.apply_camera_shake(7.0, 0.25)
 			
+		# 播放突刺音效
+		play_attack_sound()
 		add_combo(1)
 		# 刷新连击时间
 		combo_timer.start(combo_timeout)
