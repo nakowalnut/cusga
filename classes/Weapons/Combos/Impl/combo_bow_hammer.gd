@@ -5,7 +5,7 @@ func execute(player: CharacterBase, current_weapon: WeaponBase, next_weapon_name
 	
 	var bow_weapon: BowWeapon = null
 	
-	var all_weapons = player.get("all_weapons")
+	var all_weapons = player.weapon_manager.all_weapons
 	if all_weapons is Dictionary:
 		if all_weapons.has("bow"):
 			bow_weapon = all_weapons["bow"] as BowWeapon

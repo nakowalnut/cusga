@@ -15,8 +15,13 @@ func _init() -> void:
 	attack_active = 0.16
 	attack_recovery = 0.21
 	attack_cooldown = 0.10
+	
+	if not attack_sfx:
+		attack_sfx = preload("res://assets/audio/attack_spear.wav")
 
 func attack(_target_pos: Vector2) -> void:
+	play_attack_sound()
+	
 	# 矛：对范围内所有敌人造成少量伤害
 	var nearby = get_nearby_enemies(attack_range)
 	for enemy in nearby:

@@ -11,6 +11,7 @@ var _affix_modifier_ids: Array[String] = []
 var _next_affix_mod_index: int = 1
 var _weapon_base_damage_cache: Dictionary = {}
 var _weapon_damage_bonus: float = 0.0
+var _infinite_combo_enabled: bool = false
 
 func _ready() -> void:
 	visible = false
@@ -87,6 +88,8 @@ func _execute_command(cmd: String) -> void:
 				_clear_affixes()
 			else:
 				_log("Unknown clear target: " + args[1])
+		"infinite_combo":
+			_toggle_infinite_combo()
 		"close":
 			_toggle_console(false)
 		_:
@@ -129,6 +132,7 @@ func _print_help() -> void:
 	_log("give all affixes")
 	_log("clear equip")
 	_log("clear affix")
+	_log("infinite_combo")
 	_log("close")
 
 func _list_equips() -> void:
@@ -260,25 +264,25 @@ func _clear_affixes() -> void:
 	_log("All cheat affixes cleared.")
 
 func _cache_weapon_base_damage(player: Player) -> void:
-	if _weapon_base_damage_cache.is_empty() and player.all_weapons is Dictionary:
-		for weapon_id in player.all_weapons.keys():
-			var weapon = player.all_weapons[weapon_id]
+	if _weapon_base_damage_cache.is_empty() and player.weapon_manager.all_weapons is Dictionary:
+		for weapon_id in player.weapon_manager.all_weapons.keys():
+			var weapon = player.weapon_manager.all_weapons[weapon_id]
 			if is_instance_valid(weapon):
 				_weapon_base_damage_cache[str(weapon_id)] = float(weapon.damage)
 
 func _apply_weapon_damage_bonus(player: Player) -> void:
-	if player.all_weapons is Dictionary:
-		for weapon_id in player.all_weapons.keys():
-			var weapon = player.all_weapons[weapon_id]
+	if player.weapon_manager.all_weapons is Dictionary:
+		for weapon_id in player.weapon_manager.all_weapons.keys():
+			var weapon = player.weapon_manager.all_weapons[weapon_id]
 			if is_instance_valid(weapon):
 				var key := str(weapon_id)
 				var base := float(_weapon_base_damage_cache.get(key, weapon.damage))
 				weapon.damage = base * (1.0 + _weapon_damage_bonus)
 
 func _restore_weapon_damage(player: Player) -> void:
-	if player.all_weapons is Dictionary:
-		for weapon_id in player.all_weapons.keys():
-			var weapon = player.all_weapons[weapon_id]
+	if player.weapon_manager.all_weapons is Dictionary:
+		for weapon_id in player.weapon_manager.all_weapons.keys():
+			var weapon = player.weapon_manager.all_weapons[weapon_id]
 			if is_instance_valid(weapon):
 				var key := str(weapon_id)
 				if _weapon_base_damage_cache.has(key):
@@ -292,6 +296,45 @@ func _get_player() -> Player:
 		_log("Player is not ready yet.")
 		return null
 	return GameManager.player
+
+func _toggle_infinite_combo() -> void:
+	_infinite_combo_enabled = not _infinite_combo_enabled
+	
+	var player := _get_player()
+	if player == null:
+		return
+	
+	if _infinite_combo_enabled:
+		_apply_infinite_combo(player, true)
+		if is_instance_valid(player.weapon_manager):
+			player.weapon_manager.weapon_switched.connect(_on_weapon_switched_for_infinite_combo)
+		_log("无限连携技已开启！切换武器即可触发连携技。")
+	else:
+		if is_instance_valid(player.weapon_manager):
+			player.weapon_manager.weapon_switched.disconnect(_on_weapon_switched_for_infinite_combo)
+		_apply_infinite_combo(player, false)
+		_log("无限连携技已关闭。")
+
+func _on_weapon_switched_for_infinite_combo(weapon_id: String) -> void:
+	if _infinite_combo_enabled:
+		var player := _get_player()
+		if player != null:
+			_apply_infinite_combo(player, true)
+
+func _apply_infinite_combo(player: Player, enabled: bool) -> void:
+	if not is_instance_valid(player.weapon_manager):
+		_log("Player weapon manager unavailable.")
+		return
+	
+	for weapon_id in player.weapon_manager.all_weapons:
+		var weapon = player.weapon_manager.all_weapons[weapon_id]
+		if is_instance_valid(weapon):
+			if enabled:
+				weapon.is_synergy_ready = true
+				weapon.current_combo = weapon.max_combo
+			else:
+				weapon.is_synergy_ready = false
+				weapon.current_combo = 0
 
 func _log(msg: String) -> void:
 	output_label.text += msg + "\n"

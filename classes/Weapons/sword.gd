@@ -15,8 +15,14 @@ func _init() -> void:
 	attack_active = 0.12
 	attack_recovery = 0.17
 	attack_cooldown = 0.10
+	
+	# 如果组件化中没配，给一个默认的音效
+	if not attack_sfx:
+		attack_sfx = preload("res://assets/audio/attack_slash.wav")
 
 func attack(_target_pos: Vector2) -> void:
+	play_attack_sound()
+	
 	# 长剑泛用：对附近 1-3 名敌人造成伤害
 	# 虽然 HitBox 也会触发，但我们在这里显式处理多目标逻辑
 	var nearby = get_nearby_enemies(attack_range)

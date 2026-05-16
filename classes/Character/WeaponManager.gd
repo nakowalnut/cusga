@@ -131,6 +131,9 @@ func update_weapon_visual() -> void:
 	if is_instance_valid(hammer) and hammer.has_method("_clear_custom_weapon_shapes"):
 		hammer._clear_custom_weapon_shapes()
 	
+	if current_weapon_tween and current_weapon_tween.is_valid():
+		current_weapon_tween.kill()
+		
 	# 重置被Tween影响的位置和旋转，防止切枪时由于动画残留导致表现错乱
 	if weapon_sprite:
 		weapon_sprite.position = Vector2(22, -5)
@@ -164,8 +167,10 @@ func apply_weapon_transforms(weapon_id: String, weapon_color: Color) -> void:
 			animationsprite2d_node.scale = Vector2(0.125, 0.125)  # 缩小一半
 			animationsprite2d_node.position = Vector2(10, -5)  # 调整位置
 		"dagger":
+			animationsprite2d_node.position = Vector2(-5, 5)
+			
 			# 短剑：更短
-			animationsprite2d_node.scale = Vector2(0.125, 0.25)
+			#animationsprite2d_node.scale = Vector2(0.125, 0.25)
 		"spear":
 			pass
 			# 矛：更细、更长
