@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://xlaieqm7bf3f"]
+
+[ext_resource type="Script" uid="uid://bgn1irfxds620" path="res://healing_area.gd" id="1_5es0h"]
+
+[sub_resource type="AudioStream" id="AudioStream_5es0h"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1t7ln"]
+
+[node name="HealingArea" type="Area2D" unique_id=375164106]
+script = ExtResource("1_5es0h")
+heal_sound = SubResource("AudioStream_5es0h")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=340815546]
+scale = Vector2(6, 6)
+shape = SubResource("RectangleShape2D_1t7ln")

@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://csnpvqc2gj630"]
+
+[ext_resource type="Script" uid="uid://7qygnd4f2x23" path="res://room/room.gd" id="1_7w3a7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nb7d2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7w3a7"]
+size = Vector2(5, 240)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_du4cl"]
+size = Vector2(5, 239)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4anoi"]
+size = Vector2(222, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_upg3x"]
+size = Vector2(224, 5)
+
+[node name="BattleArea" type="Area2D" unique_id=1801756269 node_paths=PackedStringArray("barrier_nodes")]
+collision_layer = 7
+collision_mask = 7
+script = ExtResource("1_7w3a7")
+barrier_nodes = [NodePath("Barrier/StaticBody2D"), NodePath("Barrier/StaticBody2D2"), NodePath("Barrier/StaticBody2D3"), NodePath("Barrier/StaticBody2D4")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1915112604]
+scale = Vector2(6.5, 6.5)
+shape = SubResource("RectangleShape2D_nb7d2")
+
+[node name="Barrier" type="Node2D" parent="." unique_id=1342275169]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Barrier" unique_id=1240003973]
+position = Vector2(-100, 0)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barrier/StaticBody2D" unique_id=1691261208]
+position = Vector2(-9.5, 0)
+shape = SubResource("RectangleShape2D_7w3a7")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Barrier" unique_id=1003992264]
+position = Vector2(120, 0)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barrier/StaticBody2D2" unique_id=14924584]
+position = Vector2(-12.5, -0.5)
+shape = SubResource("RectangleShape2D_du4cl")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Barrier" unique_id=995611497]
+position = Vector2(13, 120)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barrier/StaticBody2D3" unique_id=265187644]
+position = Vector2(-13, 1)
+shape = SubResource("RectangleShape2D_4anoi")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Barrier" unique_id=1114622315]
+position = Vector2(12, -120)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barrier/StaticBody2D4" unique_id=1005119411]
+position = Vector2(-12, -2.5)
+shape = SubResource("RectangleShape2D_upg3x")
+
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=547954048]
+
+[node name="Marker2D" type="Marker2D" parent="SpawnPoints" unique_id=1829897136 groups=["enemy_spawn_point"]]
+position = Vector2(27, -51)
+
+[node name="Marker2D2" type="Marker2D" parent="SpawnPoints" unique_id=1625732951 groups=["enemy_spawn_point"]]
+position = Vector2(-2, 25)
+
+[node name="Marker2D9" type="Marker2D" parent="SpawnPoints" unique_id=1890197711 groups=["enemy_spawn_point"]]
+position = Vector2(19, 36)
+
+[node name="Marker2D3" type="Marker2D" parent="SpawnPoints" unique_id=62465626 groups=["enemy_spawn_point"]]
+position = Vector2(42, -4)
+
+[node name="Marker2D4" type="Marker2D" parent="SpawnPoints" unique_id=985903777 groups=["enemy_spawn_point"]]
+position = Vector2(-33, -23)
+
+[node name="Marker2D5" type="Marker2D" parent="SpawnPoints" unique_id=1273499068 groups=["enemy_spawn_point"]]
+position = Vector2(-43, 3)
+
+[node name="Marker2D6" type="Marker2D" parent="SpawnPoints" unique_id=956207398 groups=["enemy_spawn_point"]]
+position = Vector2(-2, 25)
+
+[node name="Marker2D7" type="Marker2D" parent="SpawnPoints" unique_id=102685709 groups=["enemy_spawn_point"]]
+position = Vector2(-40, -53)
+
+[node name="Marker2D8" type="Marker2D" parent="SpawnPoints" unique_id=1222507566 groups=["enemy_spawn_point"]]
+position = Vector2(50, -29)
+
+[node name="Marker2D10" type="Marker2D" parent="SpawnPoints" unique_id=1996399002 groups=["enemy_spawn_point"]]
+position = Vector2(-65, 73)
+
+[node name="Marker2D11" type="Marker2D" parent="SpawnPoints" unique_id=1987512785 groups=["enemy_spawn_point"]]
+position = Vector2(65, 93)
+
+[node name="Marker2D14" type="Marker2D" parent="SpawnPoints/Marker2D11" unique_id=988262938 groups=["enemy_spawn_point"]]
+position = Vector2(-155, -57)
+
+[node name="Marker2D12" type="Marker2D" parent="SpawnPoints" unique_id=1050600882 groups=["enemy_spawn_point"]]
+position = Vector2(49, -84)
+
+[node name="Marker2D13" type="Marker2D" parent="SpawnPoints" unique_id=1988068031 groups=["enemy_spawn_point"]]
+position = Vector2(-67, -90)

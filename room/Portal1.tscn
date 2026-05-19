@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bqh7tfcjeifei"]
+
+[ext_resource type="Script" uid="uid://52y7kq745exw" path="res://room/Portal1.gd" id="1_e5bep"]
+[ext_resource type="Texture2D" uid="uid://cucvclj328wox" path="res://assets/tilesets/传送门 (6)_爱给网_aigei_com.png" id="2_nmrrf"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dl81w"]
+
+[node name="Area2D" type="Area2D" unique_id=1865886141]
+collision_layer = 6
+collision_mask = 7
+script = ExtResource("1_e5bep")
+next_room_path = "res://room/2rd.tscn"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1893427863]
+rotation = 1.5707964
+scale = Vector2(0.53, 0.53)
+shape = SubResource("CapsuleShape2D_dl81w")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=179728942]
+scale = Vector2(0.11, 0.11)
+texture = ExtResource("2_nmrrf")

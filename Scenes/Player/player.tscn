@@ -885,7 +885,7 @@ attack_recovery = 0.05
 attack_cooldown = 0.02
 metadata/_custom_type_script = "uid://qrpcfidw6ndm"
 
-[node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("prev_weapon_ani", "new_weapon_ani", "animationsprite2d_node", "weapon_manager", "ultimate_system", "c_state_machine")]
+[node name="Player" type="CharacterBody2D" unique_id=357816524 node_paths=PackedStringArray("prev_weapon_ani", "new_weapon_ani", "animationsprite2d_node", "weapon_manager", "ultimate_system", "c_state_machine") groups=["player"]]
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_cyojo")
@@ -894,6 +894,7 @@ new_weapon_ani = NodePath("WeaponHolder/Weaponanim/AnimatedSprite2D2")
 animationsprite2d_node = NodePath("WeaponHolder/Weaponanim")
 weapon_manager = NodePath("WeaponManager")
 ultimate_system = NodePath("UltimateSystem")
+speed = 100.0
 c_state_machine = NodePath("StateMachine")
 metadata/_custom_type_script = "uid://l4denkeet557"
 
@@ -987,6 +988,7 @@ script = ExtResource("10_dodge")
 libraries/ = SubResource("AnimationLibrary_0u5uq")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1838557750]
+scale = Vector2(0.33, 0.33)
 zoom = Vector2(1.32, 1.32)
 position_smoothing_enabled = true
 position_smoothing_speed = 15.0

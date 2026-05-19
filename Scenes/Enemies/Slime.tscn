@@ -26,14 +26,14 @@ height = 52.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_wwgcc"]
 radius = 30.463093
 
-[node name="Slime" type="CharacterBody2D" unique_id=184754201 node_paths=PackedStringArray("character_weapon", "attack_timer", "c_state_machine")]
+[node name="Slime" type="CharacterBody2D" unique_id=184754201 node_paths=PackedStringArray("character_weapon", "c_state_machine")]
+scale = Vector2(0.4, 0.4)
 collision_layer = 4
 collision_mask = 6
 script = ExtResource("1_pw37b")
 character_weapon = NodePath("WeaponHolder/Slimer")
 max_health = 250.0
 speed = 30.0
-attack_timer = NodePath("AttackTimer")
 c_state_machine = NodePath("StateMachine")
 metadata/_custom_type_script = "uid://u4qbyupuxcf3"
 
@@ -97,6 +97,7 @@ visible = false
 [node name="HitBox" type="Area2D" parent="WeaponHolder" unique_id=1743703014]
 position = Vector2(0, -9.536743e-07)
 scale = Vector2(1, 0.99999994)
+collision_layer = 3
 collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHolder/HitBox" unique_id=1135992294]
@@ -106,6 +107,9 @@ shape = SubResource("CircleShape2D_wwgcc")
 
 [node name="Slimer" type="Node2D" parent="WeaponHolder" unique_id=1453450992]
 script = ExtResource("11_pw37b")
+synergy_damage = 5.0
+damage = 2.0
+crit_rate = 1.0
 metadata/_custom_type_script = "uid://c0gqmu1cbxjjr"
 
 [node name="AttackTimer" type="Timer" parent="." unique_id=1443518225]
