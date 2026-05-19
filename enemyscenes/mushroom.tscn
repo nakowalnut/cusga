@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://cw65oxgl4r7av"]
+
+[ext_resource type="Script" uid="uid://cdabwt7jlsdme" path="res://enemyscenes/mushroom.gd" id="1_7sinv"]
+[ext_resource type="Texture2D" uid="uid://ci0hxdk3t7nh0" path="res://icon.svg" id="2_0j286"]
+[ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_1ck3t"]
+[ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_0j286"]
+[ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_qwdpk"]
+[ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_g5jx2"]
+[ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="6_6m5qn"]
+[ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="7_2188k"]
+[ext_resource type="Script" uid="uid://bo6ptf42wuque" path="res://classes/CharacterState/c_states/stun.gd" id="8_5sp8f"]
+[ext_resource type="Script" uid="uid://dua2sujx6ct0d" path="res://classes/FieldOfView2D/FieldOfView2D.gd" id="9_7jkmg"]
+[ext_resource type="Script" uid="uid://dodsagbyx0bek" path="res://classes/Weapons/enemiesweapon/mushroom_cloud.gd" id="10_iakwy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0ncbu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_et2ea"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_27isj"]
+
+[node name="Mushroom" type="CharacterBody2D" unique_id=1918678011 node_paths=PackedStringArray("character_weapon")]
+script = ExtResource("1_7sinv")
+character_weapon = NodePath("WeaponHolder/MushroomCloud")
+metadata/_custom_type_script = "uid://couuhdcbsiyre"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=786268867]
+texture = ExtResource("2_0j286")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=740181663]
+
+[node name="StateMachine" type="Node" parent="." unique_id=1016723653]
+script = ExtResource("2_1ck3t")
+metadata/_custom_type_script = "uid://dyp5hiohmgn1i"
+
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=2099929311]
+script = ExtResource("3_0j286")
+metadata/_custom_type_script = "uid://dtjunbbhi11cp"
+
+[node name="AttackState" type="Node" parent="StateMachine" unique_id=825313410]
+script = ExtResource("4_qwdpk")
+metadata/_custom_type_script = "uid://d3wjjimrma8i6"
+
+[node name="WalkState" type="Node" parent="StateMachine" unique_id=688861791]
+script = ExtResource("5_g5jx2")
+metadata/_custom_type_script = "uid://bcrvjymso8owa"
+
+[node name="DieState" type="Node" parent="StateMachine" unique_id=1503835816]
+script = ExtResource("6_6m5qn")
+metadata/_custom_type_script = "uid://vqdmlojjhhyw"
+
+[node name="HurtState" type="Node" parent="StateMachine" unique_id=1693295577]
+script = ExtResource("7_2188k")
+metadata/_custom_type_script = "uid://be7e7v1oxgfla"
+
+[node name="StunState" type="Node" parent="StateMachine" unique_id=815885379]
+script = ExtResource("8_5sp8f")
+
+[node name="FieldOfView2D" type="Area2D" parent="." unique_id=1796027747]
+script = ExtResource("9_7jkmg")
+angle = 180.0
+auto_rotate = true
+rotation_speed = 100.96
+debug_draw = true
+metadata/_custom_type_script = "uid://dua2sujx6ct0d"
+
+[node name="AttackTimer" type="Timer" parent="." unique_id=1262769394]
+
+[node name="hitBox" type="Area2D" parent="." unique_id=226387338]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox" unique_id=1258812402]
+shape = SubResource("RectangleShape2D_0ncbu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=513557846]
+shape = SubResource("RectangleShape2D_et2ea")
+
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=825926416]
+
+[node name="MushroomCloud" type="Node2D" parent="WeaponHolder" unique_id=489230764]
+script = ExtResource("10_iakwy")
+
+[node name="Area2D" type="Area2D" parent="WeaponHolder/MushroomCloud" unique_id=1706233417]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHolder/MushroomCloud/Area2D" unique_id=1773993911]
+shape = SubResource("CircleShape2D_27isj")

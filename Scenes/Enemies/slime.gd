@@ -4,7 +4,8 @@ var current_attack_tween: Tween
 var stored_collision_layer: int = -1
 var stored_collision_mask: int = -1
 
-func pre_attack(msg):
+# 修正签名：添加类型和默认值
+func pre_attack(msg: Dictionary = {}) -> void:
 	# 使用直线距离判断是否满足攻击范围
 	if is_instance_valid(GameManager.player) and global_position.distance_to(GameManager.player.global_position) <= sight_range[0]:
 		var start_pos = global_position
@@ -53,7 +54,6 @@ func cancel_action_tweens() -> void:
 	if current_attack_tween and current_attack_tween.is_valid():
 		current_attack_tween.kill()
 	_restore_collision()
-
 
 func attack_callback():
 	if c_state_machine and c_state_machine.get_current_state_name() == "Attack":

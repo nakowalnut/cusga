@@ -1,0 +1,166 @@
+[gd_scene format=3 uid="uid://opq1mjrtjkgx"]
+
+[ext_resource type="Script" uid="uid://elaaepnwptgr" path="res://enemyscenes/wyvern.gd" id="1_5mmys"]
+[ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_grram"]
+[ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_etyur"]
+[ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_oyida"]
+[ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_ff3gr"]
+[ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="6_vqyw5"]
+[ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="7_jiuf6"]
+[ext_resource type="Script" uid="uid://bo6ptf42wuque" path="res://classes/CharacterState/c_states/stun.gd" id="8_i6uv0"]
+[ext_resource type="Script" uid="uid://dua2sujx6ct0d" path="res://classes/FieldOfView2D/FieldOfView2D.gd" id="9_8ombv"]
+[ext_resource type="Script" uid="uid://ckaseg0e3xt7l" path="res://classes/Weapons/enemiesweapon/MeleeWeaponSimple.gd" id="11_5mmys"]
+[ext_resource type="Texture2D" uid="uid://c44qu5tr2lpd2" path="res://assets/images/monster/Flying Dragon Attack.png" id="11_grram"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t2pxg"]
+size = Vector2(20, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kspdw"]
+size = Vector2(8.375, 13)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5mmys"]
+size = Vector2(8, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5mmys"]
+atlas = ExtResource("11_grram")
+region = Rect2(0, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_grram"]
+atlas = ExtResource("11_grram")
+region = Rect2(666, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_etyur"]
+atlas = ExtResource("11_grram")
+region = Rect2(1332, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oyida"]
+atlas = ExtResource("11_grram")
+region = Rect2(1998, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ff3gr"]
+atlas = ExtResource("11_grram")
+region = Rect2(2664, 0, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vqyw5"]
+atlas = ExtResource("11_grram")
+region = Rect2(0, 666, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jiuf6"]
+atlas = ExtResource("11_grram")
+region = Rect2(666, 666, 666, 666)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i6uv0"]
+atlas = ExtResource("11_grram")
+region = Rect2(1332, 666, 666, 666)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_g0236"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5mmys")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_grram")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_etyur")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 1.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oyida")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ff3gr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vqyw5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jiuf6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i6uv0")
+}],
+"loop": true,
+"name": &"fire",
+"speed": 5.0
+}]
+
+[node name="Wyvern" type="CharacterBody2D" unique_id=615164029 node_paths=PackedStringArray("character_weapon", "c_state_machine")]
+script = ExtResource("1_5mmys")
+character_weapon = NodePath("WeaponHolder/WyvernClaw")
+c_state_machine = NodePath("StateMachine")
+metadata/_custom_type_script = "uid://couuhdcbsiyre"
+
+[node name="StateMachine" type="Node" parent="." unique_id=1494900688 node_paths=PackedStringArray("character")]
+script = ExtResource("2_grram")
+character = NodePath("..")
+metadata/_custom_type_script = "uid://dyp5hiohmgn1i"
+
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=1864341836]
+script = ExtResource("3_etyur")
+metadata/_custom_type_script = "uid://dtjunbbhi11cp"
+
+[node name="AttackState" type="Node" parent="StateMachine" unique_id=1406752879]
+script = ExtResource("4_oyida")
+metadata/_custom_type_script = "uid://d3wjjimrma8i6"
+
+[node name="WalkState" type="Node" parent="StateMachine" unique_id=61166977]
+script = ExtResource("5_ff3gr")
+metadata/_custom_type_script = "uid://bcrvjymso8owa"
+
+[node name="DieState" type="Node" parent="StateMachine" unique_id=778136033]
+script = ExtResource("6_vqyw5")
+metadata/_custom_type_script = "uid://vqdmlojjhhyw"
+
+[node name="HurtState" type="Node" parent="StateMachine" unique_id=134596983]
+script = ExtResource("7_jiuf6")
+metadata/_custom_type_script = "uid://be7e7v1oxgfla"
+
+[node name="StunState" type="Node" parent="StateMachine" unique_id=2028690422]
+script = ExtResource("8_i6uv0")
+
+[node name="FieldOfView2D" type="Area2D" parent="." unique_id=177839613]
+visible = false
+script = ExtResource("9_8ombv")
+angle = 180.0
+auto_rotate = true
+rotation_speed = 100.96
+debug_draw = true
+metadata/_custom_type_script = "uid://dua2sujx6ct0d"
+
+[node name="AttackTimer" type="Timer" parent="." unique_id=787022792]
+
+[node name="hitBox" type="Area2D" parent="." unique_id=289854786]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox" unique_id=281654937]
+position = Vector2(5, 1)
+shape = SubResource("RectangleShape2D_t2pxg")
+
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=1305240048]
+
+[node name="WyvernClaw" type="Node2D" parent="WeaponHolder" unique_id=1503564603 node_paths=PackedStringArray("hit_shape")]
+script = ExtResource("11_5mmys")
+hit_shape = NodePath("HitArea/CollisionShape2D")
+
+[node name="HitArea" type="Area2D" parent="WeaponHolder/WyvernClaw" unique_id=670812559]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHolder/WyvernClaw/HitArea" unique_id=1511585854]
+position = Vector2(-5.8125, 1.5)
+shape = SubResource("RectangleShape2D_kspdw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1076370306]
+shape = SubResource("RectangleShape2D_5mmys")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=877943339]
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_g0236")
+animation = &"fire"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1479850913]
+
+[node name="Node2D" type="Node2D" parent="." unique_id=176943767]

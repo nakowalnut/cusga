@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://drdb73m3kil7y"]
+
+[ext_resource type="Script" uid="uid://cephapffbewyi" path="res://enemyscenes/humanoid.gd" id="1_bbmwe"]
+[ext_resource type="Texture2D" uid="uid://ci0hxdk3t7nh0" path="res://icon.svg" id="2_2iq7o"]
+[ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_fi5ja"]
+[ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_2iq7o"]
+[ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_ybv1j"]
+[ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_ake2a"]
+[ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="6_fccbk"]
+[ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="7_rt30r"]
+[ext_resource type="Script" uid="uid://bo6ptf42wuque" path="res://classes/CharacterState/c_states/stun.gd" id="8_0srym"]
+[ext_resource type="Script" uid="uid://ok28m66sk7mn" path="res://enemyscenes/humanoid_poison_mist.gd" id="9_kc1ni"]
+[ext_resource type="Script" uid="uid://b1wmy8beuap6i" path="res://classes/Weapons/enemiesweapon/humanoid_whip.gd" id="10_vulh6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fi5ja"]
+size = Vector2(122, 119)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rpr3x"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dk7hl"]
+
+[node name="Humanoid" type="CharacterBody2D" unique_id=1900080357]
+script = ExtResource("1_bbmwe")
+metadata/_custom_type_script = "uid://couuhdcbsiyre"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1081936515]
+texture = ExtResource("2_2iq7o")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1930535886]
+position = Vector2(1, 0.5)
+shape = SubResource("RectangleShape2D_fi5ja")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2020535868]
+
+[node name="StateMachine" type="Node" parent="." unique_id=254699780]
+script = ExtResource("2_fi5ja")
+metadata/_custom_type_script = "uid://dyp5hiohmgn1i"
+
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=1615341270]
+script = ExtResource("3_2iq7o")
+metadata/_custom_type_script = "uid://dtjunbbhi11cp"
+
+[node name="AttackState" type="Node" parent="StateMachine" unique_id=1071334048]
+script = ExtResource("4_ybv1j")
+metadata/_custom_type_script = "uid://d3wjjimrma8i6"
+
+[node name="WalkState" type="Node" parent="StateMachine" unique_id=744957390]
+script = ExtResource("5_ake2a")
+metadata/_custom_type_script = "uid://bcrvjymso8owa"
+
+[node name="DieState" type="Node" parent="StateMachine" unique_id=1688599487]
+script = ExtResource("6_fccbk")
+metadata/_custom_type_script = "uid://vqdmlojjhhyw"
+
+[node name="HurtState" type="Node" parent="StateMachine" unique_id=1119757722]
+script = ExtResource("7_rt30r")
+metadata/_custom_type_script = "uid://be7e7v1oxgfla"
+
+[node name="StunState" type="Node" parent="StateMachine" unique_id=666505296]
+script = ExtResource("8_0srym")
+
+[node name="skill" type="Node2D" parent="." unique_id=1214193003]
+
+[node name="HumanoidPoisonMist" type="Node2D" parent="skill" unique_id=1464924534]
+script = ExtResource("9_kc1ni")
+
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=1340690194]
+
+[node name="HumanoidWhip" type="Node2D" parent="WeaponHolder" unique_id=286527763]
+script = ExtResource("10_vulh6")
+
+[node name="Area2D" type="Area2D" parent="WeaponHolder/HumanoidWhip" unique_id=1575411294]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHolder/HumanoidWhip/Area2D" unique_id=1548526430]
+shape = SubResource("CircleShape2D_rpr3x")
+
+[node name="hitbox" type="Area2D" parent="." unique_id=641531432]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox" unique_id=1536600607]
+shape = SubResource("RectangleShape2D_dk7hl")

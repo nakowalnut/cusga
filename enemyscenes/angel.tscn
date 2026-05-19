@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://mym1kd6mvf1c"]
+
+[ext_resource type="Script" uid="uid://c3hu62yie23vr" path="res://angel.gd" id="1_vqhph"]
+[ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_u25vv"]
+[ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_ajd2g"]
+[ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_y6rpk"]
+[ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_prqtu"]
+[ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="6_pa1d4"]
+[ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="7_rxo1t"]
+[ext_resource type="Script" uid="uid://bo6ptf42wuque" path="res://classes/CharacterState/c_states/stun.gd" id="8_rhu0n"]
+[ext_resource type="Script" uid="uid://dua2sujx6ct0d" path="res://classes/FieldOfView2D/FieldOfView2D.gd" id="9_jh7tu"]
+[ext_resource type="Script" uid="uid://xgdycdq10va1" path="res://angel_sword.gd" id="10_4r0su"]
+[ext_resource type="Script" uid="uid://8jmm0i1pdryi" path="res://judgement_skill.gd" id="11_7j8a2"]
+[ext_resource type="Script" uid="uid://clcvncdnubphh" path="res://sunlight_spear_skill.gd" id="12_r7ut6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xxdu5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jeaas"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uys5g"]
+
+[node name="angel" type="CharacterBody2D" unique_id=2103021757 node_paths=PackedStringArray("skill_list", "character_weapon")]
+script = ExtResource("1_vqhph")
+boss_name = "angel"
+skill_list = [NodePath("skill/sunlight_spear_skill")]
+character_weapon = NodePath("WeaponHolder/angel_sword")
+metadata/_custom_type_script = "uid://couuhdcbsiyre"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1678182446]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1477522986]
+shape = SubResource("RectangleShape2D_xxdu5")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=967412733]
+
+[node name="StateMachine" type="Node" parent="." unique_id=789706351 node_paths=PackedStringArray("character")]
+script = ExtResource("2_u25vv")
+character = NodePath("")
+metadata/_custom_type_script = "uid://dyp5hiohmgn1i"
+
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=584051377]
+script = ExtResource("3_ajd2g")
+metadata/_custom_type_script = "uid://dtjunbbhi11cp"
+
+[node name="AttackState" type="Node" parent="StateMachine" unique_id=2097810473]
+script = ExtResource("4_y6rpk")
+metadata/_custom_type_script = "uid://d3wjjimrma8i6"
+
+[node name="WalkState" type="Node" parent="StateMachine" unique_id=846397316]
+script = ExtResource("5_prqtu")
+metadata/_custom_type_script = "uid://bcrvjymso8owa"
+
+[node name="DieState" type="Node" parent="StateMachine" unique_id=571686498]
+script = ExtResource("6_pa1d4")
+metadata/_custom_type_script = "uid://vqdmlojjhhyw"
+
+[node name="HurtState" type="Node" parent="StateMachine" unique_id=387857104]
+script = ExtResource("7_rxo1t")
+metadata/_custom_type_script = "uid://be7e7v1oxgfla"
+
+[node name="StunState" type="Node" parent="StateMachine" unique_id=173714434]
+script = ExtResource("8_rhu0n")
+
+[node name="FieldOfView2D" type="Area2D" parent="." unique_id=801406624]
+script = ExtResource("9_jh7tu")
+angle = 180.0
+auto_rotate = true
+rotation_speed = 100.96
+debug_draw = true
+metadata/_custom_type_script = "uid://dua2sujx6ct0d"
+
+[node name="AttackTimer" type="Timer" parent="." unique_id=748051392]
+
+[node name="hitBox" type="Area2D" parent="." unique_id=1570441219]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox" unique_id=1103979750]
+shape = SubResource("RectangleShape2D_jeaas")
+
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=573478189]
+
+[node name="angel_sword" type="Node2D" parent="WeaponHolder" unique_id=67534925]
+script = ExtResource("10_4r0su")
+
+[node name="hitbox" type="Area2D" parent="WeaponHolder/angel_sword" unique_id=988508353]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHolder/angel_sword/hitbox" unique_id=1685082314]
+shape = SubResource("RectangleShape2D_uys5g")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="WeaponHolder/angel_sword" unique_id=282629174]
+
+[node name="skill" type="Node2D" parent="." unique_id=1225004831]
+
+[node name="judgement_skill" type="Node2D" parent="skill" unique_id=1843913005]
+script = ExtResource("11_7j8a2")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="skill/judgement_skill" unique_id=1811997879]
+
+[node name="sunlight_spear_skill" type="Node2D" parent="skill" unique_id=1993523840]
+script = ExtResource("12_r7ut6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="skill/sunlight_spear_skill" unique_id=1933249506]

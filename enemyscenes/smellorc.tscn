@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://cnkidrh61su4e"]
 
 [ext_resource type="Script" uid="uid://dsy0imtkvdgjn" path="res://enemyscenes/smellorc.gd" id="1_b8mwe"]
-[ext_resource type="Texture2D" uid="uid://bum5af3t0wy0e" path="res://assets/images/characters/slime/icon.png" id="2_g8mxw"]
 [ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_vf3so"]
 [ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_wj1tp"]
 [ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_g8mxw"]
@@ -10,28 +9,23 @@
 [ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="7_ic227"]
 [ext_resource type="Script" uid="uid://bo6ptf42wuque" path="res://classes/CharacterState/c_states/stun.gd" id="8_7db2r"]
 [ext_resource type="Script" uid="uid://dua2sujx6ct0d" path="res://classes/FieldOfView2D/FieldOfView2D.gd" id="9_a2ijx"]
-[ext_resource type="Script" uid="uid://dopd2ht3xefrl" path="res://enemyscenes/stone_launcher.gd" id="11_g8mxw"]
-[ext_resource type="PackedScene" uid="uid://0tjix7fb3joh" path="res://enemyscenes/stone.tscn" id="13_eo4r0"]
+[ext_resource type="Script" uid="uid://dopd2ht3xefrl" path="res://classes/Weapons/enemiesweapon/stone_launcher.gd" id="11_g8mxw"]
+[ext_resource type="PackedScene" uid="uid://0tjix7fb3joh" path="res://classes/Weapons/enemiesweapon/stone.tscn" id="13_eo4r0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7fd1e"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lg8sw"]
 
-[node name="smellorc" type="CharacterBody2D" unique_id=515820574 node_paths=PackedStringArray("character_weapon", "attack_timer", "c_state_machine")]
+[sub_resource type="SpriteFrames" id="SpriteFrames_4gu1n"]
+
+[node name="smellorc" type="CharacterBody2D" unique_id=515820574 node_paths=PackedStringArray("c_state_machine")]
 script = ExtResource("1_b8mwe")
-character_weapon = NodePath("")
-attack_timer = NodePath("AttackTimer")
 sight_range = Array[int]([])
 c_state_machine = NodePath("StateMachine")
 metadata/_custom_type_script = "uid://couuhdcbsiyre"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2069077334]
 shape = SubResource("RectangleShape2D_7fd1e")
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=851625152]
-texture = ExtResource("2_g8mxw")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=616673286]
 
 [node name="StateMachine" type="Node" parent="." unique_id=121993261 node_paths=PackedStringArray("character")]
 script = ExtResource("2_vf3so")
@@ -82,3 +76,6 @@ shape = SubResource("RectangleShape2D_lg8sw")
 script = ExtResource("11_g8mxw")
 projectile_scene = ExtResource("13_eo4r0")
 metadata/_custom_type_script = "uid://cps2jovt78giv"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=630244465]
+sprite_frames = SubResource("SpriteFrames_4gu1n")

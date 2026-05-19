@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://blmdyh4ow77kn"]
+
+[ext_resource type="Script" uid="uid://bw5eglikx7sjw" path="res://enemyscenes/magic_orc.gd" id="1_g1m3o"]
+[ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_hobpi"]
+[ext_resource type="Texture2D" uid="uid://ci0hxdk3t7nh0" path="res://icon.svg" id="2_kkqwj"]
+[ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_dlxrr"]
+[ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_dtckv"]
+[ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_ra06w"]
+[ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="6_i7k3k"]
+[ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="7_vyfqv"]
+[ext_resource type="Script" uid="uid://bo6ptf42wuque" path="res://classes/CharacterState/c_states/stun.gd" id="8_dmv23"]
+[ext_resource type="Script" uid="uid://dua2sujx6ct0d" path="res://classes/FieldOfView2D/FieldOfView2D.gd" id="9_ra6ll"]
+[ext_resource type="Script" uid="uid://dopd2ht3xefrl" path="res://classes/Weapons/enemiesweapon/stone_launcher.gd" id="10_ammuj"]
+[ext_resource type="PackedScene" uid="uid://ceh6ebrc0yx63" path="res://classes/Weapons/enemiesweapon/magicboll.tscn" id="11_s14m4"]
+[ext_resource type="Script" uid="uid://cpxnibalqdkff" path="res://enemyscenes/SummonSkill.gd" id="12_dlxrr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kkqwj"]
+size = Vector2(111, 117)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ox08"]
+
+[node name="magic_orc" type="CharacterBody2D" unique_id=537956175 node_paths=PackedStringArray("character_weapon")]
+script = ExtResource("1_g1m3o")
+character_weapon = NodePath("WeaponHolder/stone_launcher")
+metadata/_custom_type_script = "uid://couuhdcbsiyre"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2020777884]
+position = Vector2(0.5, -7.5)
+shape = SubResource("RectangleShape2D_kkqwj")
+
+[node name="magic_orc" type="Sprite2D" parent="." unique_id=708173282]
+texture = ExtResource("2_kkqwj")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1449897280]
+
+[node name="StateMachine" type="Node" parent="." unique_id=1530804452]
+script = ExtResource("2_hobpi")
+metadata/_custom_type_script = "uid://dyp5hiohmgn1i"
+
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=130238203]
+script = ExtResource("3_dlxrr")
+metadata/_custom_type_script = "uid://dtjunbbhi11cp"
+
+[node name="AttackState" type="Node" parent="StateMachine" unique_id=1506127099]
+script = ExtResource("4_dtckv")
+metadata/_custom_type_script = "uid://d3wjjimrma8i6"
+
+[node name="WalkState" type="Node" parent="StateMachine" unique_id=709996874]
+script = ExtResource("5_ra06w")
+metadata/_custom_type_script = "uid://bcrvjymso8owa"
+
+[node name="DieState" type="Node" parent="StateMachine" unique_id=1746654984]
+script = ExtResource("6_i7k3k")
+metadata/_custom_type_script = "uid://vqdmlojjhhyw"
+
+[node name="HurtState" type="Node" parent="StateMachine" unique_id=2135872688]
+script = ExtResource("7_vyfqv")
+metadata/_custom_type_script = "uid://be7e7v1oxgfla"
+
+[node name="StunState" type="Node" parent="StateMachine" unique_id=1656984570]
+script = ExtResource("8_dmv23")
+
+[node name="FieldOfView2D" type="Area2D" parent="." unique_id=196524296]
+script = ExtResource("9_ra6ll")
+angle = 180.0
+auto_rotate = true
+rotation_speed = 100.96
+debug_draw = true
+metadata/_custom_type_script = "uid://dua2sujx6ct0d"
+
+[node name="AttackTimer" type="Timer" parent="." unique_id=301096303]
+
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=465764632]
+
+[node name="stone_launcher" type="Node2D" parent="WeaponHolder" unique_id=1045015176]
+script = ExtResource("10_ammuj")
+projectile_scene = ExtResource("11_s14m4")
+metadata/_custom_type_script = "uid://cps2jovt78giv"
+
+[node name="hitBox" type="Area2D" parent="." unique_id=783883880]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox" unique_id=535599586]
+shape = SubResource("RectangleShape2D_4ox08")
+
+[node name="SummonSkill" type="Node2D" parent="." unique_id=1775739857]
+script = ExtResource("12_dlxrr")

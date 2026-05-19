@@ -2,78 +2,37 @@ extends Enemy
 class_name EliteEnemy
 
 @export_group("精英属性")
-@export var poise_max: float = 80.0      # 霸体值
-@export var skill_cooldown: float = 5.0  # 技能冷却时间
+@export var poise_max: float = 80.0
+@onready var current_poise: float = poise_max
 
-var current_poise: float
-var skill_timer: float = 0.0             # 技能计时器
-var can_use_skill: bool = true
+# 技能组件引用
+var equipped_skill: EliteSkill = null
 
 func _ready() -> void:
-	# 霸体初始化
-	current_poise = poise_max
+	super._ready()
+	# 自动获取子节点中的第一个技能组件
+	for child in get_children():
+		if child is EliteSkill:
+			equipped_skill = child
+			break
+
+## 重写攻击准备逻辑
+func pre_attack(_msg: Dictionary = {}):
+	if not is_instance_valid(target_player): return
 	
-	# 如果父类有 _ready 则调用（即便现在没有，加上这句也是良好的编程习惯）
-	if super.has_method("_ready"):
-		super._ready()
+	# 精英怪决策流：有技能先放技能，没技能执行普通武器攻击
+	if equipped_skill and equipped_skill.is_ready:
+		equipped_skill.execute(target_player)
+	else:
+		# 执行 Enemy 基类默认的普攻位移/逻辑
+		super.pre_attack(_msg)
 
-func _process(delta: float) -> void:
-	# 独立处理技能冷却计时
-	if not can_use_skill:
-		skill_timer -= delta
-		if skill_timer <= 0:
-			can_use_skill = true
-
-## 重写受击逻辑
-## 注意：这会拦截子类原本的 take_damage
+# 霸体逻辑保留
 func take_damage(amount: float) -> void:
-	# 1. 霸体削减
 	current_poise -= amount
-	
-	# 2. 判断是否触发硬直
 	if current_poise <= 0:
 		current_poise = poise_max
-		# 霸体碎了，允许进入 HurtState
-		# 我们调用 super.take_damage(amount) 让父类处理实际扣血和状态切换
-		if super.has_method("take_damage"):
-			super.take_damage(amount)
+		super.take_damage(amount)
 	else:
-		# 霸体还在：
-		# 我们手动处理扣血，但不切换状态机（不触发 super.take_damage）
-		_apply_damage_only(amount)
-		flash_red_effect()
-
-## 内部方法：只扣血，不回退状态
-func _apply_damage_only(amount: float):
-	# 关键：既然父类没定义血量，我们就假设子类（如 Orc）有 health 变量
-	# 使用 set/get 可以避免编译器因为找不到变量而报错
-	if "health" in self:
-		set("health", get("health") - amount)
-	elif "current_health" in self:
-		set("current_health", get("current_health") - amount)
-	
-	# 如果你有死亡检测逻辑，也需要在这里补上
-	if get("health") <= 0 or get("current_health") <= 0:
-		if has_method("die"): # 假设你有 die 方法
-			call("die")
-
-func flash_red_effect() -> void:
-	var t = create_tween()
-	t.set_ease(Tween.EASE_IN_OUT)
-	t.tween_property(self, "modulate", Color.RED, 0.05)
-	t.tween_property(self, "modulate", Color.WHITE, 0.05)
-
-func reset_enemy() -> void:
-	if super.has_method("reset_enemy"):
-		super.reset_enemy()
-	current_poise = poise_max
-	skill_timer = 0
-	can_use_skill = true
-
-## 供子类在攻击状态中检查并触发技能
-func use_skill() -> bool:
-	if can_use_skill:
-		can_use_skill = false
-		skill_timer = skill_cooldown
-		return true
-	return false
+		current_health -= amount # 只扣血不进受击态
+		# 播放红色闪烁等特效

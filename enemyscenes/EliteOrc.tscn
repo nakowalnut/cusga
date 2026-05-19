@@ -1,5 +1,18 @@
 [gd_scene format=3 uid="uid://bdqrgj34swdbi"]
 
 [ext_resource type="PackedScene" uid="uid://cxfsacver3vl0" path="res://enemyscenes/orcs.tscn" id="1_j2g16"]
+[ext_resource type="Script" uid="uid://d3npxx7su5d5b" path="res://enemyscenes/AreaDamageSkill.gd" id="2_8xfw1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rtkk1"]
 
 [node name="Orc" unique_id=1209539370 instance=ExtResource("1_j2g16")]
+
+[node name="skills" type="Node2D" parent="." index="8" unique_id=767232886]
+
+[node name="jump_smash" type="Node2D" parent="skills" index="0" unique_id=2084065923]
+script = ExtResource("2_8xfw1")
+
+[node name="Area2D" type="Area2D" parent="skills/jump_smash" index="0" unique_id=255634201]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="skills/jump_smash/Area2D" index="0" unique_id=1643399109]
+shape = SubResource("CircleShape2D_rtkk1")

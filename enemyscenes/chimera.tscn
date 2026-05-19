@@ -1,0 +1,112 @@
+[gd_scene format=3 uid="uid://tojywu3b8i4u"]
+
+[ext_resource type="Script" uid="uid://dip6jqhyg4vxb" path="res://chimera.gd" id="1_kmqei"]
+[ext_resource type="Script" uid="uid://dyp5hiohmgn1i" path="res://classes/CharacterState/state_machine.gd" id="2_wsi2c"]
+[ext_resource type="Script" uid="uid://dtjunbbhi11cp" path="res://classes/CharacterState/c_states/idle.gd" id="3_ennt1"]
+[ext_resource type="Script" uid="uid://d3wjjimrma8i6" path="res://classes/CharacterState/c_states/attack.gd" id="4_0lvt6"]
+[ext_resource type="Script" uid="uid://bcrvjymso8owa" path="res://classes/CharacterState/c_states/walk.gd" id="5_a0cc5"]
+[ext_resource type="Script" uid="uid://vqdmlojjhhyw" path="res://classes/CharacterState/c_states/died.gd" id="6_n0afv"]
+[ext_resource type="Script" uid="uid://be7e7v1oxgfla" path="res://classes/CharacterState/c_states/hurt.gd" id="7_r4ykq"]
+[ext_resource type="Script" uid="uid://bo6ptf42wuque" path="res://classes/CharacterState/c_states/stun.gd" id="8_g16we"]
+[ext_resource type="Script" uid="uid://dua2sujx6ct0d" path="res://classes/FieldOfView2D/FieldOfView2D.gd" id="9_stuhb"]
+[ext_resource type="Script" uid="uid://cs67yxb8hdeun" path="res://chimera_weapon.gd" id="10_yw1lv"]
+[ext_resource type="Script" uid="uid://b2uiwg2xud481" path="res://toxic_overspill.gd" id="12_w2sc8"]
+[ext_resource type="Script" uid="uid://1thgoif2swjd" path="res://bite.gd" id="13_dt032"]
+[ext_resource type="Script" uid="uid://d3npxx7su5d5b" path="res://enemyscenes/AreaDamageSkill.gd" id="13_ui8y1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xxdu5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jeaas"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kmqei"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wsi2c"]
+
+[node name="Chimera" type="CharacterBody2D" unique_id=2103021757 node_paths=PackedStringArray("character_weapon")]
+script = ExtResource("1_kmqei")
+character_weapon = NodePath("WeaponHolder/ChimeraWeapon")
+metadata/_custom_type_script = "uid://couuhdcbsiyre"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1678182446]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1477522986]
+shape = SubResource("RectangleShape2D_xxdu5")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=967412733]
+
+[node name="StateMachine" type="Node" parent="." unique_id=789706351]
+script = ExtResource("2_wsi2c")
+metadata/_custom_type_script = "uid://dyp5hiohmgn1i"
+
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=584051377]
+script = ExtResource("3_ennt1")
+metadata/_custom_type_script = "uid://dtjunbbhi11cp"
+
+[node name="AttackState" type="Node" parent="StateMachine" unique_id=2097810473]
+script = ExtResource("4_0lvt6")
+metadata/_custom_type_script = "uid://d3wjjimrma8i6"
+
+[node name="WalkState" type="Node" parent="StateMachine" unique_id=846397316]
+script = ExtResource("5_a0cc5")
+metadata/_custom_type_script = "uid://bcrvjymso8owa"
+
+[node name="DieState" type="Node" parent="StateMachine" unique_id=571686498]
+script = ExtResource("6_n0afv")
+metadata/_custom_type_script = "uid://vqdmlojjhhyw"
+
+[node name="HurtState" type="Node" parent="StateMachine" unique_id=387857104]
+script = ExtResource("7_r4ykq")
+metadata/_custom_type_script = "uid://be7e7v1oxgfla"
+
+[node name="StunState" type="Node" parent="StateMachine" unique_id=173714434]
+script = ExtResource("8_g16we")
+
+[node name="FieldOfView2D" type="Area2D" parent="." unique_id=801406624]
+script = ExtResource("9_stuhb")
+angle = 180.0
+auto_rotate = true
+rotation_speed = 100.96
+debug_draw = true
+metadata/_custom_type_script = "uid://dua2sujx6ct0d"
+
+[node name="AttackTimer" type="Timer" parent="." unique_id=748051392]
+
+[node name="hitBox" type="Area2D" parent="." unique_id=1570441219]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox" unique_id=1103979750]
+shape = SubResource("RectangleShape2D_jeaas")
+
+[node name="WeaponHolder" type="Node2D" parent="." unique_id=573478189]
+
+[node name="ChimeraWeapon" type="Node2D" parent="WeaponHolder" unique_id=1752388091]
+script = ExtResource("10_yw1lv")
+
+[node name="skill" type="Node2D" parent="." unique_id=1225004831]
+
+[node name="Toxic Overspill" type="Node2D" parent="skill" unique_id=647261189]
+script = ExtResource("12_w2sc8")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="skill/Toxic Overspill" unique_id=963609341]
+
+[node name="Bite" type="Node2D" parent="skill" unique_id=1583526387]
+script = ExtResource("13_dt032")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="skill/Bite" unique_id=531320887]
+
+[node name="Earthquake" type="Node2D" parent="skill" unique_id=853552090]
+script = ExtResource("13_ui8y1")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="skill/Earthquake" unique_id=707355672]
+
+[node name="Area2D" type="Area2D" parent="skill/Earthquake" unique_id=775069085]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="skill/Earthquake/Area2D" unique_id=1575274516]
+shape = SubResource("CircleShape2D_kmqei")
+
+[node name="FireSkill" type="Node2D" parent="skill" unique_id=1228622572]
+script = ExtResource("13_ui8y1")
+
+[node name="Area2D" type="Area2D" parent="skill/FireSkill" unique_id=376636558]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="skill/FireSkill/Area2D" unique_id=1032659667]
+shape = SubResource("CircleShape2D_wsi2c")

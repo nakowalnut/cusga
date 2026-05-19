@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://cy1lgbyylrkys"]
+
+[ext_resource type="Script" uid="uid://7qygnd4f2x23" path="res://room/room.gd" id="1_087lj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nb7d2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_087lj"]
+size = Vector2(5, 240)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6xmc1"]
+size = Vector2(5, 239)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_855mf"]
+size = Vector2(222, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tdsiw"]
+size = Vector2(224, 5)
+
+[node name="bossArea" type="Area2D" unique_id=1801756269 node_paths=PackedStringArray("barrier_nodes")]
+script = ExtResource("1_087lj")
+enemy_count = 1
+max_per_type = 1
+barrier_nodes = [NodePath(""), NodePath(""), NodePath(""), NodePath("")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1915112604]
+scale = Vector2(14.625, 14.625)
+shape = SubResource("RectangleShape2D_nb7d2")
+
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=547954048]
+
+[node name="Marker2D" type="Marker2D" parent="SpawnPoints" unique_id=1829897136 groups=["enemy_spawn_point"]]
+
+[node name="Barrier" type="Node2D" parent="." unique_id=1167856740]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Barrier" unique_id=1888120512]
+position = Vector2(-197, 0)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barrier/StaticBody2D" unique_id=60654863]
+position = Vector2(-9.5, 0)
+shape = SubResource("RectangleShape2D_087lj")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Barrier" unique_id=676178090]
+position = Vector2(237, 0)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barrier/StaticBody2D2" unique_id=1820329549]
+position = Vector2(-12.5, -0.5)
+shape = SubResource("RectangleShape2D_6xmc1")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Barrier" unique_id=450433346]
+position = Vector2(13, 156)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barrier/StaticBody2D3" unique_id=454637648]
+position = Vector2(-13, 1)
+shape = SubResource("RectangleShape2D_855mf")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Barrier" unique_id=2067711918]
+position = Vector2(12, -97)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barrier/StaticBody2D4" unique_id=1331370538]
+position = Vector2(-12, -59)
+shape = SubResource("RectangleShape2D_tdsiw")
