@@ -1,0 +1,139 @@
+[gd_scene format=4 uid="uid://dpvh0iuem8gov"]
+
+[ext_resource type="Script" uid="uid://7qygnd4f2x23" path="res://room/room.gd" id="1_chqic"]
+[ext_resource type="PackedScene" uid="uid://cxfsacver3vl0" path="res://enemyscenes/orcs.tscn" id="2_853o5"]
+[ext_resource type="PackedScene" uid="uid://bqh7tfcjeifei" path="res://room/Portal1.tscn" id="2_uo1d7"]
+[ext_resource type="Texture2D" uid="uid://bsim5hy2mnh68" path="res://assets/tilesets/magical_forest.png" id="3_853o5"]
+[ext_resource type="PackedScene" uid="uid://beccv24g3k4oy" path="res://room/wall.tscn" id="4_polri"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gy36x"]
+texture = ExtResource("3_853o5")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+10:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+8:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+3:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+4:2/0 = 0
+4:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+6:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+3:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+4:3/0 = 0
+4:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+6:3/0 = 0
+7:3/0 = 0
+8:3/0 = 0
+0:4/0 = 0
+0:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:4/0 = 0
+1:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+2:4/0 = 0
+2:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:5/0 = 0
+0:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:5/0 = 0
+2:5/0 = 0
+2:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:6/0 = 0
+0:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:6/0 = 0
+1:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+2:6/0 = 0
+2:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+19:10/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_ayeac"]
+physics_layer_0/collision_layer = 15
+sources/0 = SubResource("TileSetAtlasSource_gy36x")
+
+[node name="Node2D" type="Node2D" unique_id=774512115]
+script = ExtResource("1_chqic")
+enemy_scenes = Array[PackedScene]([ExtResource("2_853o5")])
+enemy_count = 3
+max_per_type = 3
+portal_scene = ExtResource("2_uo1d7")
+portal_configs = Array[Dictionary]([{
+"next_room": "res://room/3rd.tscn"
+}])
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=434931373]
+tile_map_data = PackedByteArray("AAD/////AAABAAUAAAD//wAAAAAIAAMAAAD6//z/AAABAAUAAAD6//3/AAABAAUAAAD6//7/AAABAAUAAAD6////AAABAAUAAAD6/wAAAAAGAAMAAAD6/wEAAAABAAUAAAD6/wIAAAABAAUAAAD6/wMAAAAIAAAAAAD6/wQAAAABAAUAAAD6/wUAAAABAAUAAAD6/wYAAAABAAUAAAD7/wYAAAAHAAEAAAD8/wYAAAABAAUAAAD9/wYAAAABAAUAAAD+/wYAAAAIAAAAAAD//wYAAAABAAUAAAD//wUAAAABAAUAAAD//wQAAAABAAUAAAD//wMAAAABAAUAAAD//wIAAAABAAUAAAD//wEAAAABAAUAAAD///7/AAABAAUAAAD///3/AAABAAUAAAD///z/AAABAAUAAAD6/wgAAAABAAUAAAD7/wgAAAABAAUAAAD8/wgAAAABAAUAAAD9/wgAAAAIAAAAAAD+/wgAAAABAAUAAAD//wgAAAABAAUAAAD//wcAAAABAAUAAAD+/wcAAAABAAUAAAD9/wcAAAABAAUAAAD8/wcAAAABAAUAAAD7/wcAAAABAAUAAAD6/wcAAAABAAUAAAAAAPj/AAABAAUAAAAAAPn/AAABAAUAAAAAAPr/AAABAAUAAAAAAPv/AAABAAUAAAAAAPz/AAABAAUAAAAAAP3/AAABAAUAAAAAAP7/AAAIAAAAAAAAAP//AAABAAUAAAAAAPf/AAABAAUAAAABAPf/AAABAAUAAAACAPf/AAABAAUAAAADAPf/AAABAAUAAAAEAPf/AAABAAUAAAAFAPf/AAABAAUAAAAFAPj/AAABAAUAAAAFAPn/AAABAAUAAAAFAPr/AAABAAUAAAAFAPv/AAABAAUAAAAFAPz/AAABAAUAAAAFAP3/AAABAAUAAAAFAP7/AAABAAUAAAAFAP//AAABAAUAAAAFAAAAAAAHAAMAAAAFAAEAAAABAAUAAAAFAAIAAAABAAUAAAAFAAMAAAABAAUAAAAFAAQAAAABAAUAAAAAAAQAAAABAAUAAAAAAAMAAAAFAAEAAAAAAAIAAAAFAAAAAAAAAAEAAAABAAUAAAAAAAAAAAAGAAMAAAABAAAAAAAHAAMAAAABAAEAAAABAAUAAAABAAIAAAABAAUAAAABAAMAAAABAAUAAAABAAQAAAABAAUAAAACAAQAAAAIAAAAAAADAAQAAAABAAUAAAAEAAQAAAAHAAEAAAAEAAMAAAABAAUAAAADAAMAAAABAAUAAAACAAMAAAABAAUAAAACAAIAAAABAAUAAAADAAIAAAABAAUAAAAEAAIAAAABAAUAAAAEAAEAAAABAAUAAAADAAEAAAABAAUAAAACAAEAAAABAAUAAAACAAAAAAAGAAMAAAADAAAAAAAHAAMAAAAEAAAAAAAIAAMAAAAEAP//AAABAAUAAAADAP//AAAFAAEAAAACAP//AAAGAAIAAAABAP//AAABAAUAAAABAP7/AAABAAUAAAACAP7/AAABAAUAAAADAP7/AAAFAAAAAAAEAP7/AAABAAUAAAAEAP3/AAAHAAEAAAADAP3/AAABAAUAAAACAP3/AAABAAUAAAABAP3/AAABAAUAAAABAPz/AAABAAUAAAACAPz/AAABAAUAAAADAPz/AAABAAUAAAAEAPz/AAABAAUAAAADAPv/AAABAAUAAAACAPv/AAAFAAEAAAABAPv/AAABAAUAAAAEAPv/AAAIAAAAAAAEAPr/AAABAAUAAAADAPr/AAAHAAEAAAACAPr/AAAFAAAAAAABAPr/AAABAAUAAAABAPn/AAABAAUAAAACAPn/AAABAAUAAAADAPn/AAABAAUAAAAEAPn/AAABAAUAAAAEAPj/AAAHAAEAAAADAPj/AAAIAAAAAAACAPj/AAABAAUAAAABAPj/AAAIAAAAAAD+//z/AAABAAUAAAD9//z/AAABAAUAAAD8//z/AAABAAUAAAD7//z/AAABAAUAAAD7//3/AAABAAUAAAD7//7/AAABAAUAAAD7////AAABAAUAAAD7/wAAAAAHAAMAAAD7/wEAAAABAAUAAAD7/wIAAAABAAUAAAD7/wMAAAABAAUAAAD7/wQAAAABAAUAAAD7/wUAAAABAAUAAAD8/wUAAAABAAUAAAD9/wUAAAAFAAEAAAD+/wUAAAABAAUAAAD+/wQAAAABAAUAAAD+/wEAAAABAAUAAAD+/wAAAAAHAAMAAAD+////AAABAAUAAAD+//7/AAABAAUAAAD+//3/AAAIAAAAAAD+/wIAAAABAAUAAAD+/wMAAAAIAAAAAAD9/wMAAAAHAAEAAAD9/wQAAAAFAAAAAAD8/wQAAAABAAUAAAD8/wMAAAABAAUAAAD8/wIAAAAIAAAAAAD8/wEAAAABAAUAAAD9/wIAAAABAAUAAAD9/wEAAAAGAAIAAAD9/wAAAAAGAAMAAAD9////AAABAAUAAAD9//7/AAABAAUAAAD8//7/AAAFAAAAAAD8////AAAFAAEAAAD8/wAAAAAIAAMAAAD8//3/AAAHAAEAAAD9//3/AAABAAUAAAD5//z/AAAAAAUAAAD5//3/AAAAAAUAAAD5//7/AAAAAAUAAAD5////AAAAAAUAAAD5/wAAAAAAAAUAAAD5/wEAAAAAAAUAAAD5/wIAAAAAAAUAAAD5/wMAAAAAAAUAAAD5/wQAAAAAAAUAAAD5/wUAAAAAAAUAAAD5/wYAAAAAAAUAAAD5/wcAAAAAAAUAAAD5/wgAAAAAAAUAAAD///f/AAAAAAUAAAD///j/AAAAAAUAAAD///n/AAAAAAUAAAD///r/AAAAAAUAAAAGAPf/AAACAAUAAAAGAPj/AAACAAUAAAAGAPn/AAACAAUAAAAGAPr/AAACAAUAAAAGAPv/AAACAAUAAAAGAPz/AAACAAUAAAAGAP3/AAACAAUAAAAGAP7/AAACAAUAAAAGAP//AAACAAUAAAAGAAAAAAACAAUAAAAGAAEAAAACAAUAAAAGAAIAAAACAAUAAAAGAAMAAAACAAUAAAAGAAQAAAACAAUAAAAAAAYAAAACAAUAAAAAAAcAAAACAAUAAAAAAAgAAAACAAUAAAAAAPb/AAABAAQAAAABAPb/AAABAAQAAAACAPb/AAABAAQAAAADAPb/AAABAAQAAAAEAPb/AAABAAQAAAAFAPb/AAABAAQAAAD6//v/AAABAAQAAAD7//v/AAABAAQAAAD8//v/AAABAAQAAAD9//v/AAABAAQAAAD+//v/AAABAAQAAAD6/wkAAAABAAYAAAD7/wkAAAABAAYAAAD8/wkAAAABAAYAAAD9/wkAAAABAAYAAAD+/wkAAAABAAYAAAD//wkAAAABAAYAAAABAAUAAAABAAYAAAACAAUAAAABAAYAAAADAAUAAAABAAYAAAAEAAUAAAABAAYAAAAFAAUAAAABAAYAAAD5//v/AAAAAAQAAAD///b/AAAAAAQAAAAAAAkAAAACAAYAAAAGAAUAAAACAAYAAAAAAAUAAAADAAIAAAD///v/AAAEAAMAAAD5/wkAAAAAAAYAAAAGAPb/AAACAAQAAAA=")
+tile_set = SubResource("TileSet_ayeac")
+
+[node name="enemy_spawn_point" type="Node2D" parent="." unique_id=1349464357]
+
+[node name="Marker2D" type="Marker2D" parent="enemy_spawn_point" unique_id=1523623631 groups=["enemy_spawn_point"]]
+position = Vector2(6, -51)
+
+[node name="Marker2D2" type="Marker2D" parent="enemy_spawn_point" unique_id=2064177745 groups=["enemy_spawn_point"]]
+position = Vector2(-61, 23)
+
+[node name="Marker2D9" type="Marker2D" parent="enemy_spawn_point" unique_id=404718782 groups=["enemy_spawn_point"]]
+position = Vector2(55, 30)
+
+[node name="wall" type="Node2D" parent="." unique_id=19669657]
+
+[node name="StaticBody2D" parent="wall" unique_id=1091970144 instance=ExtResource("4_polri")]
+position = Vector2(-53, -71)
+scale = Vector2(1.5, 1)
+
+[node name="StaticBody2D2" parent="wall" unique_id=2024336268 instance=ExtResource("4_polri")]
+position = Vector2(-8, -115)
+rotation = 1.5707964
+scale = Vector2(1.5, 1)
+
+[node name="StaticBody2D3" parent="wall" unique_id=532273317 instance=ExtResource("4_polri")]
+position = Vector2(48, -151)
+scale = Vector2(2, 1)
+
+[node name="StaticBody2D4" parent="wall" unique_id=1476526116 instance=ExtResource("4_polri")]
+position = Vector2(103, -29)
+rotation = 1.5707964
+scale = Vector2(4, 1)
+
+[node name="StaticBody2D5" parent="wall" unique_id=282873153 instance=ExtResource("4_polri")]
+position = Vector2(58.000004, 88)
+scale = Vector2(1.5, 1)
+collision_mask = 15
+
+[node name="StaticBody2D6" parent="wall" unique_id=936823312 instance=ExtResource("4_polri")]
+position = Vector2(10, 120)
+rotation = 1.5707964
+scale = Vector2(1.1, 1)
+
+[node name="StaticBody2D7" parent="wall" unique_id=1108801906 instance=ExtResource("4_polri")]
+position = Vector2(-49, 152)
+scale = Vector2(2, 1)
+
+[node name="StaticBody2D8" parent="wall" unique_id=798650866 instance=ExtResource("4_polri")]
+position = Vector2(-100, 40.000004)
+rotation = 1.5707964
+scale = Vector2(3.6, 1)
+
+[node name="PlayerStart" type="Marker2D" parent="." unique_id=432142176]
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1701054133 groups=["portal_spawn_point"]]
+
+[node name="Marker2D" type="Marker2D" parent="Node2D" unique_id=1608638962 groups=["portal_spawn_point"]]

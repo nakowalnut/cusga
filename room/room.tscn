@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c8sqivq1b6gr8"]
 
 [ext_resource type="Script" uid="uid://7qygnd4f2x23" path="res://room/room.gd" id="1_tku2a"]
-[ext_resource type="PackedScene" uid="uid://cxfsacver3vl0" path="res://enemyscenes/orcs.tscn" id="2_tku2a"]
+[ext_resource type="PackedScene" uid="uid://opq1mjrtjkgx" path="res://enemyscenes/wyvern.tscn" id="2_tku2a"]
 [ext_resource type="PackedScene" uid="uid://bwbih2ig3yeia" path="res://Scenes/Player/player.tscn" id="4_et4wo"]
 [ext_resource type="Texture2D" uid="uid://bxm80s3rbat5y" path="res://room/未标题.png" id="13_t7mnq"]
 
